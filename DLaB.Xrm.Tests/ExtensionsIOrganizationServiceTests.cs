@@ -1,9 +1,10 @@
-﻿using DLaB.Xrm.Entities;
+﻿
+
+using DLaB.Xrm.Entities;
 using DLaB.Xrm.Test;
+using DLaB.Xrm.Test.Builders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
-using XrmUnitTest.Test;
-using XrmUnitTest.Test.Builders;
 
 namespace DLaB.Xrm.Tests
 {
@@ -38,7 +39,7 @@ namespace DLaB.Xrm.Tests
                 Assert.IsNotNull(contact);
 
                 // Test Not Exists
-                service.Delete(Ids.Contact);
+                service.Delete((Id)Ids.Contact);
                 contact = service.GetFirstOrDefault<Contact>();
                 Assert.IsNull(contact);
             }

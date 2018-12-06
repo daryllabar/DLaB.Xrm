@@ -1,17 +1,10 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Runtime.Serialization;
+﻿using System.IO;
 using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
-using DLaB.Common;
 using DLaB.Xrm.Entities;
-using DLaB.Xrm.LocalCrm;
 using DLaB.Xrm.Sandbox.Serialization;
-using DLaB.Xrm.Test.Builders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using XrmUnitTest.Test;
+using DLaB.Common;
 
 namespace DLaB.Xrm.Tests.Sandbox.Serialization
 {
