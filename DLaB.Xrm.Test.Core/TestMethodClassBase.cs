@@ -1,7 +1,12 @@
-﻿namespace DLaB.Xrm.Test
+﻿using DLaB.Xrm.Test;
+using DLaB.Xrm.Test.Builders;
+using Microsoft.Xrm.Sdk;
+
+namespace DLaB.Xrm.Test
 {
     public abstract class TestMethodClassBase : TestMethodClassBaseDLaB
     {
+        protected override IAgnosticServiceBuilder GetOrganizationServiceBuilder(IOrganizationService service) { return new Builders.OrganizationServiceBuilder(service); }
 
         protected override void LoadConfigurationSettings()
         {

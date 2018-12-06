@@ -159,10 +159,6 @@
       <Project>{ef9b877d-cb30-45c1-b28f-43cc26850356}</Project>
       <Name>DLaB.Xrm.Test</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DLaB.Xrm.Workflow\DLaB.Xrm.Workflow.csproj">
-      <Project>{dda6bad7-c9e4-45e8-a8e7-b6275ad95933}</Project>
-      <Name>DLaB.Xrm.Workflow</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DLaB.Xrm\DLaB.Xrm.csproj">
       <Project>{c11c3523-d4f4-4c7d-b072-46e96947efc2}</Project>
       <Name>DLaB.Xrm</Name>
@@ -187,6 +183,7 @@
     </When>
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="..\DLaB.Xrm.Test.Core\DLaB.Xrm.Test.Core.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

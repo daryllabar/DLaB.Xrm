@@ -1,7 +1,6 @@
 ﻿using DLaB.Xrm.Client;
 using DLaB.Xrm.Entities;
-using DLaB.Xrm.Test;
-using DLaB.Xrm.Test.Builders;
+using DLaB.Xrm.Test.Core.Builders;
 using Microsoft.Xrm.Sdk;
 
 namespace DLaB.Xrm.Test
@@ -15,11 +14,11 @@ namespace DLaB.Xrm.Test
         {
             if (!TestSettings.AssumptionXmlPath.IsConfigured)
             {
-                TestSettings.AssumptionXmlPath.Configure(new PatherFinderProjectOfType(typeof(TestMethodClassBase), "Assumptions\\Entity Xml"));
+                TestSettings.AssumptionXmlPath.Configure(new PatherFinderProjectOfType(typeof(MsTestProvider), "Assumptions\\Entity Xml"));
             }
             if (!TestSettings.UserTestConfigPath.IsConfigured)
             {
-                TestSettings.UserTestConfigPath.Configure(new PatherFinderProjectOfType(typeof(TestMethodClassBase), "UnitTestSettings.user.config"));
+                TestSettings.UserTestConfigPath.Configure(new PatherFinderProjectOfType(typeof(MsTestProvider), "UnitTestSettings.user.config"));
             }
             if (!TestSettings.EntityBuilder.IsConfigured)
             {

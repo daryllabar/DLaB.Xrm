@@ -86,8 +86,6 @@
     <Compile Include="DebugLogger.cs" />
     <Compile Include="MsTestProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestInitializer.cs" />
-    <Compile Include="TestMethodClassBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assumptions\Entity Xml\Product_Install.xml" />

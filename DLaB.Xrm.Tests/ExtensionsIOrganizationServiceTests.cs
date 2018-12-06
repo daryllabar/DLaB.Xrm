@@ -2,7 +2,7 @@
 
 using DLaB.Xrm.Entities;
 using DLaB.Xrm.Test;
-using DLaB.Xrm.Test.Builders;
+using DLaB.Xrm.Test.Core.Builders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 
