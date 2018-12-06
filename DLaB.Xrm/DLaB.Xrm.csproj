@@ -85,6 +85,6 @@
     <None Include="DLaB.Xrm.Source.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="..\DLaB.Xrm.Base\DLaB.Xrm.Base.projitems" Label="Shared" />
+  <Import Project="..\DLaB.Xrm.Core\DLaB.Xrm.Base.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
