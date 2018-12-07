@@ -17,6 +17,12 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DLaB.Xrm.Core", "DLaB.Xrm.C
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DLaB.Xrm.Workflow.Core", "DLaB.Xrm.Workflow.Core\DLaB.Xrm.Workflow.Core.shproj", "{0A4F992C-57F2-4910-AECC-13AD1CD271AD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{DEDEE8E9-2FCB-484A-AA86-B43C3DEA324E}"
+	ProjectSection(SolutionItems) = preProject
+		DLaB.Xrm\DLaB.Xrm.Source.nuspec = DLaB.Xrm\DLaB.Xrm.Source.nuspec
+		DLaB.Xrm.Workflow\DLaB.Xrm.Workflow.Source.nuspec = DLaB.Xrm.Workflow\DLaB.Xrm.Workflow.Source.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		DLaB.Xrm.Workflow.Core\DLaB.Xrm.Workflow.Base.projitems*{0a4f992c-57f2-4910-aecc-13ad1cd271ad}*SharedItemsImports = 13
@@ -24,7 +30,6 @@ Global
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{a3b3ce75-dfae-4035-97a3-afd49ad47bc5}*SharedItemsImports = 13
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{c11c3523-d4f4-4c7d-b072-46e96947efc2}*SharedItemsImports = 4
 		DLaB.Xrm.Test.Core\DLaB.Xrm.Test.Core.projitems*{c987f4c2-40b4-4572-b7c5-36c138361afb}*SharedItemsImports = 13
-		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{dda6bad7-c9e4-45e8-a8e7-b6275ad95933}*SharedItemsImports = 4
 		DLaB.Xrm.Workflow.Core\DLaB.Xrm.Workflow.Base.projitems*{dda6bad7-c9e4-45e8-a8e7-b6275ad95933}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

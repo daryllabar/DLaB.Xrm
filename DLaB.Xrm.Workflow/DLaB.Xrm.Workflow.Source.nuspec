@@ -2,11 +2,11 @@
 <package>
   <metadata>
     <id>DLaB.Xrm.Workflow.Source</id>
-    <version>1.1.0.7</version>
+    <version>1.1.0.8</version>
     <authors>Daryl LaBar</authors>
     <owners>Daryl LaBar</owners>
-    <licenseUrl>https://github.com/daryllabar/XrmUnitTest/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/daryllabar/XrmUnitTest</projectUrl>
+    <licenseUrl>https://github.com/daryllabar/DLaB.Xrm/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/daryllabar/DLaB.Xrm</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/daryllabar/XrmUnitTest/master/DLaB_Dynamics_64x64.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Contains extensions for Xrm development.  </description>
@@ -16,7 +16,7 @@
     <dependencies>
       <group targetFramework=".NETFramework4.5">
         <dependency id="DLaB.Common.Source" version="1.1.2.7" />
-        <dependency id="DLaB.Xrm.Source" version="2.3.0.2" />
+        <dependency id="DLaB.Xrm.Source" version="2.3.0.3" />
       </group>
     </dependencies>
     <frameworkAssemblies>
@@ -26,6 +26,6 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\..\DLaB.Xrm.Workflow.Base\*.cs" target="content\App_Packages\DLaB.Xrm.Workflow.Source.1.1.0.7" />
+    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="content\App_Packages\DLaB.Xrm.Workflow.Source.1.1.0.8" />
   </files>
 </package>
