@@ -5,8 +5,9 @@ using DLaB.Xrm.Test;
 using DLaB.Xrm.Test.Core.Builders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
+using Source.DLaB.Xrm;
 
-namespace DLaB.Xrm.Tests
+namespace Core.DLaB.Xrm.Tests
 {
     [TestClass]
     public class ExtensionsIOrganizationServiceTests

@@ -26,6 +26,7 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		DLaB.Xrm.Workflow.Core\DLaB.Xrm.Workflow.Base.projitems*{0a4f992c-57f2-4910-aecc-13ad1cd271ad}*SharedItemsImports = 13
+		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{1df3be66-5b01-44b1-a810-03e2116e7518}*SharedItemsImports = 4
 		DLaB.Xrm.Test.Core\DLaB.Xrm.Test.Core.projitems*{1df3be66-5b01-44b1-a810-03e2116e7518}*SharedItemsImports = 4
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{a3b3ce75-dfae-4035-97a3-afd49ad47bc5}*SharedItemsImports = 13
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{c11c3523-d4f4-4c7d-b072-46e96947efc2}*SharedItemsImports = 4

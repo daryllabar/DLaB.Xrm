@@ -7,7 +7,7 @@
     <ProjectGuid>{1DF3BE66-5B01-44B1-A810-03E2116E7518}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DLaB.Xrm.Tests</RootNamespace>
+    <RootNamespace>Core.DLaB.Xrm.Tests</RootNamespace>
     <AssemblyName>DLaB.Xrm.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -54,6 +54,7 @@
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.5\lib\net452\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>
       <Private>True</Private>
@@ -147,6 +148,22 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\Config.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\ConfigKeyValueSplitInfo.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\ConfigKeyValuesSplitInfo.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\ConfigProvider.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\ConfigValuesSplitInfo.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\Exceptions\DictionaryDuplicateKeyException.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\Exceptions\EnumCaseUndefinedException.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\Exceptions\TypeArgumentException.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\Extensions.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\ProcessExecutor.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\ProcessExecutorInfo.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\TypeSafeEnumBase.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\VersionControl\ISourceControlProvider.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\VersionControl\SourceControl.cs" />
+    <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\VersionControl\VsTfsSourceControlProvider.cs" />
+    <Compile Include="EntityHelperTests.cs" />
     <Compile Include="ExtensionsIOrganizationServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sandbox\ExceptionHandlerTests.cs" />
@@ -160,10 +177,6 @@
     <ProjectReference Include="..\DLaB.Xrm.Test\DLaB.Xrm.Test.csproj">
       <Project>{ef9b877d-cb30-45c1-b28f-43cc26850356}</Project>
       <Name>DLaB.Xrm.Test</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DLaB.Xrm\DLaB.Xrm.csproj">
-      <Project>{c11c3523-d4f4-4c7d-b072-46e96947efc2}</Project>
-      <Name>DLaB.Xrm</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
@@ -186,6 +199,7 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="..\DLaB.Xrm.Test.Core\DLaB.Xrm.Test.Core.projitems" Label="Shared" />
+  <Import Project="..\DLaB.Xrm.Core\DLaB.Xrm.Base.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
