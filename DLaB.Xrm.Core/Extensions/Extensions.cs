@@ -1619,12 +1619,12 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the current users timezone code and locale id
+        /// Retrieves the current users TimeZoneCode
         /// </summary>
         private static int? RetrieveUserSettingsTimeZoneCode(IOrganizationService service, Guid userId)
         {
             // ReSharper disable StringLiteralTypo
-            var setting = service.GetFirstOrDefault("usersettings", new ColumnSet("localeid", "timezonecode"), "systemuserid", userId);
+            var setting = service.GetFirstOrDefault("usersettings", new ColumnSet("timezonecode"), "systemuserid", userId);
             return setting?.GetAttributeValue<int?>("timezonecode");
             // ReSharper restore StringLiteralTypo
         }
