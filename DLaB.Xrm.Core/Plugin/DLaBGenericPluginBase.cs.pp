@@ -229,7 +229,12 @@ namespace Source.DLaB.Xrm.Plugin
         /// Method that gets called in the finally block of the Execute
         /// </summary>
         /// <param name="context">The context.</param>
-        protected virtual void PostExecute(IExtendedPluginContext context) { }
+        protected virtual void PostExecute(IExtendedPluginContext context) {
+            if(context.TracingService is IMaxLengthTracingService maxLengthService)
+            {
+                maxLengthService.RetraceMaxLength();
+            }
+        }
 
         /// <summary>
         /// Method that gets called directly before Execute(context).  Returning true will skip the Execute(context) from getting called.  

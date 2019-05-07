@@ -38,7 +38,9 @@ namespace Source.DLaB.Xrm
                     return;
                 }
 
-                var trace = string.Format(format, args);
+                var trace = args.Length == 0
+                    ? format
+                    : string.Format(format, args);
                 TraceHistory.AppendLine(trace);
                 TraceService.Trace(trace);
             }
