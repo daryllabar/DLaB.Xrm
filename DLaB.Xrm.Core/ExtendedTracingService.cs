@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.Xrm.Sdk;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
@@ -10,15 +12,22 @@ namespace Source.DLaB.Xrm
     /// <summary>
     /// Tracing Service guaranteed to not throw an exception
     /// </summary>
-    public class ExtendedTracingService: ITracingService
+    public class ExtendedTracingService: IMaxLengthTracingService
     {
         private ITracingService TraceService { get; }
+        public int MaxTraceLength { get; }
+        private StringBuilder TraceHistory { get; }
+
 
         /// <summary>
         /// Constructor.  
         /// </summary>
         /// <param name="service">The Real Trace Service to utilize</param>
-        public ExtendedTracingService(ITracingService service) { TraceService = service; }
+        public ExtendedTracingService(ITracingService service, int maxTraceLength = 10244) {
+            TraceService = service;
+            MaxTraceLength = maxTraceLength;
+            TraceHistory = new StringBuilder();
+        }
 
         /// <inheritdoc />
         public virtual void Trace(string format, params object[] args) {
@@ -29,7 +38,9 @@ namespace Source.DLaB.Xrm
                     return;
                 }
 
-                TraceService.Trace(format, args);
+                var trace = string.Format(format, args);
+                TraceHistory.AppendLine(trace);
+                TraceService.Trace(trace);
             }
             catch (Exception ex)
             {
@@ -67,6 +78,41 @@ namespace Source.DLaB.Xrm
                     // Better to give up rather than stopping the entire program when attempting to write a Trace message
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public void RetraceMaxLength()
+        {
+            if(TraceHistory.Length <= MaxTraceLength)
+            {
+                return;
+            }
+
+            var trace = TraceHistory.ToString().Trim();
+            if(trace.Length <= MaxTraceLength)
+            {
+                // WhiteSpace 
+                Trace(trace);
+                return;
+            }
+
+            //Assume the three Traces will each add New Lines, which are 2 characters each, so 6
+            var maxLength = MaxTraceLength - 6;
+            if(maxLength <= 0)
+            {
+                return;
+            }
+
+            var snip = Environment.NewLine + "..." + Environment.NewLine;
+            var startLength = maxLength / 2 - snip.Length; // Subtract snip from start
+            if(startLength <= 0)
+            {
+                // Really short MaxTraceLength, don't do anything
+                return;
+            }
+            Trace(trace.Substring(0, startLength));
+            Trace(snip);
+            Trace(trace.Substring(trace.Length -(maxLength - (startLength + snip.Length))));
         }
     }
 }

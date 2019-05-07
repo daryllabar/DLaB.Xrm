@@ -164,6 +164,7 @@
     <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\VersionControl\SourceControl.cs" />
     <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\VersionControl\VsTfsSourceControlProvider.cs" />
     <Compile Include="EntityHelperTests.cs" />
+    <Compile Include="ExtendedTracingServiceTests.cs" />
     <Compile Include="ExtensionsIOrganizationServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sandbox\ExceptionHandlerTests.cs" />
