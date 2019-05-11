@@ -13,7 +13,7 @@ namespace Source.DLaB.Xrm
     {
         /// <summary>
         /// If the max length of the trace has been exceeded, the most important parts of the trace are retraced.
-        /// If the max lenght of the trace has not been exceeded, then nothing is done.
+        /// If the max length of the trace has not been exceeded, then nothing is done.
         /// </summary>
         void RetraceMaxLength();
     }

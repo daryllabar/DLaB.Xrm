@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xrm.Sdk;
 
@@ -12,7 +11,7 @@ namespace Source.DLaB.Xrm
     /// <summary>
     /// Tracing Service guaranteed to not throw an exception
     /// </summary>
-    public class ExtendedTracingService: IMaxLengthTracingService
+    public class ExtendedTracingService : IMaxLengthTracingService
     {
         private ITracingService TraceService { get; }
         public int MaxTraceLength { get; }
@@ -23,14 +22,17 @@ namespace Source.DLaB.Xrm
         /// Constructor.  
         /// </summary>
         /// <param name="service">The Real Trace Service to utilize</param>
-        public ExtendedTracingService(ITracingService service, int maxTraceLength = 10244) {
+        /// <param name="maxTraceLength">The max length of the trace log.</param>
+        public ExtendedTracingService(ITracingService service, int maxTraceLength = 10240)
+        {
             TraceService = service;
             MaxTraceLength = maxTraceLength;
             TraceHistory = new StringBuilder();
         }
 
         /// <inheritdoc />
-        public virtual void Trace(string format, params object[] args) {
+        public virtual void Trace(string format, params object[] args)
+        {
             try
             {
                 if (string.IsNullOrWhiteSpace(format) || TraceService == null)
@@ -46,75 +48,75 @@ namespace Source.DLaB.Xrm
             }
             catch (Exception ex)
             {
-                try
-                {
-                    if (args == null)
-                    {
-                        // ReSharper disable once PossibleNullReferenceException
-                        TraceService.Trace((format == null
-                            ? "Exception occured attempting to trace null and null args."
-                            : $@"Exception occured attempting to trace: ""{format}"" and null args.") + Environment.NewLine + ex);
-                    }
-                    else
-                    {
-                        try
-                        {
-                            format = args.Length == 0 ? format : string.Format(format ?? "NULL", args);
-                            // ReSharper disable once PossibleNullReferenceException
-                            TraceService.Trace($"Exception occured attempting to trace {format}.{Environment.NewLine + ex}");
-                        }
-                        catch
-                        {
-                            var argsText = $"[{string.Join(", ", args)}]";
-                            // ReSharper disable once PossibleNullReferenceException
-                            TraceService.Trace( $"Exception occured attempting to trace and then handle format for {format} with {argsText}.{Environment.NewLine + ex}");
-                        }
-                        // ReSharper disable once PossibleNullReferenceException
-                    }
-
-                }
-                // ReSharper disable once EmptyGeneralCatchClause
-                catch
-                {
-                    // Attempted to trace a message, and had an exception, and then had another exception attempting to trace the exception that occured when tracing.
-                    // Better to give up rather than stopping the entire program when attempting to write a Trace message
-                }
+                AttemptToTraceTracingException(format, args, ex);
             }
         }
 
         /// <inheritdoc />
         public void RetraceMaxLength()
         {
-            if(TraceHistory.Length <= MaxTraceLength)
+            if (TraceHistory.Length <= MaxTraceLength)
             {
                 return;
             }
 
             var trace = TraceHistory.ToString().Trim();
-            if(trace.Length <= MaxTraceLength)
+            if (trace.Length <= MaxTraceLength)
             {
                 // WhiteSpace 
                 Trace(trace);
                 return;
             }
 
-            //Assume the three Traces will each add New Lines, which are 2 characters each, so 6
+            //Assume the three traces will each add new lines, which are 2 characters each, so 6
             var maxLength = MaxTraceLength - 6;
-            if(maxLength <= 0)
+            if (maxLength <= 0)
             {
                 return;
             }
 
             var snip = Environment.NewLine + "..." + Environment.NewLine;
             var startLength = maxLength / 2 - snip.Length; // Subtract snip from start
-            if(startLength <= 0)
+            if (startLength <= 0)
             {
                 // Really short MaxTraceLength, don't do anything
                 return;
             }
             Trace(trace.Substring(0, startLength));
             Trace(snip);
-            Trace(trace.Substring(trace.Length -(maxLength - (startLength + snip.Length))));
+            Trace(trace.Substring(trace.Length - (maxLength - (startLength + snip.Length))));
+        }
+
+        private void AttemptToTraceTracingException(string format, object[] args, Exception ex)
+        {
+            try
+            {
+                if (args == null)
+                {
+                    TraceService.Trace((format == null
+                                           ? "Exception occured attempting to trace null and null args."
+                                           : $@"Exception occured attempting to trace: ""{format}"" and null args.") + Environment.NewLine + ex);
+                }
+                else
+                {
+                    try
+                    {
+                        format = args.Length == 0 ? format : string.Format(format ?? "NULL", args);
+                        TraceService.Trace($"Exception occured attempting to trace {format}.{Environment.NewLine + ex}");
+                    }
+                    catch
+                    {
+                        var argsText = $"[{string.Join(", ", args)}]";
+                        TraceService.Trace($"Exception occured attempting to trace and then handle format for {format} with {argsText}.{Environment.NewLine + ex}");
+                    }
+                }
+            }
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch
+            {
+                // Attempted to trace a message, and had an exception, and then had another exception attempting to trace the exception that occured when tracing.
+                // Better to give up rather than stopping the entire program when attempting to write a Trace message
+            }
         }
     }
 }
