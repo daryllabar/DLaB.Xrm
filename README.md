@@ -3,8 +3,6 @@
 
 A library of XRM Extensions intended to be used by any XRM project, in any Xrm Plugin/Workflow.  Ever had a QueryExpression, and wished you get generate SQL from the QueryExpression while debugging?  Now you can:  `queryExpression.GetSqlStatement()`.  Ever wish your plugins had a built in method to prevent recusive lookps?  Just inherit from the `GenericPluginHandlerBase`, they will.  Project delivered by a [source only nuget package](https://www.nuget.org/packages/DLaB.Xrm.Source/), so you control the version of the Xrm Assemblies it references, and you don't have to IL Merge for you plugins!
 
-Xrm Unit Testing Framework Provides a long list of features that makes developing Unit Tests in CRM quicker, faster, easier, and more reliable.
-
 ## How Can I Help?
 
 DLaB.Xrm is designed to be a community focused, open sourced project.  There are two main ways to help:
