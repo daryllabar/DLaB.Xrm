@@ -3,7 +3,7 @@
 # Purpose
 The DLaB.Xrm Library is full of tons of helpful extension methods and classes intended to be used on any XRM project, in any Xrm Plugin/Workflow.  It is designed to be used anywhere you're referencing the Microsoft SDK dlls, so Plugins, Custom Workflow Activities, and external server code.  Ever had a QueryExpression, and wished you get generate SQL from the QueryExpression while debugging?  Now you can:  `queryExpression.GetSqlStatement()`.  Ever wish your plugins had a built in method to prevent recusive lookps?  Just inherit from the `GenericPluginHandlerBase`, they will.
 
-Checkout the [Wiki](../wiki) for more documentation.
+Checkout the [Wiki](../../wiki) for more documentation.
 
 # Source Only Nuget Packages
 Since IL Merging isn't technically supported by Microsoft, the code is available on NuGet as a [Source only Package](https://nikcodes.com/2013/10/23/packaging-source-code-with-nuget/).  This also allows you to control the version of the Xrm Assemblies it references. If you truly want to make your own DLL, you'd need to add "DLAB_XRM" to the Conditional Compilation Symbols for the project.
