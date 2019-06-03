@@ -16,6 +16,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// Settings for the IOrganization Service
         /// </summary>
         public ExtendedOrganizationServiceSettings OrganizationServiceSettings { get; set; }
+        public int? MaxTraceLength { get; set; }
 
         /// <summary>
         /// Creates a DLaBExtendedPluginContextSettings
@@ -45,7 +46,14 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public virtual ITracingService InitializeTracingService(IServiceProvider serviceProvider)
         {
-            return new ExtendedTracingService(serviceProvider.GetService<ITracingService>());
+            if (MaxTraceLength.HasValue)
+            {
+                return new ExtendedTracingService(serviceProvider.GetService<ITracingService>(), MaxTraceLength.Value);
+            }
+            else
+            {
+                return new ExtendedTracingService(serviceProvider.GetService<ITracingService>());
+            }
         }
 
         /// <summary>

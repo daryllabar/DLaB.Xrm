@@ -20,7 +20,7 @@ namespace Source.DLaB.Xrm
 
         #region AddChildLink:  All methods created due to possible bug - http://stackoverflow.com/questions/10722307/why-does-linkentity-addlink-initialize-the-linkfromentityname-with-its-own-lin
             /// <summary>
-            /// Adds the new LinkEntity as a child to this LinkEnity, rather than this LinkEntity's LinkFrom Entity
+            /// Adds the new LinkEntity as a child to this LinkEntity, rather than this LinkEntity's LinkFrom Entity
             /// Assumes that the linkFromAttributeName and the linkToAttributeName are the same
             /// </summary>
             /// <param name="link"></param>
@@ -33,7 +33,7 @@ namespace Source.DLaB.Xrm
             }
 
             /// <summary>
-            /// Adds the new LinkEntity as a child to this LinkEnity, rather than this LinkEntity's LinkFrom Entity
+            /// Adds the new LinkEntity as a child to this LinkEntity, rather than this LinkEntity's LinkFrom Entity
             /// Assumes that the linkFromAttributeName and the linkToAttributeName are the same
             /// </summary>
             /// <param name="link"></param>
@@ -47,7 +47,7 @@ namespace Source.DLaB.Xrm
             }
 
             /// <summary>
-            /// Adds the new LinkEntity as a child to this LinkEnity, rather than this LinkEntity's LinkFrom Entity
+            /// Adds the new LinkEntity as a child to this LinkEntity, rather than this LinkEntity's LinkFrom Entity
             /// </summary>
             /// <param name="link"></param>
             /// <param name="linkToEntityName"></param>
@@ -61,7 +61,7 @@ namespace Source.DLaB.Xrm
             }
 
             /// <summary>
-            /// Adds the new LinkEntity as a child to this LinkEnity, rather than this LinkEntity's LinkFrom Entity
+            /// Adds the new LinkEntity as a child to this LinkEntity, rather than this LinkEntity's LinkFrom Entity
             /// </summary>
             /// <param name="link"></param>
             /// <param name="linkToEntityName"></param>

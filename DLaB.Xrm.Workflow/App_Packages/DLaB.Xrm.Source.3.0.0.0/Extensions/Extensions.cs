@@ -79,7 +79,7 @@ namespace Source.DLaB.Xrm
 
         /// <summary>
         /// If the imageName is populated, then if images collection contains the given imageName Key, the Value is cast to the Entity type T, else null is returned
-        /// If the imageName is not populated but the default name is, then the defaultname is searched for in the images collection and if it has a value, it is cast to the Entity type T.
+        /// If the imageName is not populated but the default name is, then the defaultName is searched for in the images collection and if it has a value, it is cast to the Entity type T.
         /// Else, the first non-null value in the images collection is returned.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -532,7 +532,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Converts an Earlybound Entity to the SDK Entity, as well as all child Entities in EntityCollection Attributes
+        /// Converts an early bound entity to the SDK entity, as well as all child entities in EntityCollection Attributes
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
@@ -773,7 +773,7 @@ namespace Source.DLaB.Xrm
         #region FilterExpression
 
         /// <summary>
-        /// Depending on the Type of T, adds the correct is active criteria Statment
+        /// Depending on the Type of T, adds the correct is active criteria Statement
         /// Note: Use AddLink&lt;T&gt; for Linked Entities
         /// </summary>
         /// <typeparam name="T">The Entity type.</typeparam>
@@ -784,7 +784,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Depending on the Type of T, adds the correct is active criteria Statment
+        /// Depending on the Type of T, adds the correct is active criteria Statement
         /// Note: Use AddLink&lt;T&gt; for Linked Entities
         /// </summary>
         /// <param name="fe"></param>
@@ -881,11 +881,11 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Adds a Condition expression to the filter expression to force the statecode to be a specfic value.
+        /// Adds a Condition expression to the filter expression to force the statecode to be a specific value.
         /// </summary>
         /// <param name="fe">The Filter Expression.</param>
         /// <param name="entityStateEnum">The entity state enum value.</param>
-        /// <returns>The Filter expression with the conditionexpression added</returns>
+        /// <returns>The Filter expression with the ConditionExpression added</returns>
         public static FilterExpression StateIs(this FilterExpression fe, object entityStateEnum)
         {
             fe.AddConditionEnforceAndFilterOperator(new ConditionExpression("statecode", ConditionOperator.Equal, (int)entityStateEnum));
@@ -1178,15 +1178,15 @@ namespace Source.DLaB.Xrm
 
         #endregion Associate
 
-        #region CreateWithSupressDuplicateDetection
+        #region CreateWithSuppressDuplicateDetection
 
         /// <summary>
-        /// Creates a record with SupressDuplicateDetection Enabled to Ignore any potential Duplicates Created
+        /// Creates a record with SuppressDuplicateDetection Enabled to Ignore any potential Duplicates Created
         /// </summary>
         /// <param name="service"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static Guid CreateWithSupressDuplicateDetection(this IOrganizationService service, Entity entity)
+        public static Guid CreateWithSuppressDuplicateDetection(this IOrganizationService service, Entity entity)
         {
             var response = (CreateResponse)service.Execute(new CreateRequest
                                                            {
@@ -1196,7 +1196,7 @@ namespace Source.DLaB.Xrm
             return response.id;
         }
 
-        #endregion CreateWithSupressDuplicateDetection
+        #endregion CreateWithSuppressDuplicateDetection
 
         #region Delete
 
@@ -1299,7 +1299,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// There have been Generic SQL errors casued with calling this while using multi-threading.  This hopefully
+        /// There have been Generic SQL errors caused with calling this while using multi-threading.  This hopefully
         /// will fix that
         /// </summary>
         /// <param name="service">The service.</param>
@@ -1558,7 +1558,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Gets the first entity that is returened by the fetch expression.  Null is returned if none are found.
+        /// Gets the first entity that is returned by the fetch expression.  Null is returned if none are found.
         /// </summary>
         /// <typeparam name="T">The Entity Type.</typeparam>
         /// <param name="service">The service.</param>
@@ -1596,6 +1596,38 @@ namespace Source.DLaB.Xrm
         }
 
         #endregion GetFirstOrDefault
+
+        /// <summary>
+        /// Gets the local time from the UTC time.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="userId">The id of the user to lookup the timezone code user settings</param>
+        /// <param name="utcTime">The given UTC time to find the user's local time for.  Defaults to DateTime.UtcNow</param>
+        /// <param name="defaultTimeZoneCode">Default TimeZoneCode if the user has no TimeZoneCode defined.  Defaults to EDT.</param>
+        public static DateTime GetUserLocalTime(this IOrganizationService service, Guid userId, DateTime? utcTime, int defaultTimeZoneCode = 35)
+        {
+            var timeZoneCode = RetrieveUserSettingsTimeZoneCode(service, userId) ?? defaultTimeZoneCode;
+            var request = new LocalTimeFromUtcTimeRequest
+            {
+                TimeZoneCode = timeZoneCode,
+                UtcTime = utcTime ?? DateTime.UtcNow
+            };
+
+            var response = (LocalTimeFromUtcTimeResponse)service.Execute(request);
+
+            return response.LocalTime;
+        }
+
+        /// <summary>
+        /// Retrieves the current users TimeZoneCode
+        /// </summary>
+        private static int? RetrieveUserSettingsTimeZoneCode(IOrganizationService service, Guid userId)
+        {
+            // ReSharper disable StringLiteralTypo
+            var setting = service.GetFirstOrDefault("usersettings", new ColumnSet("timezonecode"), "systemuserid", userId);
+            return setting?.GetAttributeValue<int?>("timezonecode");
+            // ReSharper restore StringLiteralTypo
+        }
 
         #region InitializeFrom
 
@@ -1719,12 +1751,12 @@ namespace Source.DLaB.Xrm
         #region UpdateWithSupressDuplicateDetection
 
         /// <summary>
-        /// Creates a record with SupressDuplicateDetection Enabled to Ignore any potential Duplicates Created
+        /// Creates a record with SuppressDuplicateDetection Enabled to Ignore any potential Duplicates Created
         /// </summary>
         /// <param name="service"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static void UpdateWithSupressDuplicateDetection(this IOrganizationService service, Entity entity)
+        public static void UpdateWithSuppressDuplicateDetection(this IOrganizationService service, Entity entity)
         {
             service.Execute(new UpdateRequest
             {
@@ -1777,7 +1809,7 @@ namespace Source.DLaB.Xrm
         #region LinkEntity
 
         /// <summary>
-        /// Adds a Condition expression to the LinkCriteria of the LinkEntity to force the statecode to be a specfic value.
+        /// Adds a Condition expression to the LinkCriteria of the LinkEntity to force the statecode to be a specific value.
         /// </summary>
         /// <param name="link">The link.</param>
         /// <param name="entityStateEnum">The entity state enum.</param>
@@ -2034,7 +2066,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Enumerates the parameters, returning indepth details about each.
+        /// Enumerates the parameters, returning in-depth details about each.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         /// <param name="name">The name.</param>
@@ -2103,7 +2135,7 @@ namespace Source.DLaB.Xrm
         #region PropertyInfo
 
         /// <summary>
-        /// Gets the logical attribute name of the given properyt.  Assumes that the property contains an AttributeLogicalNameAttribute
+        /// Gets the logical attribute name of the given property.  Assumes that the property contains an AttributeLogicalNameAttribute
         /// </summary>
         /// <param name="property">The property.</param>
         /// <param name="throwIfNotFound">Throws an error if the property does not contain an AttributeLogicalNameAttribute</param>

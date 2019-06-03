@@ -263,7 +263,7 @@ namespace Source.DLaB.Xrm
         #region Helper Functions
 
         /// <summary>
-        /// Enumerates over all LinkEntitites in the QueryExpression, in a depth-first search
+        /// Enumerates over all LinkEntities in the QueryExpression, in a depth-first search
         /// </summary>
         /// <param name="qe"></param>
         /// <returns></returns>
@@ -280,7 +280,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Enumerates over all LinkEntitites in the LinkEntity, in a depth-first search
+        /// Enumerates over all LinkEntities in the LinkEntity, in a depth-first search
         /// </summary>
         /// <param name="link"></param>
         /// <returns></returns>

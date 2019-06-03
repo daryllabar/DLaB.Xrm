@@ -33,7 +33,7 @@ namespace Source.DLaB.Xrm
                 return filterExpression;
             }
 
-            // Get Indexes of all or's and ConditionExpressions
+            // Get Indexes of all ors and ConditionExpressions
             var indexes = Enumerable.Range(0, length).ToList();
             var ors = indexes.Where(
                     i => columnNameAndValuePairs.ItemAtIndexIsType(i, typeof(LogicalOperator))).
@@ -134,7 +134,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Helper function to get the or filter based on the filterexpression.  If it already is or, just return it.
+        /// Helper function to get the or filter based on the FilterExpression.  If it already is or, just return it.
         /// Else, return a new child or filter
         /// </summary>
         /// <param name="filterExpression"></param>
@@ -155,7 +155,7 @@ namespace Source.DLaB.Xrm
                     // Check to ensure the index of the current plus 1 doesn't equal the index of the next 
                     if (ors[i] + 1 == ors[i + 1])
                     {
-                        throw new ArgumentException("All LogicalOperator values must have at least one column value seperating them");
+                        throw new ArgumentException("All LogicalOperator values must have at least one column value separating them");
                     }
                 }
 
@@ -349,7 +349,7 @@ namespace Source.DLaB.Xrm
         #region GetFirst
 
         /// <summary>
-        /// Retreives the first Active entity where the columnNameAndValue Pairs match
+        /// Retrieves the first Active entity where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service">open IOrganizationService</param>
         /// <param name="logicalName">LogicalName of the Entity.</param>
@@ -365,7 +365,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retreives the first Active entity (with the given subset of columns only)
+        /// Retrieves the first Active entity (with the given subset of columns only)
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service">The service.</param>
@@ -387,7 +387,7 @@ namespace Source.DLaB.Xrm
         #region GetFirst<T>
 
         /// <summary>
-        /// Retreives the first Active entity where the columnNameAndValue Pairs match
+        /// Retrieves the first Active entity where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
         /// <param name="service">open IOrganizationService</param>
@@ -404,7 +404,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retreives the first Active entity (with the given subset of columns only) 
+        /// Retrieves the first Active entity (with the given subset of columns only) 
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
@@ -423,7 +423,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retreives the first Active entity (with the given subset of columns only) 
+        /// Retrieves the first Active entity (with the given subset of columns only) 
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
@@ -446,17 +446,15 @@ namespace Source.DLaB.Xrm
         // ReSharper disable once UnusedParameter.Local
         private static void AssertExistsWhere<T>(T entity, object[] columnNameAndValuePairs) where T : Entity
         {
-            if (entity == null)
-            {
-                throw new InvalidOperationException("No " + EntityHelper.GetEntityLogicalName<T>() + " found where " +
-                    QueryExpressionFactory.Create<T>((ColumnSet)null, true, columnNameAndValuePairs).GetSqlStatement());
-            }
+            if (entity != null) { return; }
+            throw new InvalidOperationException("No " + EntityHelper.GetEntityLogicalName<T>() + " found where " +
+                                                QueryExpressionFactory.Create<T>((ColumnSet)null, true, columnNameAndValuePairs).GetSqlStatement());
         }
 
         #region GetFirstOrDefault
 
         /// <summary>
-        /// Retreives the first Active entity where the columnNameAndValue Pairs match
+        /// Retrieves the first Active entity where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service">open IOrganizationService</param>
         /// <param name="logicalName">Logical Name of the Entity:</param>
@@ -469,7 +467,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retreives the first Active entity (with the given subset of columns only) 
+        /// Retrieves the first Active entity (with the given subset of columns only) 
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service"></param>
@@ -495,7 +493,7 @@ namespace Source.DLaB.Xrm
         #region GetFirstOrDefault<T>
 
         /// <summary>
-        /// Retreives the first Active entity where the columnNameAndValue Pairs match
+        /// Retrieves the first Active entity where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
         /// <param name="service">open IOrganizationService</param>
@@ -511,7 +509,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retreives the first Active entity (with the given subset of columns only) 
+        /// Retrieves the first Active entity (with the given subset of columns only) 
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
@@ -531,7 +529,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retreives the first Active entity (with the given subset of columns only) 
+        /// Retrieves the first Active entity (with the given subset of columns only) 
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>

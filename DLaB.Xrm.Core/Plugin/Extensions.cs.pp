@@ -148,13 +148,13 @@ namespace Source.DLaB.Xrm.Plugin
         #endregion GetContextInfo
 
         /// <summary>
-        /// Determines whether a shared variable exists that specifies that the plugin or the plugin and specifc message type should be prevented from executing.
-        /// This is used in conjunction with PreventPluginHandlerExecution
+        /// Determines whether a shared variable exists that specifies that the plugin or the plugin and specific message type should be prevented from executing.
+        /// This is used in conjunction with PreventPluginExecution
         /// </summary>
         /// <returns></returns>
-        public static bool HasPluginHandlerExecutionBeenPrevented(this IExtendedPluginContext context)
+        public static bool HasPluginExecutionBeenPrevented(this IExtendedPluginContext context)
         {
-            return context.HasPluginHandlerExecutionBeenPreventedInternal(context.Event, GetPreventPluginHandlerSharedVariableName(context.PluginTypeName));
+            return context.HasPluginExecutionBeenPreventedInternal(context.Event, GetPreventPluginSharedVariableName(context.PluginTypeName));
         }
 
         /// <summary>
@@ -497,44 +497,44 @@ namespace Source.DLaB.Xrm.Plugin
 
         #region Prevent Plugin Execution
 
-        #region PreventPluginHandlerExecution
+        #region PreventPluginExecution
 
         /// <summary>
-        /// Adds a shared Variable to the context that is checked by the GenericPluginHandlerBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
+        /// Adds a shared Variable to the context that is checked by the GenericPluginBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="handlerTypeFullName">The Full Type Name of the Plugin to Prevent</param>
         /// <param name="messageType">Type of the message.</param>
-        public static void PreventPluginHandlerExecution(this IPluginExecutionContext context, string handlerTypeFullName, MessageType messageType)
+        public static void PreventPluginExecution(this IPluginExecutionContext context, string handlerTypeFullName, MessageType messageType)
         {
-            context.PreventPluginHandlerExecution(handlerTypeFullName, messageType.Name);
+            context.PreventPluginExecution(handlerTypeFullName, messageType.Name);
         }
 
         /// <summary>
-        /// Adds a shared Variable to the context that is checked by the GenericPluginHandlerBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
+        /// Adds a shared Variable to the context that is checked by the GenericPluginBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="handlerTypeFullName">The Full Type Name of the Plugin to Prevent</param>
         /// <param name="event">Type of the event.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public static void PreventPluginHandlerExecution(this IPluginExecutionContext context, string handlerTypeFullName, RegisteredEvent @event)
+        public static void PreventPluginExecution(this IPluginExecutionContext context, string handlerTypeFullName, RegisteredEvent @event)
         {
             if (@event == null) throw new ArgumentNullException(nameof(@event));
 
-            context.PreventPluginHandlerExecution(handlerTypeFullName, @event.MessageName, @event.EntityLogicalName, @event.Stage);
+            context.PreventPluginExecution(handlerTypeFullName, @event.MessageName, @event.EntityLogicalName, @event.Stage);
         }
 
         /// <summary>
-        /// Adds a shared Variable to the context that is checked by the GenericPluginHandlerBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
+        /// Adds a shared Variable to the context that is checked by the GenericPluginBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="handlerTypeFullName">The Full Type Name of the Plugin to Prevent</param>
         /// <param name="messageName">Name of the message.</param>
         /// <param name="logicalName">Name of the logical.</param>
         /// <param name="stage">The stage.</param>
-        public static void PreventPluginHandlerExecution(this IPluginExecutionContext context, string handlerTypeFullName, string messageName = null, string logicalName = null, PipelineStage? stage = null)
+        public static void PreventPluginExecution(this IPluginExecutionContext context, string handlerTypeFullName, string messageName = null, string logicalName = null, PipelineStage? stage = null)
         {
-            var preventionName = GetPreventPluginHandlerSharedVariableName(handlerTypeFullName);
+            var preventionName = GetPreventPluginSharedVariableName(handlerTypeFullName);
             if (!context.SharedVariables.TryGetValue(preventionName, out object value))
             {
                 value = new Entity();
@@ -550,45 +550,45 @@ namespace Source.DLaB.Xrm.Plugin
             }
         }
 
-        #endregion PreventPluginHandlerExecution
+        #endregion PreventPluginExecution
 
-        #region PreventPluginHandlerExecution<T>
+        #region PreventPluginExecution<T>
 
         /// <summary>
-        /// Adds a shared Variable to the context that is checked by the GenericPluginHandlerBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
+        /// Adds a shared Variable to the context that is checked by the GenericPluginBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
         /// </summary>
         /// <typeparam name="T">The type of the plugin.</typeparam>
         /// <param name="context">The context.</param>
         /// <param name="messageType">Type of the message.</param>
-        public static void PreventPluginHandlerExecution<T>(this IPluginExecutionContext context, MessageType messageType)
+        public static void PreventPluginExecution<T>(this IPluginExecutionContext context, MessageType messageType)
             where T : IRegisteredEventsPlugin
         {
-            context.PreventPluginHandlerExecution<T>(messageType.Name);
+            context.PreventPluginExecution<T>(messageType.Name);
         }
 
         /// <summary>
-        /// Adds a shared Variable to the context that is checked by the GenericPluginHandlerBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
+        /// Adds a shared Variable to the context that is checked by the GenericPluginBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
         /// </summary>
         /// <typeparam name="T">The type of the plugin.</typeparam>
         /// <param name="context">The context.</param>
         /// <param name="event">Type of the event.</param>
-        public static void PreventPluginHandlerExecution<T>(this IPluginExecutionContext context, RegisteredEvent @event)
+        public static void PreventPluginExecution<T>(this IPluginExecutionContext context, RegisteredEvent @event)
             where T : IRegisteredEventsPlugin
         {
-            context.PreventPluginHandlerExecution(typeof(T).FullName, @event);
+            context.PreventPluginExecution(typeof(T).FullName, @event);
         }
 
         /// <summary>
-        /// Adds a shared Variable to the context that is checked by the GenericPluginHandlerBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
+        /// Adds a shared Variable to the context that is checked by the GenericPluginBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
         /// </summary>
         /// <typeparam name="T">The type of the plugin.</typeparam>
-        public static void PreventPluginHandlerExecution<T>(this IPluginExecutionContext context, string messageName = null, string logicalName = null, PipelineStage? stage = null)
+        public static void PreventPluginExecution<T>(this IPluginExecutionContext context, string messageName = null, string logicalName = null, PipelineStage? stage = null)
             where T : IRegisteredEventsPlugin
         {
-            context.PreventPluginHandlerExecution(typeof(T).FullName, messageName, logicalName, stage);
+            context.PreventPluginExecution(typeof(T).FullName, messageName, logicalName, stage);
         }
 
-        #endregion PreventPluginHandlerExecution<T>
+        #endregion PreventPluginExecution<T>
 
         private static string GetPreventionRule(string messageName = null, string logicalName = null, PipelineStage? stage = null)
         {
@@ -598,27 +598,27 @@ namespace Source.DLaB.Xrm.Plugin
             return rule;
         }
 
-        private static string GetPreventPluginHandlerSharedVariableName(string pluginTypeName)
+        private static string GetPreventPluginSharedVariableName(string pluginTypeName)
         {
             return pluginTypeName + "PreventExecution";
         }
 
-        #region HasPluginHandlerExecutionBeenPrevented
+        #region HasPluginExecutionBeenPrevented
 
         /// <summary>
         /// Determines whether a shared variable exists that specifies that the plugin or the plugin and specifc message type should be prevented from executing.
-        /// This is used in conjunction with PreventPluginHandlerExecution
+        /// This is used in conjunction with PreventPluginExecution
         /// </summary>
         /// <typeparam name="T">The type of the plugin.</typeparam>
         /// <returns></returns>
-        public static bool HasPluginHandlerExecutionBeenPrevented<T>(this IPluginExecutionContext context, RegisteredEvent @event)
+        public static bool HasPluginExecutionBeenPrevented<T>(this IPluginExecutionContext context, RegisteredEvent @event)
             where T : IRegisteredEventsPlugin
         {
-            var preventionName = GetPreventPluginHandlerSharedVariableName(typeof(T).FullName);
-            return context.HasPluginHandlerExecutionBeenPreventedInternal(@event, preventionName);
+            var preventionName = GetPreventPluginSharedVariableName(typeof(T).FullName);
+            return context.HasPluginExecutionBeenPreventedInternal(@event, preventionName);
         }
 
-        private static bool HasPluginHandlerExecutionBeenPreventedInternal(this IPluginExecutionContext context, RegisteredEvent @event, string preventionName)
+        private static bool HasPluginExecutionBeenPreventedInternal(this IPluginExecutionContext context, RegisteredEvent @event, string preventionName)
         {
             var value = context.GetFirstSharedVariable(preventionName);
             if (value == null)
@@ -637,7 +637,7 @@ namespace Source.DLaB.Xrm.Plugin
                    hash.Contains(GetPreventionRule(stage: @event.Stage));
         }
 
-        #endregion HasPluginHandlerExecutionBeenPrevented
+        #endregion HasPluginExecutionBeenPrevented
 
         #endregion Prevent Plugin Execution
 

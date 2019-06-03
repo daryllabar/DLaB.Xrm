@@ -121,7 +121,7 @@ namespace Source.DLaB.Xrm
                     // And the key contains a "." or is an exact match on the aliased attribute logical name.  This keeps groupings that may not be the same type (Date Group by Day) from populating the aliased entity
                     // The one exception for this is the Id. which we want to include if we can
                     ||
-                        (aliasedEntityName != null && // Or an Entity Attribute Name is specifed, and 
+                        (aliasedEntityName != null && // Or an Entity Attribute Name is specified, and 
                             entry.Key.StartsWith(aliasedEntityName + ".")) // it starts with the aliasedEntityName + ".
                     ))
                 {
@@ -165,7 +165,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <typeparam name="T">The type of the aliased attribute form the linked entity</typeparam>
         /// <param name="entity"></param>
-        /// <param name="attributeName">The aliased attribute from the linked entity.  Can be preappended with the
+        /// <param name="attributeName">The aliased attribute from the linked entity.  Can be prepended with the
         /// linked entities logical name and a period. ie "Contact.LastName"</param>
         /// <returns></returns>
         public static T GetAliasedValue<T>(this Entity entity, string attributeName)
@@ -183,7 +183,7 @@ namespace Source.DLaB.Xrm
 
             if (!(value is AliasedValue aliased))
             {
-                throw new InvalidCastException(string.Format("Attribute {0} was of type {1}, not AliasedValue", attributeName, value.GetType().FullName));
+                throw new InvalidCastException($"Attribute {attributeName} was of type {value.GetType().FullName}, not AliasedValue");
             }
 
             try
@@ -204,10 +204,7 @@ namespace Source.DLaB.Xrm
             }
             catch (InvalidCastException)
             {
-                throw new InvalidCastException(
-                    string.Format("Unable to cast attribute {0}.{1} from type {2} to type {3}",
-                        aliased.EntityLogicalName, aliased.AttributeLogicalName,
-                        aliased.Value.GetType().Name, typeof(T).Name));
+                throw new InvalidCastException($"Unable to cast attribute {aliased.EntityLogicalName}.{aliased.AttributeLogicalName} from type {aliased.Value.GetType().Name} to type {typeof(T).Name}");
             }
         }
 
@@ -219,7 +216,7 @@ namespace Source.DLaB.Xrm
         /// Returns the Aliased Value for a column specified in a Linked entity
         /// </summary>
         /// <param name="entity"></param>
-        /// <param name="attributeName">The aliased attribute from the linked entity.  Can be preappeneded with the
+        /// <param name="attributeName">The aliased attribute from the linked entity.  Can be prepended with the
         /// linked entities logical name and a period. ie "Contact.LastName"</param>
         /// <returns></returns>
         public static bool HasAliasedAttribute(this Entity entity, string attributeName)
@@ -260,7 +257,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Handles spliting the attributeName if it is formated as "EntityAliasedName.AttributeName",
+        /// Handles splitting the attributeName if it is formatted as "EntityAliasedName.AttributeName",
         /// updating the attribute name and returning the aliased EntityName
         /// </summary>
         /// <param name="attributeName"></param>
@@ -272,7 +269,7 @@ namespace Source.DLaB.Xrm
                 var split = attributeName.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                 if (split.Length != 2)
                 {
-                    throw new Exception("Attribute Name was specified for an Alaised Value with " + split.Length +
+                    throw new Exception("Attribute Name was specified for an Aliased Value with " + split.Length +
                     " split parts, and two were expected.  Attribute Name = " + attributeName);
                 }
                 aliasedEntityName = split[0];

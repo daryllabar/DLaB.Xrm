@@ -38,7 +38,7 @@ namespace Source.DLaB.Xrm
         {
             if (!(columnNameAndValuePairs[0] is string attributeName))
             {
-                throw new ArgumentException("HasConditionInWithValues requires the first value in the columnNameAndValuePairs attribute to be the attribute name.", "columnNameAndValuePairs");
+                throw new ArgumentException("HasConditionInWithValues requires the first value in the columnNameAndValuePairs attribute to be the attribute name.", nameof(columnNameAndValuePairs));
             }
 
             return filter.Conditions.Any(c => c.ValuesInConditionIn(attributeName, columnNameAndValuePairs.Skip(1))) ||

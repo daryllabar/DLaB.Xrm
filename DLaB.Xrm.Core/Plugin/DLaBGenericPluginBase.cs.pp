@@ -62,7 +62,7 @@ namespace Source.DLaB.Xrm.Plugin
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the GenericPluginHandlerBase class.
+        /// Initializes a new instance of the GenericPluginBase class.
         /// </summary>
         /// <param name="unsecureConfig"></param>
         /// <param name="secureConfig"></param>
@@ -168,7 +168,7 @@ namespace Source.DLaB.Xrm.Plugin
                         return;
                     }
 
-                    if (context.HasPluginHandlerExecutionBeenPrevented())
+                    if (context.HasPluginExecutionBeenPrevented())
                     {
                         context.Trace("Context has Specified Call to be Prevented!");
                         return;

@@ -296,7 +296,7 @@ namespace Source.DLaB.Xrm
         public static List<T> GetEntitiesIn<T>(this IOrganizationService service,
                 string columnName, IEnumerable values) where T : Entity
         {
-            return service.GetEntities<T>(QueryExpressionFactory.CreateIn<T>(columnName, values));
+            return service.GetEntities(QueryExpressionFactory.CreateIn<T>(columnName, values));
         }
 
         /// <summary>
@@ -310,7 +310,7 @@ namespace Source.DLaB.Xrm
         public static List<T> GetEntitiesIn<T>(this IOrganizationService service,
                 string columnName, params object[] values) where T : Entity
         {
-            return service.GetEntities<T>(QueryExpressionFactory.CreateIn<T>(columnName, values));
+            return service.GetEntities(QueryExpressionFactory.CreateIn<T>(columnName, values));
         }
 
         /// <summary>
@@ -345,7 +345,7 @@ namespace Source.DLaB.Xrm
         public static List<T> GetEntitiesIn<T>(this IOrganizationService service, ColumnSet columnSet,
                 string columnName, IEnumerable values) where T : Entity
         {
-            return service.GetEntities<T>(QueryExpressionFactory.CreateIn<T>(columnSet, columnName, values));
+            return service.GetEntities(QueryExpressionFactory.CreateIn<T>(columnSet, columnName, values));
         }
 
         /// <summary>
@@ -380,7 +380,7 @@ namespace Source.DLaB.Xrm
         public static List<T> GetEntitiesIn<T>(this IOrganizationService service, ColumnSet columnSet,
                 string columnName, params object[] values) where T : Entity
         {
-            return service.GetEntities<T>(QueryExpressionFactory.CreateIn<T>(columnSet, columnName, values));
+            return service.GetEntities(QueryExpressionFactory.CreateIn<T>(columnSet, columnName, values));
         }
 
         #endregion GetEntitiesIn<T>
@@ -388,7 +388,7 @@ namespace Source.DLaB.Xrm
         #region GetFirstOrDefaultIn
 
         /// <summary>
-        /// Retreives the first active entity (with the given subset of columns only) 
+        /// Retrieves the first active entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type.</typeparam>
@@ -404,7 +404,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retreives the first active entity (with the given subset of columns only) 
+        /// Retrieves the first active entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type.</typeparam>
@@ -420,7 +420,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retreives the first active entity (with the given subset of columns only) 
+        /// Retrieves the first active entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type.</typeparam>
@@ -439,7 +439,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retreives the first active entity (with the given subset of columns only) 
+        /// Retrieves the first active entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type.</typeparam>
@@ -456,7 +456,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retreives the first active entity (with the given subset of columns only) 
+        /// Retrieves the first active entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
@@ -475,7 +475,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retreives the first active entity (with the given subset of columns only) 
+        /// Retrieves the first active entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>

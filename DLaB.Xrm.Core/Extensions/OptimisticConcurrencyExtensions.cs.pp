@@ -23,7 +23,7 @@ namespace Source.DLaB.Xrm
         /// <typeparam name="T">The entity type</typeparam>
         /// <param name="service">The service.</param>
         /// <param name="entity">The entity.</param>
-        /// <param name="reconcileEntity">Function that accepts the latest version of the entity fomr the server as a property, and returns what the updated version should now be.</param>
+        /// <param name="reconcileEntity">Function that accepts the latest version of the entity from the server as a property, and returns what the updated version should now be.</param>
         /// <param name="retrieveEntity">Function used to get the entity if the RowVersion doesn't match.  Defaults to getting the entity with all columns returned.</param>
         /// <exception cref="Exception">No row version is set!  Unable to preform OptimisticUpdate</exception>
         public static T OptimisticUpdate<T>(this IOrganizationService service, T entity, Func<T, T> reconcileEntity, Func<IOrganizationService, T> retrieveEntity = null) where T: Entity
