@@ -1,11 +1,14 @@
 # DLaB.Xrm [![Build status](https://ci.appveyor.com/api/projects/status/u69wecl3lk0efkg0?svg=true)](https://ci.appveyor.com/project/daryllabar/dlab-xrm)
 
+# Purpose
+The DLaB.Xrm Library is full of tons of helpful extension methods and classes intended to be used on any XRM project, in any Xrm Plugin/Workflow.  It is designed to be used anywhere you're referencing the Microsoft SDK dlls, so Plugins, Custom Workflow Activities, and external server code.  Ever had a QueryExpression, and wished you get generate SQL from the QueryExpression while debugging?  Now you can:  `queryExpression.GetSqlStatement()`.  Ever wish your plugins had a built in method to prevent recusive lookps?  Just inherit from the `GenericPluginHandlerBase`, they will.
 
-A library of XRM Extensions intended to be used by any XRM project, in any Xrm Plugin/Workflow.  Ever had a QueryExpression, and wished you get generate SQL from the QueryExpression while debugging?  Now you can:  `queryExpression.GetSqlStatement()`.  Ever wish your plugins had a built in method to prevent recusive lookps?  Just inherit from the `GenericPluginHandlerBase`, they will.  Project delivered by a [source only nuget package](https://www.nuget.org/packages/DLaB.Xrm.Source/), so you control the version of the Xrm Assemblies it references, and you don't have to IL Merge for you plugins!
+Checkout the [Wiki](../../wiki) for more documentation.
 
-Xrm Unit Testing Framework Provides a long list of features that makes developing Unit Tests in CRM quicker, faster, easier, and more reliable.
+# Source Only Nuget Packages
+Since IL Merging isn't technically supported by Microsoft, the code is available on NuGet as a [Source only Package](https://nikcodes.com/2013/10/23/packaging-source-code-with-nuget/).  This also allows you to control the version of the Xrm Assemblies it references. If you truly want to make your own DLL, you'd need to add "DLAB_XRM" to the Conditional Compilation Symbols for the project.
 
-## How Can I Help?
+# How Can I Help?
 
 DLaB.Xrm is designed to be a community focused, open sourced project.  There are two main ways to help:
 Please submit an issue for bugs/feature requests.  If you'd like to contribute:
