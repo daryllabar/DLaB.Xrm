@@ -12,7 +12,7 @@ namespace Source.DLaB.Xrm.Plugin
 {
     /// <inheritdoc />
     /// <summary>
-    /// Plugin Handler Base.  Allows for Registered Events, preventing infinite loops, and auto logging
+    /// Plugin Base.  Allows for Registered Events, preventing infinite loops, and auto logging
     /// </summary>
     public abstract class DLaBGenericPluginBase<T> : IRegisteredEventsPlugin where T: IExtendedPluginContext
     {
@@ -35,8 +35,8 @@ namespace Source.DLaB.Xrm.Plugin
 
         #region Properties
 
-        private readonly object _handlerLock = new object();
-        private volatile bool _isIntialized;
+        private readonly object _initializerLock = new object();
+        private volatile bool _isInitialized;
         private IEnumerable<RegisteredEvent> _events;
 
         /// <inheritdoc />
@@ -99,23 +99,23 @@ namespace Source.DLaB.Xrm.Plugin
 
         #region Initialize
 
-        private void InitializeMain()
+        private void InitializeMain(IServiceProvider serviceProvider)
         {
-            if (_isIntialized) { return; }
+            if (_isInitialized) { return; }
 
-            lock (_handlerLock)
+            lock (_initializerLock)
             {
-                if (_isIntialized) { return; }
+                if (_isInitialized) { return; }
 
-                _isIntialized = true;
-                Initialize();
+                _isInitialized = true;
+                Initialize(serviceProvider);
             }
         }
 
         /// <summary>
         /// Called once directly before the plugin instance is executed for the first time.
         /// </summary>
-        protected virtual void Initialize() { }
+        protected virtual void Initialize(IServiceProvider serviceProvider) { }
 
 
         #endregion Initialize
@@ -134,9 +134,9 @@ namespace Source.DLaB.Xrm.Plugin
         /// </remarks>
         public void Execute(IServiceProvider serviceProvider)
         {
-            if (!_isIntialized)
+            if (!_isInitialized)
             {
-                InitializeMain();
+                InitializeMain(serviceProvider);
             }
             PreExecute(serviceProvider);
 

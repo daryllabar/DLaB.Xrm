@@ -99,7 +99,7 @@ namespace Source.DLaB.Xrm.Plugin
 
         #region Initialize
 
-        private void InitializeMain()
+        private void InitializeMain(IServiceProvider serviceProvider)
         {
             if (_isInitialized) { return; }
 
@@ -108,14 +108,14 @@ namespace Source.DLaB.Xrm.Plugin
                 if (_isInitialized) { return; }
 
                 _isInitialized = true;
-                Initialize();
+                Initialize(serviceProvider);
             }
         }
 
         /// <summary>
         /// Called once directly before the plugin instance is executed for the first time.
         /// </summary>
-        protected virtual void Initialize() { }
+        protected virtual void Initialize(IServiceProvider serviceProvider) { }
 
 
         #endregion Initialize
@@ -136,7 +136,7 @@ namespace Source.DLaB.Xrm.Plugin
         {
             if (!_isInitialized)
             {
-                InitializeMain();
+                InitializeMain(serviceProvider);
             }
             PreExecute(serviceProvider);
 
