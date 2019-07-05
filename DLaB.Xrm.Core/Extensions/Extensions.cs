@@ -1788,7 +1788,7 @@ namespace Source.DLaB.Xrm
         /// <param name="serviceProvider">The Provider.</param>
         /// <param name="userId">The UserId to create the service in context of.</param>
         /// <returns></returns>
-        public static IOrganizationService CreateOrganizationService(this IServiceProvider provider, Guid? userId)
+        public static IOrganizationService CreateOrganizationService(this IServiceProvider provider, Guid? userId = null)
         {;
             return provider.GetService<IOrganizationServiceFactory>().CreateOrganizationService(userId);
         }
