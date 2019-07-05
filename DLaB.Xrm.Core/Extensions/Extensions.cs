@@ -1782,6 +1782,17 @@ namespace Source.DLaB.Xrm
             return (T)provider.GetService(typeof(T));
         }
 
+        /// <summary>
+        /// Creates an IOrganization Service using the default IOrganizationServiceFactory
+        /// </summary>
+        /// <param name="serviceProvider">The Provider.</param>
+        /// <param name="userId">The UserId to create the service in context of.</param>
+        /// <returns></returns>
+        public static IOrganizationService CreateOrganizationService(this IServiceProvider provider, Guid? userId)
+        {;
+            return provider.GetService<IOrganizationServiceFactory>().CreateOrganizationService(userId);
+        }
+
         #endregion IServiceProvider
 
         #region Label
