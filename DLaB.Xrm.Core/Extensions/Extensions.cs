@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,7 @@ using System.Linq.Expressions;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
+using Microsoft.Xrm.Sdk.Metadata.Query;
 #if DLAB_UNROOT_COMMON_NAMESPACE
 using DLaB.Common;
 #else
@@ -1473,6 +1475,47 @@ namespace Source.DLaB.Xrm
 
         #endregion GetEntity
 
+        #region GetEntityLogicalName
+
+        private static readonly ConcurrentDictionary<int, string> ObjectTypeToLogicalNameMapping = new ConcurrentDictionary<int, string>();
+        private static readonly object ObjectTypeToLogicalNameMappingLock = new object();
+        /// <summary>
+        /// Gets the Entity Logical Name for the given object Type Code
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="objectTypeCode">The Object Type Code</param>
+        /// <param name="useCache">Allows for caching the calls in a thread safe manner</param>
+        /// <returns></returns>
+        public static string GetEntityLogicalName(this IOrganizationService service, int objectTypeCode, bool useCache=true)
+        {
+            return useCache 
+                ? ObjectTypeToLogicalNameMapping.GetOrAddSafe(ObjectTypeToLogicalNameMappingLock, objectTypeCode, c => GetEntityLogicalNameInternal(service, c)) 
+                : GetEntityLogicalNameInternal(service, objectTypeCode);
+        }
+
+        private static string GetEntityLogicalNameInternal(this IOrganizationService service, int objectTypeCode)
+        {
+            var entityFilter = new MetadataFilterExpression(LogicalOperator.And); 
+            entityFilter.Conditions.Add(new MetadataConditionExpression("ObjectTypeCode ", MetadataConditionOperator.Equals, objectTypeCode)); 
+            var propertyExpression = new MetadataPropertiesExpression { AllProperties = false }; 
+            propertyExpression.PropertyNames.Add("LogicalName");
+
+            var response = (RetrieveMetadataChangesResponse)service.Execute(new RetrieveMetadataChangesRequest 
+            { 
+                Query = new EntityQueryExpression 
+                { 
+                    Criteria = entityFilter, 
+                    Properties = propertyExpression 
+                } 
+            }); 
+ 
+            return response.EntityMetadata.Count >= 1 
+                ? response.EntityMetadata[0].LogicalName 
+                : null;
+        }
+
+        #endregion GetEntityLogicalName
+
         #region GetEntities
 
         /// <summary>
@@ -1785,7 +1828,7 @@ namespace Source.DLaB.Xrm
         /// <summary>
         /// Creates an IOrganization Service using the default IOrganizationServiceFactory
         /// </summary>
-        /// <param name="serviceProvider">The Provider.</param>
+        /// <param name="provider">The Provider.</param>
         /// <param name="userId">The UserId to create the service in context of.</param>
         /// <returns></returns>
         public static IOrganizationService CreateOrganizationService(this IServiceProvider provider, Guid? userId = null)
