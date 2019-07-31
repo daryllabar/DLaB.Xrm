@@ -16,6 +16,9 @@ namespace Source.DLaB.Xrm.Plugin
         /// Settings for the IOrganization Service
         /// </summary>
         public ExtendedOrganizationServiceSettings OrganizationServiceSettings { get; set; }
+        /// <summary>
+        /// The max length of the trace log.
+        /// </summary>
         public int? MaxTraceLength { get; set; }
 
         /// <summary>
