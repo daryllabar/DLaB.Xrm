@@ -1496,7 +1496,7 @@ namespace Source.DLaB.Xrm
         private static string GetEntityLogicalNameInternal(this IOrganizationService service, int objectTypeCode)
         {
             var entityFilter = new MetadataFilterExpression(LogicalOperator.And); 
-            entityFilter.Conditions.Add(new MetadataConditionExpression("ObjectTypeCode ", MetadataConditionOperator.Equals, objectTypeCode)); 
+            entityFilter.Conditions.Add(new MetadataConditionExpression("ObjectTypeCode", MetadataConditionOperator.Equals, objectTypeCode)); 
             var propertyExpression = new MetadataPropertiesExpression { AllProperties = false }; 
             propertyExpression.PropertyNames.Add("LogicalName");
 

@@ -14,6 +14,9 @@ namespace Source.DLaB.Xrm
     public class ExtendedTracingService : IMaxLengthTracingService
     {
         private ITracingService TraceService { get; }
+        /// <summary>
+        /// The max length of the trace log.
+        /// </summary>
         public int MaxTraceLength { get; }
         private StringBuilder TraceHistory { get; }
 
