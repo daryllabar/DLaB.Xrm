@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2041
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLaB.Xrm", "DLaB.Xrm\DLaB.Xrm.csproj", "{C11C3523-D4F4-4C7D-B072-46E96947EFC2}"
 EndProject
@@ -31,6 +31,7 @@ Global
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{a3b3ce75-dfae-4035-97a3-afd49ad47bc5}*SharedItemsImports = 13
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{c11c3523-d4f4-4c7d-b072-46e96947efc2}*SharedItemsImports = 4
 		DLaB.Xrm.Test.Core\DLaB.Xrm.Test.Core.projitems*{c987f4c2-40b4-4572-b7c5-36c138361afb}*SharedItemsImports = 13
+		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{dda6bad7-c9e4-45e8-a8e7-b6275ad95933}*SharedItemsImports = 4
 		DLaB.Xrm.Workflow.Core\DLaB.Xrm.Workflow.Base.projitems*{dda6bad7-c9e4-45e8-a8e7-b6275ad95933}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
