@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{DEDEE8E9
 	ProjectSection(SolutionItems) = preProject
 		DLaB.Xrm\DLaB.Xrm.Source.nuspec = DLaB.Xrm\DLaB.Xrm.Source.nuspec
 		DLaB.Xrm.Workflow\DLaB.Xrm.Workflow.Source.nuspec = DLaB.Xrm.Workflow\DLaB.Xrm.Workflow.Source.nuspec
+		Icon.64x64.png = Icon.64x64.png
 	EndProjectSection
 EndProject
 Global

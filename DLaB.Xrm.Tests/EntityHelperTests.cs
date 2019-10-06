@@ -1,4 +1,5 @@
 ﻿using System;
+using DLaB.Xrm.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
@@ -9,6 +10,12 @@ namespace Core.DLaB.Xrm.Tests
     [TestClass]
     public class EntityHelperTests
     {
+        [TestMethod]
+        public void EntityHelper_GetParentEntityAttributeName_ForContactIncident_Should_ReturnCustomerId()
+        {
+            Assert.AreEqual(Incident.Fields.CustomerId, EntityHelper.GetParentEntityAttributeName<Incident, Contact>());
+        }
+
         [TestMethod]
         public void EntityHelper_GetIdAttributeName_ForCustomActivity_Should_ReturnActivityId()
         {
