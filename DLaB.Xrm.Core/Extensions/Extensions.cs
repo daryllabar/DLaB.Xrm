@@ -44,12 +44,14 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static bool IsLocalOptionSetAttribute(this AttributeMetadata attribute)
         {
-            if (attribute.AttributeType != AttributeTypeCode.Picklist)
+            if (attribute.AttributeType != AttributeTypeCode.Picklist
+                && attribute.AttributeType != AttributeTypeCode.State
+                && attribute.AttributeType != AttributeTypeCode.Status) 
             {
                 return false;
             }
 
-            if (attribute is PicklistAttributeMetadata picklist)
+            if (attribute is EnumAttributeMetadata picklist)
             {
                 return picklist.OptionSet.IsGlobal.HasValue && !picklist.OptionSet.IsGlobal.Value;
             }
