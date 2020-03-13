@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DLaB.Xrm.Source</id>
-    <version>3.0.0.9</version>
+    <version>3.0.0.10</version>
     <authors>Daryl LaBar</authors>
     <owners>Daryl LaBar</owners>
     <license type="expression">MIT</license>
@@ -15,7 +15,7 @@
     <tags>Dynamics CRM Plugin XRM</tags>
     <dependencies>
       <group targetFramework=".NETFramework4.5">
-        <dependency id="DLaB.Common.Source" version="1.2.0.3" />
+        <dependency id="DLaB.Common.Source" version="1.2.0.5" />
       </group>
     </dependencies>
     <frameworkAssemblies>
@@ -25,13 +25,13 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\DLaB.Xrm.Core\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.9" />
-    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.9\Comparers" />
-    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.9\Exceptions" />
-    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.9\Extensions" />
-    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.9\Plugin" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.9\Sandbox" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.9\Serialization" />
+    <file src="..\DLaB.Xrm.Core\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.10" />
+    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.10\Comparers" />
+    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.10\Exceptions" />
+    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.10\Extensions" />
+    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.10\Plugin" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.10\Sandbox" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.0.0.10\Serialization" />
     <file src="..\Icon.64x64.png" target="images\" />
   </files>
 </package>
