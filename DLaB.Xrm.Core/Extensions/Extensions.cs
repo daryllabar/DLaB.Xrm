@@ -779,7 +779,12 @@ namespace Source.DLaB.Xrm
 
         #region FetchExpression
 
-        public static string GetLogicalName(this FetchExpression fe)
+        /// <summary>
+        /// Get's the logical name of the primary entity for the fetch expression.
+        /// </summary>
+        /// <param name="fe"></param>
+        /// <returns></returns>
+        public static string GetEntityName(this FetchExpression fe)
         {
             var xml = new XmlDocument();
             xml.LoadXml(fe.Query);
