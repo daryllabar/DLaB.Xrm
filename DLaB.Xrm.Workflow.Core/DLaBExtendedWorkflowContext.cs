@@ -41,6 +41,16 @@ namespace Source.DLaB.Xrm.Workflow
         /// </summary>
         public IOrganizationService InitiatingUserOrganizationService => _triggeredUserOrganizationService ?? (_triggeredUserOrganizationService = Settings.InitializeIOrganizationService(ServiceFactory, InitiatingUserId, TracingService));
 
+        /// <summary>
+        /// Returns true if the execution context is asynchronous (Mode = 1)
+        /// </summary>
+        public bool IsAsync => Mode == 1;
+
+        /// <summary>
+        /// Returns true if the execution context is synchronous (Mode = 0)
+        /// </summary>
+        public bool IsSync => Mode == 0;
+
         /// <inheritdoc />
         /// <summary>
         /// The IOrganizationService of the workflow, Impersonated as the user that the plugin is registered to run as.

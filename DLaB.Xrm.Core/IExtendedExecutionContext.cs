@@ -18,6 +18,16 @@ namespace Source.DLaB.Xrm
         IOrganizationService InitiatingUserOrganizationService { get; }
 
         /// <summary>
+        /// Returns true if the execution context is asynchronous (Mode = 1)
+        /// </summary>
+        bool IsAsync { get; }
+
+        /// <summary>
+        /// Returns true if the execution context is synchronous (Mode = 0)
+        /// </summary>
+        bool IsSync { get; }
+
+        /// <summary>
         /// The IOrganizationService of the plugin, Impersonated as the user that plugin is registered to run as, using the PluginExecutionContext.UserId.
         /// </summary>
         IOrganizationService OrganizationService { get; }

@@ -226,6 +226,16 @@ namespace Source.DLaB.Xrm.Plugin
         public IsolationMode IsolationMode => (IsolationMode) PluginExecutionContext.IsolationMode;
 
         /// <summary>
+        /// Returns true if the execution context is asynchronous (Mode = 1)
+        /// </summary>
+        public bool IsAsync => Mode == 1;
+
+        /// <summary>
+        /// Returns true if the execution context is synchronous (Mode = 0)
+        /// </summary>
+        public bool IsSync => Mode == 0;
+
+        /// <summary>
         /// Gets or sets the service provider.
         /// </summary>
         /// <value>
