@@ -248,7 +248,7 @@ namespace Source.DLaB.Xrm
                     name = "activityid";
                     break;
                 default:
-                    name = DLaBConfig.Config.GetIrregularIdAttributeName(logicalName);
+                    name = DLaBEntityHelperConfig.Config.GetIrregularIdAttributeName(logicalName);
                     break;
             }
 
@@ -273,8 +273,9 @@ namespace Source.DLaB.Xrm
         /// Gets the Primary Field (name) info. 
         /// </summary>
         /// <param name="logicalName">Name of the logical.</param>
+        /// <param name="config">Interface for handling irregular primary attribute names.</param>
         /// <returns></returns>
-        public static PrimaryFieldInfo GetPrimaryFieldInfo(string logicalName)
+        public static PrimaryFieldInfo GetPrimaryFieldInfo(string logicalName, IEntityHelperConfig config = null)
         {
             var info = new PrimaryFieldInfo();
                 switch (logicalName)
@@ -502,7 +503,7 @@ namespace Source.DLaB.Xrm
                             info.AttributeName = null;
                         }
 
-                        info = DLaBConfig.Config.GetIrregularPrimaryFieldInfo(logicalName, info) ?? info;
+                        info = (config ?? DLaBEntityHelperConfig.Config).GetIrregularPrimaryFieldInfo(logicalName, info) ?? info;
                         break;
                 }
 

@@ -40,7 +40,7 @@ namespace Core.DLaB.Xrm.Tests
         public string Subject { get; set; }
     }
 
-    public class MyConfig : IDLaBConfig
+    public class MyConfig : IEntityHelperConfig
     {
         public string GetIrregularIdAttributeName(string logicalName)
         {

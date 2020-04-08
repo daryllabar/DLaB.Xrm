@@ -10,7 +10,7 @@ namespace Source.DLaB.Xrm
     /// <summary>
     /// Implement this class to be able to provide config information to be used by the DLaB.Xrm code base
     /// </summary>
-    public interface IDLaBConfig
+    public interface IEntityHelperConfig
     {
         /// <summary>
         /// Defines any id logical names that don't follow the standard conventions.
@@ -32,21 +32,21 @@ namespace Source.DLaB.Xrm
     /// Searches the current assembly for the first public class that implements IDLaBConfig
     /// </summary>
     // ReSharper disable once InconsistentNaming
-    internal static class DLaBConfig
+    internal static class DLaBEntityHelperConfig
     {
         // ReSharper disable once InconsistentNaming
-        private static readonly Lazy<IDLaBConfig> _config = new Lazy<IDLaBConfig>(CreateConfigInstance);
-        public static IDLaBConfig Config => _config.Value;
+        private static readonly Lazy<IEntityHelperConfig> _config = new Lazy<IEntityHelperConfig>(CreateConfigInstance);
+        public static IEntityHelperConfig Config => _config.Value;
 
-        private static IDLaBConfig CreateConfigInstance()
+        private static IEntityHelperConfig CreateConfigInstance()
         {
-            var configType = GetFirstImplementation(typeof(IDLaBConfig));
+            var configType = GetFirstImplementation(typeof(IEntityHelperConfig));
             if (configType == null)
             {
                 return new DefaultConfig();
             }
 
-            return (IDLaBConfig)Activator.CreateInstance(configType, false);
+            return (IEntityHelperConfig)Activator.CreateInstance(configType, false);
         }
 
         public static Type GetFirstImplementation(Type interfaceType)
@@ -54,7 +54,7 @@ namespace Source.DLaB.Xrm
             return interfaceType.Assembly.ExportedTypes.FirstOrDefault(t => !t.IsInterface && interfaceType.IsAssignableFrom(t));
         }
 
-        private class DefaultConfig : IDLaBConfig
+        private class DefaultConfig : IEntityHelperConfig
         {
             public string GetIrregularIdAttributeName(string logicalName)
             {
