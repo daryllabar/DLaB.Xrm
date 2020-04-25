@@ -26,7 +26,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DLAB_XRM_DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\DLaB.Xrm.ruleset</CodeAnalysisRuleSet>
@@ -158,6 +158,7 @@
     <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.7\VersionControl\VsTfsSourceControlProvider.cs" />
     <Compile Include="EntityHelperTests.cs" />
     <Compile Include="ExtendedTracingServiceTests.cs" />
+    <Compile Include="ExtensionsToStringDebugTests.cs" />
     <Compile Include="ExtensionsColumnSetAddColumnsTests.cs" />
     <Compile Include="ExtensionsIOrganizationServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
