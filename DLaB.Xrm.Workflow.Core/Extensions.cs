@@ -181,7 +181,7 @@ namespace Source.DLaB.Xrm.Workflow
         #endregion Get(Pre/Post)Entities
 
         /// <summary>
-        /// Returns an indepth view of the context
+        /// Returns an in depth view of the context
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns></returns>

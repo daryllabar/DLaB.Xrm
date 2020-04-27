@@ -323,7 +323,12 @@ namespace Source.DLaB.Xrm
 
         #region IExecutionContext
 
-        private static List<string> ToStringDebug(this IExecutionContext context)
+        /// <summary>
+        /// Returns an in depth view of the context
+        /// </summary>
+        /// <param name="context">The Context</param>
+        /// <returns></returns>
+        internal static List<string> ToStringDebug(this IExecutionContext context)
         {
             var info = StringDebugInfo.Default;
             var lines = new List<string>
