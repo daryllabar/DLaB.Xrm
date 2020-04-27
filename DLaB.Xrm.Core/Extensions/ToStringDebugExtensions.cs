@@ -37,7 +37,7 @@ namespace Source.DLaB.Xrm
 
         #region DataCollection<string, object>
 
-        private static IEnumerable<string> ToStringDebug(this DataCollection<string, object> items, StringDebugInfo info = null)
+        private static IEnumerable<string> ToStringDebug(this DataCollection<string, object> items, StringDebugInfo info)
         {
             foreach (var item in items.OrderBy(kvp => kvp.Key))
             {
@@ -146,6 +146,31 @@ namespace Source.DLaB.Xrm
                 info);
         }
 
+        /// <summary>
+        /// Iterates and displays the attributes listed in the entity's Attributes collection as well as the Id and LogicalName.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <param name="info">Optional arguments.</param>
+        public static string ToStringDebug(this Entity entity, StringDebugInfo info = null)
+        {
+            info = info ?? StringDebugInfo.Default;
+            if (entity == null)
+            {
+                return info.Indent + "null";
+            }
+
+            return Wrap("{",
+                new []
+                {
+                    "Id: \"" + entity.Id + "\"", 
+                    "LogicalName: \"" + entity.LogicalName + "\""
+                }.Concat(
+                    entity.Attributes.ToStringDebug(info)
+                ),
+                "}",
+                info);
+        }
+
         #endregion Entity
 
         #region EntityCollection
@@ -206,15 +231,21 @@ namespace Source.DLaB.Xrm
                 return info.Indent + name + ": null";
             }
 
+            
             if (images.Count == 1)
             {
-                return info.Indent + images.Keys.First() + ":" + images.Values.First().ToStringAttributes(info).TrimStart();
+                var kvp = images.First();
+                var id = kvp.Value?.Id == Guid.Empty
+                    ? string.Empty
+                    : "_" + kvp.Value?.LogicalName + "_" + kvp.Value?.Id.ToString("N");
+                return info.Indent + name + id + ": " + images.Values.First().ToStringAttributes(info).TrimStart();
             }
 
-            return Wrap(name + ": [",
-                images.Select(v => v.Value.ToStringAttributes(info.IncreaseIndent())),
-                "]",
-                info);
+            return Wrap(name + ": {",
+                images.Select(v => v.Key + ": " + v.Value.ToStringDebug(info).TrimStart()),
+                "}",
+                info.WithNoTab(),
+                string.Empty);
         }
 
         #endregion EntityImageCollection
@@ -273,6 +304,7 @@ namespace Source.DLaB.Xrm
         /// <param name="info">Optional arguments.</param>
         public static string ToStringDebug(this IEnumerable collection, StringDebugInfo info = null)
         {
+            info = info ?? StringDebugInfo.Default;
             var prefix = info.SingleLine
                 ? string.Empty
                 : Environment.NewLine + info.Indent + info.Tab;
@@ -311,7 +343,7 @@ namespace Source.DLaB.Xrm
                 "PrimaryEntityId: " + context.PrimaryEntityId,
                 "PrimaryEntityName: " + context.PrimaryEntityName,
                 "SecondaryEntityName: " + context.SecondaryEntityName,
-                "UserId: " + context.UserId,
+                "UserId: " + context.UserId
             };
             lines.Add(context.InputParameters.ToStringDebug("InputParameters", info));
             lines.Add(context.OutputParameters.ToStringDebug("OutputParameters", info));
@@ -447,7 +479,7 @@ namespace Source.DLaB.Xrm
 
         public string Indent { get; }
         public string Tab { get; }
-        private StringDebugInfo IncreasedIndent { get; set; }
+        private Dictionary<int,StringDebugInfo> IncreasedIndents { get; set; }
         private StringDebugInfo NoTab { get; set; }
 
         public static StringDebugInfo Default = new StringDebugInfo();
@@ -465,6 +497,7 @@ namespace Source.DLaB.Xrm
 
             Indent = Extensions.GenerateNonBreakingSpace(IndentSpaces );
             Tab = Extensions.GenerateNonBreakingSpace(TabWidth);
+            IncreasedIndents = new Dictionary<int, StringDebugInfo>();
         }
 
         /// <summary>
@@ -474,7 +507,13 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public StringDebugInfo IncreaseIndent(int tabs = 1)
         {
-            return IncreasedIndent ?? (IncreasedIndent = new StringDebugInfo(this, IndentSpaces + TabWidth * tabs));
+            if(!IncreasedIndents.TryGetValue(tabs, out var indent))
+            {
+                indent = new StringDebugInfo(this, IndentSpaces + TabWidth * tabs);
+                IncreasedIndents[tabs] = indent;
+            }
+
+            return indent;
         }
 
         public StringDebugInfo WithNoTab()

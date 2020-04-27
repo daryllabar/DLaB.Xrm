@@ -18,6 +18,42 @@ namespace Core.DLaB.Xrm.Tests
 
 
         [TestMethod]
+        public void Extensions_EntityImageCollection_ToStringDebug()
+        {
+            var entity1 = new Contact {Id = Guid.NewGuid(), LastName = "Doe"};
+            var sut = new EntityImageCollection
+            {
+                { "PreImage1", entity1 }
+            };
+
+            AssertAreEqualHandleSpaces($@"PreImage_{entity1.LogicalName}_{entity1.Id:N}: {{
+  contactid: ""{entity1.Id}"",
+  lastname: ""Doe""
+}}", sut.ToStringDebug("PreImage"));
+
+
+            var entity2 = new Contact {Id = Guid.NewGuid(), FirstName = "John"};
+            sut.Add("PreImage2", entity2);
+
+            AssertAreEqualHandleSpaces($@"PreImage: {{
+PreImage1: {{
+  Id: ""{entity1.Id}"",
+  LogicalName: ""contact"",
+  contactid: ""{entity1.Id}"",
+  lastname: ""Doe""
+}},
+PreImage2: {{
+  Id: ""{entity2.Id}"",
+  LogicalName: ""contact"",
+  contactid: ""{entity2.Id}"",
+  firstname: ""John""
+}}
+}}", sut.ToStringDebug("PreImage"));
+
+            
+        }
+
+        [TestMethod]
         public void Extensions_EntityReference_ToStringDebug()
         {
             var sut = new EntityReference
