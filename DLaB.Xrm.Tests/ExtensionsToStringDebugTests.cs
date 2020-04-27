@@ -13,7 +13,27 @@ namespace Core.DLaB.Xrm.Tests
         private void AssertAreEqualHandleSpaces(string expected, string actual, int tabSpaces = 2)
         {
             const string space = " "; // This is not a space, it is a Non-Breaking Space (alt+255).  In the log things get trimmed, and this will prevent that from happening;
-            Assert.AreEqual(expected.Replace("\t", new string(' ', tabSpaces)), actual.Replace(space, " "));
+            expected = expected.Replace("\t", new string(' ', tabSpaces));
+            actual = actual.Replace(space, " ");
+            var newlines = 1;
+            if (!expected.Equals(actual))
+            {
+                for(var i = 0; i < expected.Length && i < actual.Length; i++)
+                {
+                    if (expected[i] != actual[i])
+                    {
+                        Assert.AreEqual(expected, actual, $"First index of error occured at character index {i}.  This happened on line {newlines}.  Found '{actual[i]}' (char {(int) actual[i]}), Expected '{expected[i]}' (char {(int) expected[i]})");
+                    }
+
+                    if (expected[i] == '\n')
+                    {
+                        newlines++;
+                    }
+                }
+            }
+            
+            Assert.AreEqual(expected, actual);
+            
         }
 
 
