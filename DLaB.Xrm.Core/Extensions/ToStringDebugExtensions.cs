@@ -388,10 +388,11 @@ namespace Source.DLaB.Xrm
                 return info.Indent + name + ": {}";
             }
 
+            var allEntities = parameters.Values.All(a => a is Entity);
             return Wrap(info.Indent + name + ": {",
-                parameters.ToStringDebug(info),
+                parameters.ToStringDebug(allEntities ? info: info.IncreaseIndent()),
                 "}",
-                info.WithNoTab(), string.Empty);
+                allEntities ? info.WithNoTab(): info, string.Empty);
         }
 
         #endregion ParameterCollection

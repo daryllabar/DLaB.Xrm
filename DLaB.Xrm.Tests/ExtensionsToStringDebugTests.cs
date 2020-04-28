@@ -31,9 +31,29 @@ namespace Core.DLaB.Xrm.Tests
                     }
                 }
             }
-            
+
+            AssertAreSameLength(expected, actual);
+
             Assert.AreEqual(expected, actual);
             
+        }
+
+        private static void AssertAreSameLength(string expected, string actual)
+        {
+            if (expected.Length == actual.Length)
+            {
+                return;
+            }
+
+            var info = expected.Length < actual.Length
+                ? new {Shorter = expected, ShorterName = "Expected", Longer = actual, LongerName = "Actual"}
+                : new {Shorter = actual, ShorterName = "Actual", Longer = expected, LongerName = "Expected"};
+
+            var longer = info.Longer.Substring(0, info.Shorter.Length);
+            if (longer == info.Shorter)
+            {
+                Assert.AreEqual(expected, actual, $"{info.ShorterName} was shorter than {info.LongerName}.  Excess text: \"{info.Longer.Substring(info.Shorter.Length)}\".");
+            }
         }
 
 
@@ -289,40 +309,61 @@ PreImage2: {{
             };
             
             AssertAreEqualHandleSpaces($@"InputParameters: {{
-Dict: {{
-  Key1: ""Value1"",
-  Key2: ""Value2""
-}},
-Entity: {{
-  birthdate: ""{now}"",
-  managername: ""Owner""
-}},
-EntityCollection: [
-  {{
-    firstname: ""Great"",
-    leadid: ""{ids[4]}""
+  Dict: {{
+    Key1: ""Value1"",
+    Key2: ""Value2""
   }},
-  {{
-    contactid: ""{ids[5]}"",
-    lastname: ""Good""
-  }}
-],
-EntityRef: {{LogicalName: ""lead"", Id: ""{ids[0]}""}},
-EntityRefCollection: [
-  {{LogicalName: ""lead"", Id: ""{ids[1]}""}},
-  {{LogicalName: ""contact"", Id: ""{ids[2]}""}},
-  {{LogicalName: ""account"", Id: ""{ids[3]}""}}
-],
-IEnumerable: {{
-  ""List`1"": [
-    ""v1"",
-    ""v2"",
-    ""v3""
-  ]
-}},
-OSV: 1
+  Entity: {{
+    birthdate: ""{now}"",
+    managername: ""Owner""
+  }},
+  EntityCollection: [
+    {{
+      firstname: ""Great"",
+      leadid: ""{ids[4]}""
+    }},
+    {{
+      contactid: ""{ids[5]}"",
+      lastname: ""Good""
+    }}
+  ],
+  EntityRef: {{LogicalName: ""lead"", Id: ""{ids[0]}""}},
+  EntityRefCollection: [
+    {{LogicalName: ""lead"", Id: ""{ids[1]}""}},
+    {{LogicalName: ""contact"", Id: ""{ids[2]}""}},
+    {{LogicalName: ""account"", Id: ""{ids[3]}""}}
+  ],
+  IEnumerable: {{
+    ""List`1"": [
+      ""v1"",
+      ""v2"",
+      ""v3""
+    ]
+  }},
+  OSV: 1
 }}", sut.ToStringDebug("InputParameters"));
 
+        }
+
+        [TestMethod]
+        public void Extensions_ParameterCollection_ToStringDebugEntitiesOnly()
+        {
+            // Entities only collections should not indent.
+            var contact = new Contact
+            {
+                Id = Guid.NewGuid(),
+                AccountRoleCodeEnum = Contact_AccountRoleCode.DecisionMaker
+            };
+            var sut = new ParameterCollection
+            {
+                {"Target", contact}
+            };
+            AssertAreEqualHandleSpaces($@"InputParameters: {{
+Target: {{
+  accountrolecode: 1,
+  contactid: ""{contact.Id}""
+}}
+}}", sut.ToStringDebug("InputParameters"));
         }
     }
 }
