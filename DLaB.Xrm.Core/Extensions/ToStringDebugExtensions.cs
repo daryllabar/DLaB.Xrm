@@ -5,7 +5,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
+#if DLAB_UNROOT_COMMON_NAMESPACE
+using DLaB.Common;
+#else
 using Source.DLaB.Common;
+#endif
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 namespace DLaB.Xrm
@@ -479,17 +483,41 @@ namespace Source.DLaB.Xrm
     /// </summary>
     public class StringDebugInfo
     {
+        /// <summary>
+        /// Number of Spaces of the current indent.
+        /// </summary>
         public int IndentSpaces { get; }
+        /// <summary>
+        /// Width of a single Tab.
+        /// </summary>
         public int TabWidth { get; }
+        /// <summary>
+        /// If the ToString should output on a single line.
+        /// </summary>
         public bool SingleLine { get; }
 
+        /// <summary>
+        /// Indent string.
+        /// </summary>
         public string Indent { get; }
+        /// <summary>
+        /// Tab string.
+        /// </summary>
         public string Tab { get; }
         private Dictionary<int,StringDebugInfo> IncreasedIndents { get; set; }
         private StringDebugInfo NoTab { get; set; }
 
+        /// <summary>
+        /// Default StringDebugInfo.
+        /// </summary>
         public static StringDebugInfo Default = new StringDebugInfo();
 
+        /// <summary>
+        /// Creates a new StringDebugInfo
+        /// </summary>
+        /// <param name="indentSpaces">Number of Spaces of the Indent.</param>
+        /// <param name="tabWidth">Number of Spaces of a Tab.</param>
+        /// <param name="singleLine">If the ToStringDebug should be a single line.</param>
         public StringDebugInfo(int indentSpaces = 0, int tabWidth = 2, bool singleLine = false)
             : this (null, indentSpaces, tabWidth, singleLine)
         {
@@ -522,8 +550,16 @@ namespace Source.DLaB.Xrm
             return indent;
         }
 
+        /// <summary>
+        /// Returns a StringDebugInfo with no tabs.
+        /// </summary>
+        /// <returns></returns>
         public StringDebugInfo WithNoTab()
         {
+            if (this.TabWidth == 0)
+            {
+                return this;
+            }
             return NoTab ?? (NoTab = new StringDebugInfo(this, tabWidth: 0));
         }
     }
