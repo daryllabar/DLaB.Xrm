@@ -13,8 +13,8 @@ namespace Core.DLaB.Xrm.Tests
         private void AssertAreEqualHandleSpaces(string expected, string actual, int tabSpaces = 2)
         {
             const string space = " "; // This is not a space, it is a Non-Breaking Space (alt+255).  In the log things get trimmed, and this will prevent that from happening;
-            expected = expected.Replace("\t", new string(' ', tabSpaces));
-            actual = actual.Replace(space, " ");
+            expected = expected.Replace("\t", new string(' ', tabSpaces)).Replace("\r\n", "\n"); // The AppVeyor environment runs on Unix based environment, so this changes to handle new-line discrepancies.
+            actual = actual.Replace(space, " ").Replace("\r\n", "\n");
             var newlines = 1;
             if (!expected.Equals(actual))
             {
