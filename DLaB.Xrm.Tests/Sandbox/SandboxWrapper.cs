@@ -45,7 +45,7 @@ namespace Core.DLaB.Xrm.Tests.Sandbox
         /// <summary>
         /// The Sandbox AppDomain to execute the plugin
         /// </summary>
-        public AppDomain PluginAppDomain { get; private set; }
+        public AppDomain SandboxedAppDomain { get; private set; }
 
         public T Instantiate(object[] constructorArguments = null)
         {
@@ -91,7 +91,7 @@ namespace Core.DLaB.Xrm.Tests.Sandbox
             ps.AddPermission(new EventLogPermission(PermissionState.None));
 
 
-            PluginAppDomain = AppDomain.CreateDomain(DomainSuffix, null, setup, ps, null);
+            SandboxedAppDomain = AppDomain.CreateDomain(DomainSuffix, null, setup, ps, null);
 
             return Create(constructorArguments);
         }
@@ -101,7 +101,7 @@ namespace Core.DLaB.Xrm.Tests.Sandbox
             var type = typeof(T);
 
             return (T)Activator.CreateInstanceFrom(
-                PluginAppDomain,
+                SandboxedAppDomain,
                 type.Assembly.ManifestModule.FullyQualifiedName,
                 // ReSharper disable once AssignNullToNotNullAttribute
                 type.FullName, false, BindingFlags.CreateInstance,
@@ -120,10 +120,10 @@ namespace Core.DLaB.Xrm.Tests.Sandbox
 
             if (disposing)
             {
-                if (PluginAppDomain != null)
+                if (SandboxedAppDomain != null)
                 {
-                    AppDomain.Unload(PluginAppDomain);
-                    PluginAppDomain = null;
+                    AppDomain.Unload(SandboxedAppDomain);
+                    SandboxedAppDomain = null;
                 }
             }
 
