@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Xml.Serialization;
+using Core.DLaB.Xrm.Tests.Sandbox;
 using DLaB.Xrm.Entities;
 using DLaB.Xrm.Sandbox.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,27 +16,54 @@ namespace DLaB.Xrm.Tests.Sandbox.Serialization
         [TestMethod]
         public void SerializableEntity_IsSerializable()
         {
-            //
-            // Arrange
-            //
-            var contact = new Contact
+            var test = SandboxWrapper.Instantiate<SandboxText>();
+            test.Run();
+        }
+
+        [Serializable]
+        public class SandboxText
+        {
+            public void Run()
             {
-                FirstName = "Test",
-               // AccountRoleCodeEnum = contact_accountrolecode.Employee,
-                DoNotPhone = true
-            };
+                //
+                // Arrange
+                //
+                var contact = new Contact
+                {
+                    FirstName = "Test",
+                    //AccountRoleCodeEnum = Contact_AccountRoleCode.Employee,
+                    DoNotPhone = true
+                };
 
-            //
-            // Act
-            //
-            var entity = new SerializableEntity(contact);
-            var xml = ToXml(entity);
+                //
+                // Act
+                //
+                var entity = new SerializableEntity(contact);
+                var xml = ToXml(entity);
+                var json = entity.SerializeToJson();
+                try
+                {
+                    ToXml(contact);
+                }
+                catch (Exception ex)
+                {
+                    Assert.IsNotNull(ex);
+                }
+                try
+                {
+                    contact.SerializeToJson();
+                }
+                catch (Exception ex)
+                {
+                    Assert.IsNotNull(ex);
+                }
 
-
-            //
-            // Assert
-            //
-            Assert.IsNotNull(xml);
+                //
+                // Assert
+                //
+                Assert.IsNotNull(xml);
+                Assert.IsNotNull(json);
+            }
         }
 
         public static string ToXml<T>(T objToXml, bool includeNameSpace = true)

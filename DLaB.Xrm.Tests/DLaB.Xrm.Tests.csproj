@@ -163,6 +163,7 @@
     <Compile Include="ExtensionsIOrganizationServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sandbox\ExceptionHandlerTests.cs" />
+    <Compile Include="Sandbox\SandboxWrapper.cs" />
     <Compile Include="Sandbox\Serialization\SerializableEntityTests.cs" />
   </ItemGroup>
   <ItemGroup>
