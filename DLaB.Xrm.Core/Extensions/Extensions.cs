@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
@@ -587,12 +588,135 @@ namespace Source.DLaB.Xrm
         /// <returns>new cloned entity</returns>
         public static T Clone<T>(this T source) where T : Entity
         {
+#if NETCOREAPP
+            var cloned = new Entity(source.LogicalName)
+            {
+                Id = source.Id,
+                LogicalName = source.LogicalName
+            };
+
+            foreach (var kvp in source.FormattedValues)
+            {
+                cloned.FormattedValues.Add(kvp.Key, kvp.Value);
+            }
+
+#if !PRE_KEYATTRIBUTE
+            foreach (var kvp in source.KeyAttributes)
+            {
+                cloned.KeyAttributes.Add(kvp.Key, CloneAttribute(kvp.Value));
+            }
+#endif
+
+            foreach (var kvp in source.Attributes)
+            {
+                cloned[kvp.Key] = CloneAttribute(kvp.Value);
+            }
+
+            foreach (var related in source.RelatedEntities)
+            {
+                var sourceCollection = related.Value;
+                var collection = new EntityCollection(sourceCollection.Entities.Select(e => e.CloneToEntity()).ToList())
+                {
+                    EntityName = sourceCollection.EntityName,
+                    MinActiveRowVersion = sourceCollection.MinActiveRowVersion,
+                    PagingCookie = sourceCollection.PagingCookie,
+                    MoreRecords = sourceCollection.MoreRecords,
+                    TotalRecordCount = sourceCollection.TotalRecordCount,
+                    TotalRecordCountLimitExceeded = sourceCollection.TotalRecordCountLimitExceeded
+                };
+
+                cloned.RelatedEntities.Add(related.Key, collection);
+            }
+            return cloned.ToEntity<T>();
+#else
             return source?.Serialize().DeserializeEntity<T>();
+#endif
         }
 
-        #endregion Entity
+        /// <summary>
+        /// Clones the entity, then converts it to the same type as the entity
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        private static Entity CloneToEntity(this Entity source)
+        {
+            var clone = source.Clone();
+            if (source.GetType() == typeof(Entity))
+            {
+                return clone;
+            }
+            
+            return (Entity)typeof(Entity)
+                .GetMethod("ToEntity")
+                .MakeGenericMethod(source.GetType())
+                .Invoke(clone, new object[0]);
+        }
 
-        #region EntityCollection
+        private static object CloneAttribute(this object value)
+        {
+            if (value == null)
+                return null;
+
+            switch (value)
+            {
+                case string stringValue:
+                    return stringValue;
+                case EntityReference entityRef:
+                {
+                    var clone = new EntityReference(entityRef.LogicalName, entityRef.Id)
+                    {
+                        Name = entityRef.Name,
+                        RowVersion = entityRef.RowVersion
+                    };
+#if !PRE_KEYATTRIBUTE
+                    clone.KeyAttributes.AddRange(entityRef.KeyAttributes.Select(kvp => new KeyValuePair<string,object>(kvp.Key, CloneAttribute(kvp.Value))));
+#endif
+                    return clone;
+                }
+                case BooleanManagedProperty boolManaged:
+                    return new BooleanManagedProperty(boolManaged.Value);
+                case AliasedValue aliased:
+                    return new AliasedValue(aliased.EntityLogicalName, aliased.AttributeLogicalName, CloneAttribute(aliased.Value));
+                case OptionSetValue optionSetValue:
+                    return new OptionSetValue(optionSetValue.Value);
+                case Money money:
+                    return new Money(money.Value);
+                case EntityCollection collection:
+                    return new EntityCollection(collection.Entities.Select(e => e.Clone()).ToList());
+                case IEnumerable<Entity> entities:
+                    return entities.Select(e => e.Clone()).ToArray();
+                case byte[] bytes:
+                    return bytes.Select(b => b).ToArray();
+                default:
+                    var type = value.GetType();
+                    if(type.GetInterfaces()
+                         .Where(i =>  i.IsGenericType)
+                         .Any(i => i.GetGenericTypeDefinition() == typeof(IList<>)))
+                    {
+                        dynamic clonedList;
+                        try
+                        {
+                            clonedList = (dynamic) Activator.CreateInstance(type);
+                        }
+                        catch(Exception ex)
+                        {
+                            throw new NotImplementedException($"An attempted was made to clone an attribute of type {type.FullName}, but it does not contain an empty constructor, and therefore requires custom logic to clone.", ex);
+                        }
+                        foreach(var item in (IEnumerable)value)
+                        {
+                            clonedList.Add(item.CloneAttribute());
+                        }
+
+                        return clonedList;
+                    }
+
+                    return value;
+            }
+        }
+
+#endregion Entity
+
+#region EntityCollection
 
         /// <summary>
         /// Converts the entity collection into a list, casting each entity.
@@ -611,9 +735,9 @@ namespace Source.DLaB.Xrm
             return col.Entities.Select(e => e.AsEntity<T>()).ToList();
         }
 
-        #endregion EntityCollection
+#endregion EntityCollection
 
-        #region EntityMetadata
+#region EntityMetadata
 
         /// <summary>
         /// Gets the text value of the di.
@@ -625,9 +749,9 @@ namespace Source.DLaB.Xrm
             return entity.DisplayName.GetLocalOrDefaultText(entity.SchemaName) + " (" + entity.LogicalName + ")";
         }
 
-        #endregion EntityMetadata
+#endregion EntityMetadata
 
-        #region EntityReference
+#region EntityReference
 
         /// <summary>
         /// Returns the Name and Id of an entity reference in this format "Name (id)"
@@ -673,15 +797,15 @@ namespace Source.DLaB.Xrm
             return entityReference == value || entityReference != null && entityReference.Equals(value);
         }
 
-        #endregion EntityReference
+#endregion EntityReference
 
-        #region EntityReferenceCollection
+#region EntityReferenceCollection
 
 
 
-        #endregion EntityReferenceCollection
+#endregion EntityReferenceCollection
 
-        #region FetchExpression
+#region FetchExpression
 
         /// <summary>
         /// Get's the logical name of the primary entity for the fetch expression.
@@ -695,9 +819,9 @@ namespace Source.DLaB.Xrm
             return xml.SelectSingleNode("/fetch/entity/@name")?.Value;
         }
 
-        #endregion FetchExpression
+#endregion FetchExpression
 
-        #region FilterExpression
+#region FilterExpression
 
         /// <summary>
         /// Depending on the Type of T, adds the correct is active criteria Statement
@@ -819,11 +943,11 @@ namespace Source.DLaB.Xrm
             return fe;
         }
 
-        #endregion FilterExpression
+#endregion FilterExpression
 
-        #region IExecutionContext
+#region IExecutionContext
 
-        #region ContainsAllNonNull
+#region ContainsAllNonNull
 
         /// <summary>
         /// Checks to see if the PluginExecutionContext.InputParameters Contains the attribute names, and the value is not null
@@ -858,9 +982,9 @@ namespace Source.DLaB.Xrm
             return context.SharedVariables.ContainsAllNonNull(parameterNames);
         }
 
-        #endregion ContainsAllNonNull
+#endregion ContainsAllNonNull
 
-        #region GetParameterValue
+#region GetParameterValue
 
         /// <summary>
         /// Gets the parameter value from the PluginExecutionContext.InputParameters collection, cast to type 'T', or default(T) if the collection doesn't contain a parameter with the given name.
@@ -957,13 +1081,13 @@ namespace Source.DLaB.Xrm
             return context.SharedVariables.GetParameterValue(variableName);
         }
 
-        #endregion GetParameterValue
+#endregion GetParameterValue
 
-        #endregion IExecutionContext
+#endregion IExecutionContext
 
-        #region IOrganizationService
+#region IOrganizationService
 
-        #region Assign
+#region Assign
 
         /// <summary>
         /// Assigns the supplied entity to the supplied user
@@ -1009,9 +1133,9 @@ namespace Source.DLaB.Xrm
             });
         }
 
-        #endregion Assign
+#endregion Assign
 
-        #region Associate
+#region Associate
 
         /// <summary>
         /// Associates one or more entities to an entity.
@@ -1053,9 +1177,9 @@ namespace Source.DLaB.Xrm
                 new EntityReferenceCollection(entities.ToList()));
         }
 
-        #endregion Associate
+#endregion Associate
 
-        #region CreateWithSuppressDuplicateDetection
+#region CreateWithSuppressDuplicateDetection
 
         /// <summary>
         /// Creates a record with SuppressDuplicateDetection Enabled to Ignore any potential Duplicates Created
@@ -1073,9 +1197,9 @@ namespace Source.DLaB.Xrm
             return response.id;
         }
 
-        #endregion CreateWithSuppressDuplicateDetection
+#endregion CreateWithSuppressDuplicateDetection
 
-        #region Delete
+#region Delete
 
         /// <summary>
         /// Deletes the specified entity
@@ -1098,9 +1222,9 @@ namespace Source.DLaB.Xrm
             service.Delete(entity.LogicalName, entity.Id);
         }
 
-        #endregion Delete
+#endregion Delete
 
-        #region DeleteIfExists
+#region DeleteIfExists
 
         /// <summary>
         /// Attempts to delete the entity with the given id. If it doesn't exist, false is returned
@@ -1218,7 +1342,7 @@ namespace Source.DLaB.Xrm
             return exists;
         }
 
-        #endregion DeleteIfExists
+#endregion DeleteIfExists
 
         /// <summary>
         /// Executes a batch of requests against the CRM Web Service using the ExecuteMultipleRequest command.
@@ -1260,7 +1384,7 @@ namespace Source.DLaB.Xrm
             }
         }
 
-        #region GetAllEntities
+#region GetAllEntities
 
         /// <summary>
         /// Gets all entities using the Query Expression
@@ -1292,7 +1416,7 @@ namespace Source.DLaB.Xrm
             return RetrieveAllEntities<T>.GetAllEntities(service, qe, maxCount, pageSize);
         }
 
-        #endregion GetAllEntities
+#endregion GetAllEntities
 
         /// <summary>
         /// Returns the WhoAmIResponse to determine the current user's UserId, BusinessUnitId, and OrganizationId
@@ -1304,7 +1428,7 @@ namespace Source.DLaB.Xrm
             return (WhoAmIResponse)service.Execute(new WhoAmIRequest());
         }
 
-        #region GetEntity
+#region GetEntity
 
         /// <summary>
         /// Retrieves the Entity of the given type with the given Id, with all columns
@@ -1348,9 +1472,9 @@ namespace Source.DLaB.Xrm
             return service.Retrieve(EntityHelper.GetEntityLogicalName<T>(), id, columnSet).AsEntity<T>();
         }
 
-        #endregion GetEntity
+#endregion GetEntity
 
-        #region GetEntityLogicalName
+#region GetEntityLogicalName
 
         private static readonly ConcurrentDictionary<int, string> ObjectTypeToLogicalNameMapping = new ConcurrentDictionary<int, string>();
         private static readonly object ObjectTypeToLogicalNameMappingLock = new object();
@@ -1389,9 +1513,9 @@ namespace Source.DLaB.Xrm
                 : null;
         }
 
-        #endregion GetEntityLogicalName
+#endregion GetEntityLogicalName
 
-        #region GetEntities
+#region GetEntities
 
         /// <summary>
         /// Returns first 5000 entities using the Query Expression
@@ -1417,9 +1541,9 @@ namespace Source.DLaB.Xrm
             return service.RetrieveMultiple(qe).ToEntityList<T>();
         }
 
-        #endregion GetEntities
+#endregion GetEntities
 
-        #region GetFirst
+#region GetFirst
 
         /// <summary>
         /// Gets the first entity that matches the query expression.  An exception is thrown if none are found.
@@ -1459,9 +1583,9 @@ namespace Source.DLaB.Xrm
             }
         }
 
-        #endregion GetFirst
+#endregion GetFirst
 
-        #region GetFirstOrDefault
+#region GetFirstOrDefault
 
         /// <summary>
         /// Gets the first entity that matches the query expression.  Null is returned if none are found.
@@ -1513,7 +1637,7 @@ namespace Source.DLaB.Xrm
             return service.GetFirstOrDefault<T>(qe.Query);
         }
 
-        #endregion GetFirstOrDefault
+#endregion GetFirstOrDefault
 
         /// <summary>
         /// Gets the local time from the UTC time.
@@ -1547,7 +1671,7 @@ namespace Source.DLaB.Xrm
             // ReSharper restore StringLiteralTypo
         }
 
-        #region InitializeFrom
+#region InitializeFrom
 
         /// <summary>
         /// Utilizes the standard OOB Mappings from CRM to hydrate fields on child record from a parent.
@@ -1591,7 +1715,7 @@ namespace Source.DLaB.Xrm
             return initialized.Entity.AsEntity<T>();
         }
 
-        #endregion InitializeFrom
+#endregion InitializeFrom
 
         /// <summary>
         /// Currently only tested against System Users.  Not sure if it will work with other entities
@@ -1666,7 +1790,7 @@ namespace Source.DLaB.Xrm
             return exists;
         }
 
-        #region UpdateWithSupressDuplicateDetection
+#region UpdateWithSupressDuplicateDetection
 
         /// <summary>
         /// Creates a record with SuppressDuplicateDetection Enabled to Ignore any potential Duplicates Created
@@ -1683,11 +1807,11 @@ namespace Source.DLaB.Xrm
             });
         }
 
-        #endregion CreateWithSupressDuplicateDetection
+#endregion CreateWithSupressDuplicateDetection
 
-        #endregion IOrganizationService
+#endregion IOrganizationService
 
-        #region IServiceProvider
+#region IServiceProvider
 
         /// <summary>
         /// Gets the service.
@@ -1711,9 +1835,9 @@ namespace Source.DLaB.Xrm
             return provider.GetService<IOrganizationServiceFactory>().CreateOrganizationService(userId);
         }
 
-        #endregion IServiceProvider
+#endregion IServiceProvider
 
-        #region Label
+#region Label
 
         /// <summary>
         /// Gets the local or default text.
@@ -1733,9 +1857,9 @@ namespace Source.DLaB.Xrm
             return local.Label ?? defaultIfNull;
         }
 
-        #endregion Label
+#endregion Label
 
-        #region LinkEntity
+#region LinkEntity
 
         /// <summary>
         /// Adds a Condition expression to the LinkCriteria of the LinkEntity to force the statecode to be a specific value.
@@ -1749,9 +1873,9 @@ namespace Source.DLaB.Xrm
             return link;
         }
 
-        #endregion LinkEntity
+#endregion LinkEntity
 
-        #region Money
+#region Money
 
         /// <summary>
         /// Returns the value of the Money, or 0 if it is null
@@ -1803,9 +1927,9 @@ namespace Source.DLaB.Xrm
             return money == value || money != null && money.Equals(value);
         }
 
-        #endregion Money
+#endregion Money
 
-        #region OptionSetValue
+#region OptionSetValue
 
         /// <summary>
         /// Returns the value of the OptionSetValue, or int.MinValue if it is null
@@ -1857,9 +1981,9 @@ namespace Source.DLaB.Xrm
             return osv == value || osv != null && osv.Equals(value);
         }
 
-        #endregion OptionSetValue
+#endregion OptionSetValue
 
-        #region OrganizationRequestCollection
+#region OrganizationRequestCollection
 
         /// <summary>
         /// Adds a CreateRequest to the OrganizationRequestCollection.
@@ -1950,9 +2074,9 @@ namespace Source.DLaB.Xrm
             requests.Add(new UpdateRequest { Target = entity });
         }
 
-        #endregion OrganizationRequestCollection
+#endregion OrganizationRequestCollection
 
-        #region ParameterCollection
+#region ParameterCollection
 
         /// <summary>
         /// Checks to see if the ParameterCollection Contains the attribute names, and the value is not null
@@ -1994,9 +2118,9 @@ namespace Source.DLaB.Xrm
             return parameters.Contains(parameterName) ? parameters[parameterName] : null;
         }
 
-        #endregion ParameterCollection
+#endregion ParameterCollection
 
-        #region PropertyInfo
+#region PropertyInfo
 
         /// <summary>
         /// Gets the logical attribute name of the given property.  Assumes that the property contains an AttributeLogicalNameAttribute
@@ -2015,9 +2139,9 @@ namespace Source.DLaB.Xrm
             return attribute?.LogicalName;
         }
 
-        #endregion PropertyInfo
+#endregion PropertyInfo
 
-        #region QueryByAttribute
+#region QueryByAttribute
 
         /// <summary>
         /// Sets the Count and Page number of the query to return just the first entity.
@@ -2053,9 +2177,9 @@ namespace Source.DLaB.Xrm
             return query;
         }
 
-        #endregion QueryByAttribute
+#endregion QueryByAttribute
 
-        #region QueryBase
+#region QueryBase
 
         /// <summary>
         /// Sets the Count and Page number of the query to return just the first entity.
@@ -2109,9 +2233,9 @@ namespace Source.DLaB.Xrm
             return qb;
         }
 
-        #endregion QueryBase
+#endregion QueryBase
 
-        #region QueryExpression
+#region QueryExpression
 
         /// <summary>
         /// Depending on the Type of T, adds the correct is active criteria Statement
@@ -2185,8 +2309,9 @@ namespace Source.DLaB.Xrm
 
         #endregion QueryExpression
 
-        #region String
+#region String
 
+#if !NETCOREAPP
         /// <summary>
         /// Deserializes the string xml value to a specific entity type.
         /// </summary>
@@ -2220,7 +2345,8 @@ namespace Source.DLaB.Xrm
             var serializer = new NetDataContractSerializer();
             return (T)(serializer.ReadObject(new MemoryStream(Encoding.UTF8.GetBytes(xml))));
         }
+#endif
 
-        #endregion String
+#endregion String
     }
 }

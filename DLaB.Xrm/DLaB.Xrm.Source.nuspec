@@ -13,9 +13,12 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>Dynamics CRM Plugin XRM</tags>
+    <contentFiles>
+      <files include="cs/netcoreapp/**/*.*" buildAction="Compile" />
+    </contentFiles>
     <dependencies>
       <group>
-        <dependency id="DLaB.Common.Source" version="1.2.0.7" />
+        <dependency id="DLaB.Common.Source" version="1.2.0.10" />
       </group>
     </dependencies>
     <frameworkAssemblies>
@@ -25,13 +28,22 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\DLaB.Xrm.Core\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.1.0.0" />
-    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.1.0.0\Comparers" />
-    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.1.0.0\Exceptions" />
-    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.1.0.0\Extensions" />
-    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.1.0.0\Plugin" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.1.0.0\Sandbox" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.1.0.0\Serialization" />
+    <file src="..\DLaB.Xrm.Core\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.2.0.6" />
+    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.2.0.6\Comparers" />
+    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.2.0.6\Exceptions" />
+    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.2.0.6\Extensions" />
+    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.2.0.6\Plugin" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.2.0.6\Sandbox" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="content\App_Packages\DLaB.Xrm.Source.3.2.0.6\Serialization" />
+
+    <file src="..\DLaB.Xrm.Core\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.3.2.0.6" />
+    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.3.2.0.6\Comparers" />
+    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.3.2.0.6\Exceptions" />
+    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.3.2.0.6\Extensions" />
+    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.3.2.0.6\Plugin" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.3.2.0.6\Sandbox" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.3.2.0.6\Serialization" />
+
     <file src="..\Icon.64x64.png" target="images\" />
   </files>
 </package>
