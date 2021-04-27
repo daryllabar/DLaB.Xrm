@@ -9,6 +9,7 @@ namespace DLaB.Xrm.Tests.Core
     [TestClass]
     public class ExtensionsEntity
     {
+#if !NETCOREAPP
         [TestMethod]
         public void Extensions_Entity_Clone()
         {
@@ -42,5 +43,6 @@ namespace DLaB.Xrm.Tests.Core
             entity.FormattedValues["First"] = "2";
             Assert.AreNotEqual(entity.FormattedValues["First"], clone.FormattedValues["First"]);
         }
+#endif
     }
 }

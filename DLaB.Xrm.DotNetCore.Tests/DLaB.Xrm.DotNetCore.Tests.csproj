@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NETCOREAPP</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DLaB.Common.Source" Version="1.2.0.10" />
+    <PackageReference Include="DLaB.Common.Source" Version="1.2.0.11" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Microsoft.PowerPlatform.Cds.Client" Version="0.2.31-Alpha" />
     <PackageReference Include="Microsoft.PowerPlatform.Cds.Client.Dynamics" Version="0.2.31-Alpha" />
