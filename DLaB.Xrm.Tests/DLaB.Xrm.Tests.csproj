@@ -165,6 +165,7 @@
     <Compile Include="Sandbox\ExceptionHandlerTests.cs" />
     <Compile Include="Sandbox\SandboxWrapper.cs" />
     <Compile Include="Sandbox\Serialization\SerializableEntityTests.cs" />
+    <Compile Include="SolutionCheckerAvoiderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

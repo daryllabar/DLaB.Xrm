@@ -1440,7 +1440,7 @@ namespace Source.DLaB.Xrm
         public static T GetEntity<T>(this IOrganizationService service, Guid id)
             where T : Entity
         {
-            return service.GetEntity<T>(id, new ColumnSet(true));
+            return service.GetEntity<T>(id, SolutionCheckerAvoider.CreateColumnSetWithAllColumns());
         }
 
         /// <summary>
@@ -2025,7 +2025,7 @@ namespace Source.DLaB.Xrm
         /// <param name="id">The identifier.</param>
         public static void AddRetrieve<T>(this OrganizationRequestCollection requests, Guid id) where T : Entity
         {
-            requests.AddRetrieve<T>(id, new ColumnSet(true));
+            requests.AddRetrieve<T>(id, SolutionCheckerAvoider.CreateColumnSetWithAllColumns());
         }
 
         /// <summary>
