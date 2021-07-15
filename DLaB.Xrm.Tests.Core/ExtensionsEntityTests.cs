@@ -1,7 +1,13 @@
-﻿using System;
+﻿#if !NETCOREAPP
+using System;
 using DLaB.Xrm.Entities;
+#endif
+using System;
+using System.Globalization;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
 using Source.DLaB.Xrm;
 
 namespace DLaB.Xrm.Tests.Core
@@ -44,5 +50,25 @@ namespace DLaB.Xrm.Tests.Core
             Assert.AreNotEqual(entity.FormattedValues["First"], clone.FormattedValues["First"]);
         }
 #endif
+
+        [TestMethod]
+        public void Extensions_Entity_ToEntityInterface()
+        {
+            var sut = new Entity(MyEarlyBoundEntity.EntityLogicalName);
+            sut.ToEntityInterface<IMyInterface>(Assembly.GetExecutingAssembly(), "DLaB.Xrm.Tests.Core");
+            var output = sut.ToEntityInterface<IMyInterface>(Assembly.GetExecutingAssembly(), "DLaB.Xrm.Tests.Core");
+            Assert.IsNotNull(output);
+            Assert.AreNotEqual(sut, output);
+            Assert.AreEqual(output, ((Entity)output).ToEntityInterface<IMyInterface>(Assembly.GetExecutingAssembly(), "DLaB.Xrm.Tests.Core"));
+        }
     }
+
+    [EntityLogicalName("myearlyboundentity")]
+    public class MyEarlyBoundEntity : Entity, IMyInterface
+    {
+        public const string EntityLogicalName = "myearlyboundentity";
+    }
+
+    public interface IMyInterface { }
+
 }

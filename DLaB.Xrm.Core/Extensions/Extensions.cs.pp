@@ -8,6 +8,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Xml;
 using Microsoft.Xrm.Sdk.Client;
@@ -480,6 +481,46 @@ namespace Source.DLaB.Xrm
                 value = defaultValue;
             }
             return value;
+        }
+
+        /// <summary>
+        /// Attempts to cast the given entity to specified interface by first converting it to it's early bound entity type.
+        /// </summary>
+        /// <typeparam name="TInterface">The Interface to cast the early bound entity to</typeparam>
+        /// <typeparam name="TEntityContext">The EntityContext To Use to lookup the early bound type.</typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static TInterface ToEntityInterface<TInterface, TEntityContext>(this Entity entity) where TEntityContext : OrganizationServiceContext
+        {
+            return ((object)entity) is TInterface type
+                ? type
+                : entity.ToEntityInterface<TInterface>(EntityHelper.GetType<TEntityContext>(entity.LogicalName));
+        }
+
+        /// <summary>
+        /// Attempts to cast the given entity to specified interface by first converting it to it's early bound entity type.
+        /// </summary>
+        /// <typeparam name="TInterface">The Interface to cast the early bound entity to</typeparam>
+        /// <param name="earlyBoundAssembly">The early bound assembly.</param>
+        /// <param name="namespace">The namespace.</param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static TInterface ToEntityInterface<TInterface>(this Entity entity, Assembly earlyBoundAssembly, string @namespace)
+        {
+            return ((object)entity) is TInterface type
+                ? type
+                : entity.ToEntityInterface<TInterface>(EntityHelper.GetType(earlyBoundAssembly, @namespace, entity.LogicalName));
+        }
+
+        private static TInterface ToEntityInterface<TInterface>(this Entity entity, Type earlyBoundType)
+        {
+            var toEntity = typeof(Entity).GetMethod(nameof(Entity.ToEntity));
+            var typedEntity = toEntity?.MakeGenericMethod(earlyBoundType).Invoke(entity, null);
+            if (typedEntity is TInterface type) {
+                return type;
+            }
+            throw new InvalidCastException(string.Format(CultureInfo.InvariantCulture, "Cannot cast entity {0} to {1}!", earlyBoundType.FullName, typeof(TInterface).FullName));
         }
 
         /// <summary>
