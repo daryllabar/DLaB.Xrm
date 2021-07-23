@@ -484,6 +484,45 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
+        /// Calls the Entity.ToEntity() method generically based on the logical name.  Useful for determining if an early bound entity implements a given type.
+        /// </summary>
+        /// <typeparam name="TEntityContext">The Context to use to determine the entity type.</typeparam>
+        /// <param name="entity">The Entity</param>
+        /// <returns></returns>
+        public static Entity ToEarlyBoundEntity<TEntityContext>(this Entity entity) where TEntityContext : OrganizationServiceContext
+        {
+            return entity.ToEarlyBoundEntity(EntityHelper.GetType<TEntityContext>(entity.LogicalName));
+        }
+
+        /// <summary>
+        /// Calls the Entity.ToEntity() method generically based on the logical name.  Useful for determining if an early bound entity implements a given type.
+        /// </summary>
+        /// <param name="entity">The Entity</param>
+        /// <param name="earlyBoundAssembly">The assembly to search</param>
+        /// <param name="namespace">The namespace to search</param>
+        /// <returns></returns>
+        public static Entity ToEarlyBoundEntity(this Entity entity, Assembly earlyBoundAssembly, string @namespace)
+        {
+            return entity.ToEarlyBoundEntity(EntityHelper.GetType(earlyBoundAssembly, @namespace, entity.LogicalName));
+        }
+
+        /// <summary>
+        /// Calls the Entity.ToEntity() method generically based on the logical name.  Useful for determining if an early bound entity implements a given type.
+        /// </summary>
+        /// <param name="entity">The Entity</param>
+        /// <param name="earlyBoundType">The Type to call the ToEntity generic method with.</param>
+        /// <returns></returns>
+        public static Entity ToEarlyBoundEntity(this Entity entity, Type earlyBoundType)
+        {
+            if (entity.GetType() == earlyBoundType)
+            {
+                return entity;
+            }
+            var toEntity = typeof(Entity).GetMethod(nameof(Entity.ToEntity));
+            return (Entity) toEntity?.MakeGenericMethod(earlyBoundType).Invoke(entity, null);
+        }
+
+        /// <summary>
         /// Attempts to cast the given entity to specified interface by first converting it to it's early bound entity type.
         /// </summary>
         /// <typeparam name="TInterface">The Interface to cast the early bound entity to</typeparam>
@@ -515,9 +554,8 @@ namespace Source.DLaB.Xrm
 
         private static TInterface ToEntityInterface<TInterface>(this Entity entity, Type earlyBoundType)
         {
-            var toEntity = typeof(Entity).GetMethod(nameof(Entity.ToEntity));
-            var typedEntity = toEntity?.MakeGenericMethod(earlyBoundType).Invoke(entity, null);
-            if (typedEntity is TInterface type) {
+            var typedEntity = ToEarlyBoundEntity(entity, earlyBoundType);
+            if (((object)typedEntity) is TInterface type) {
                 return type;
             }
             throw new InvalidCastException(string.Format(CultureInfo.InvariantCulture, "Cannot cast entity {0} to {1}!", earlyBoundType.FullName, typeof(TInterface).FullName));
