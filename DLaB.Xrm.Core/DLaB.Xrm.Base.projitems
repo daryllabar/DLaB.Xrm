@@ -41,7 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ToStringDebugExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\WhereEqualExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\WhereInExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DLaBEntityHelperConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DLaBXrmConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IExtendedExecutionContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IMaxLengthTracingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LateBoundActivePropertyInfo.cs" />

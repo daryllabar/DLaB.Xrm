@@ -714,12 +714,6 @@ namespace Source.DLaB.Xrm
 
         #endregion EntityReference
 
-        #region EntityReferenceCollection
-
-
-
-        #endregion EntityReferenceCollection
-
         #region FetchExpression
 
         /// <summary>
@@ -1498,7 +1492,7 @@ namespace Source.DLaB.Xrm
 
         #endregion QueryExpression
 
-#region String
+        #region String
 
 #if !NETCOREAPP
         /// <summary>
