@@ -211,7 +211,9 @@ namespace Source.DLaB.Xrm
                 baseEntity[attribute.Key] = attribute.Value;
             }
 
-            foreach (var formattedAtt in entity.FormattedValues.Where(a => !baseEntity.FormattedValues.Contains(a.Key)))
+            foreach (var formattedAtt in entity.FormattedValues.Where(a =>
+                !baseEntity.FormattedValues.Contains(a.Key)
+                && baseEntity.GetAttributeValue<object>(a.Key)?.Equals(entity.GetAttributeValue<object>(a.Key)) == true))
             {
                 baseEntity.FormattedValues[formattedAtt.Key] = formattedAtt.Value;
             }
