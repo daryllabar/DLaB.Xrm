@@ -25,7 +25,7 @@ namespace Core.DLaB.Xrm.Tests
             Assert.IsTrue(!target.CoalesceEntity(preImage).FormattedValues.ContainsKey(Contact.Fields.AccountRoleCode));
 
             target.AccountRoleCodeEnum = preImage.AccountRoleCodeEnum;
-            Assert.AreEqual(preImage.FormattedValues[Contact.Fields.AccountRoleCode], target.FormattedValues[Contact.Fields.AccountRoleCode]);
+            Assert.AreEqual(preImage.FormattedValues[Contact.Fields.AccountRoleCode], target.CoalesceEntity(preImage).FormattedValues[Contact.Fields.AccountRoleCode]);
         }
 
         #endregion FirstOrDefault
