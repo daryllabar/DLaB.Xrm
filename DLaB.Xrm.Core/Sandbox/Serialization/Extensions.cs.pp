@@ -13,7 +13,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
     public static class Extensions
     {
         #region string
-#if !NETCOREAPP
+#if !NET
         /// <summary>
         /// Deserializes the entity from a string xml value to a specific entity type.
         /// </summary>

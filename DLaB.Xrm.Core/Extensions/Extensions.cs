@@ -668,14 +668,32 @@ namespace Source.DLaB.Xrm
             }
         }
 
-#if NETCOREAPP
+#if NET
         /// <summary>
         /// Clone Entity (deep copy)
         /// </summary>
         /// <param name="source">source entity.</param>
-        /// <param name="cloneAttributes">Also clones Attributes so Option Sets and Entity References are cloned.</param>
+        /// <param name="deepClone">Also clones Attributes so Option Sets and Entity References are cloned.</param>
         /// <returns>new cloned entity</returns>
-        public static T Clone<T>(this T source, bool cloneAttributes = false) where T : Entity
+        public static T Clone<T>(this T source, bool deepClone = false) where T : Entity
+        {
+            return source?.CloneInternal(deepClone);
+        }
+#else
+        /// <summary>
+        /// Clone Entity (deep copy)
+        /// </summary>
+        /// <param name="source">source entity.</param>
+        /// <param name="serialize">Clone by serializing and deserializing the Entity.  False will return a shallow clone</param>
+        /// <returns>new cloned entity</returns>
+        public static T Clone<T>(this T source, bool serialize = true) where T : Entity
+        {
+            return serialize
+                ? source?.Serialize().DeserializeEntity<T>()
+                : source?.CloneInternal();
+        }
+#endif
+        private static T CloneInternal<T>(this T source, bool deepClone = false) where T : Entity
         {
             if (source == null)
             {
@@ -692,10 +710,19 @@ namespace Source.DLaB.Xrm
             }
             foreach (var attribute in source.Attributes)
             {
-                if (cloneAttributes)
+                if (deepClone)
                 {
                     switch (attribute.Value)
                     {
+                        case AliasedValue av:
+                            entity[attribute.Key] = new AliasedValue(av.EntityLogicalName, av.AttributeLogicalName, av.Value);
+                            break;
+                        case Entity e:
+                            entity[attribute.Key] = e.Clone(deepClone);
+                            break;
+                        case EntityCollection ec:
+                            entity[attribute.Key] = ec.Clone(deepClone);
+                            break;
                         case OptionSetValue osv:
                             entity[attribute.Key] = new OptionSetValue(osv.Value);
                             break;
@@ -724,44 +751,46 @@ namespace Source.DLaB.Xrm
             }
             foreach (var related in source.RelatedEntities)
             {
-                entity.RelatedEntities[related.Key] = related.Value.Clone(cloneAttributes);
+#if NET
+                entity.RelatedEntities[related.Key] = related.Value.Clone(deepClone);
+#else
+                entity.RelatedEntities[related.Key] = related.Value.Clone();
+#endif
             }
             return entity;
         }
-#else
-        /// <summary>
-        /// Clone Entity (deep copy)
-        /// </summary>
-        /// <param name="source">source entity.</param>
-        /// <returns>new cloned entity</returns>
-        public static T Clone<T>(this T source) where T : Entity
-        {
-            return source?.Serialize().DeserializeEntity<T>();
-        }
-#endif
 
         #endregion Entity
 
         #region EntityCollection
 
-#if NETCOREAPP
+#if NET
         /// <summary>
         /// Clone EntityCollection (deep copy)
         /// </summary>
         /// <param name="source">source EntityCollection.</param>
-        /// <param name="cloneAttributes">Also clones Attributes so Option Sets and Entity References are cloned.</param>
+        /// <param name="deepClone">Also clones Attributes so Option Sets and Entity References are cloned.</param>
         /// <returns>new cloned EntityCollection</returns>
-        public static EntityCollection Clone(this EntityCollection source, bool cloneAttributes = false)
+        public static EntityCollection Clone(this EntityCollection source, bool deepClone = false)
+        {
+            return source.CloneInternal(deepClone);
+        }
 #else
         /// <summary>
         /// Clone EntityCollection (deep copy)
         /// </summary>
         /// <param name="source">source EntityCollection.</param>
+        /// <param name="serialize">Clone by serializing and deserializing the Entity.  False will return a shallow clone</param>
         /// <returns>new cloned EntityCollection</returns>
-        public static EntityCollection Clone(this EntityCollection source)
-#endif
+        public static EntityCollection Clone(this EntityCollection source, bool serialize = true)
         {
-            if(source == null)
+            return source.CloneInternal(serialize);
+        }
+#endif
+
+        private static EntityCollection CloneInternal(this EntityCollection source, bool deepClone = true)
+        {
+            if (source == null)
             {
                 return null;
             }
@@ -777,11 +806,7 @@ namespace Source.DLaB.Xrm
                 TotalRecordCountLimitExceeded = source.TotalRecordCountLimitExceeded
             };
 
-#if NETCOREAPP
-            clone.Entities.AddRange(source.Entities.Select(e => e.Clone(cloneAttributes)));
-#else
-            clone.Entities.AddRange(source.Entities.Select(e => e.Clone()));
-#endif
+            clone.Entities.AddRange(source.Entities.Select(e => e.Clone(deepClone)));
             return clone;
         }
 
@@ -1674,7 +1699,7 @@ namespace Source.DLaB.Xrm
 
 #region String
 
-#if !NETCOREAPP
+#if !NET
         /// <summary>
         /// Deserializes the string xml value to a specific entity type.
         /// </summary>

@@ -1,7 +1,8 @@
-﻿#if !NETCOREAPP
+﻿#if !NET
 using DLaB.Xrm.Entities;
 #endif
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
@@ -13,7 +14,7 @@ namespace DLaB.Xrm.Tests.Core
     [TestClass]
     public class ExtensionsEntity
     {
-#if !NETCOREAPP
+#if !NET
         [TestMethod]
         public void Extensions_Entity_Clone()
         {
@@ -67,6 +68,60 @@ namespace DLaB.Xrm.Tests.Core
             Assert.IsNotNull(entity);
             Assert.AreNotEqual(sut, entity);
             Assert.AreEqual(entity, entity.ToEarlyBoundEntity(Assembly.GetExecutingAssembly(), "DLaB.Xrm.Tests.Core"));
+        }
+
+        [TestMethod]
+        public void Extensions_Entity_CloneLate()
+        {
+            var sut = new Entity
+            {
+                ["ParentCustomerId"] = new EntityReference("account", Guid.NewGuid()),
+                ["AccountRoleCode"] = new OptionSetValue(1),
+                ["Address1_Longitude"] = 10,
+                ["Address1_City"] = "Smallsville",
+                ["AnnualIncome"] = new Money(10m),
+                ["business_unit_contacts"] = new Entity("BusinessUnit") { ["Address1_City"] = "Detroit" },
+                ["EC"] = new EntityCollection(new List<Entity>{ new Entity("BusinessUnit") { ["Address1_City"] = "Chicago" }}),
+                RowVersion = "123"
+            };
+            sut.FormattedValues.Add("First", "1");
+            var clone = sut.Clone(true);
+
+            var parentCustomer = sut.GetAttributeValue<EntityReference>("ParentCustomerId");
+            var parentCustomerClone = clone.GetAttributeValue<EntityReference>("ParentCustomerId");
+            Assert.IsFalse(ReferenceEquals(parentCustomer, parentCustomerClone));
+            Assert.AreEqual(parentCustomer.LogicalName, parentCustomerClone.LogicalName);
+            Assert.AreEqual(parentCustomer.Id, parentCustomerClone.Id);
+            parentCustomer.Id = Guid.NewGuid();
+            Assert.AreNotEqual(parentCustomer.Id, parentCustomerClone.Id);
+
+            Assert.AreEqual(sut.GetAttributeValue<OptionSetValue>("AccountRoleCode").Value, clone.GetAttributeValue<OptionSetValue>("AccountRoleCode").Value);
+            Assert.AreEqual(sut["Address1_Longitude"], clone["Address1_Longitude"]);
+            Assert.AreEqual(sut["Address1_City"], clone["Address1_City"]);
+
+            var annualIncome = sut.GetAttributeValue<Money>("AnnualIncome");
+            var annualIncomeClone = clone.GetAttributeValue<Money>("AnnualIncome");
+            Assert.AreEqual(annualIncome.Value, annualIncomeClone.Value);
+            annualIncome.Value += 10;
+            Assert.AreNotEqual(annualIncome.Value, annualIncomeClone.Value);
+
+            var bus = sut.GetAttributeValue<Entity>("business_unit_contacts");
+            var busClone= clone.GetAttributeValue<Entity>("business_unit_contacts");
+            Assert.AreEqual(bus["Address1_City"], busClone["Address1_City"]);
+            bus["Address1_City"] += " City";
+            Assert.AreNotEqual(bus["Address1_City"], busClone["Address1_City"]);
+
+            Assert.AreEqual(sut.FormattedValues["First"], clone.FormattedValues["First"]);
+            sut.FormattedValues["First"] = "2";
+            Assert.AreNotEqual(sut.FormattedValues["First"], clone.FormattedValues["First"]);
+
+            var ec = sut.GetAttributeValue<EntityCollection>("EC");
+            var ecClone = clone.GetAttributeValue<EntityCollection>("EC");
+            Assert.IsFalse(ReferenceEquals(ec, ecClone));
+            Assert.AreEqual(ec.Entities[0].LogicalName, ecClone.Entities[0].LogicalName);
+            Assert.AreEqual(ec.Entities[0].Id, ecClone.Entities[0].Id);
+            ec.Entities[0].Id = Guid.NewGuid();
+            Assert.AreNotEqual(ec.Entities[0].Id, ecClone.Entities[0].Id);
         }
     }
 
