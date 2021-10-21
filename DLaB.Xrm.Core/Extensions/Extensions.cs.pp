@@ -217,11 +217,12 @@ namespace Source.DLaB.Xrm
             {
                 baseEntity.FormattedValues[formattedAtt.Key] = formattedAtt.Value;
             }
-
+#if !PRE_KEYATTRIBUTE
             foreach (var keyAtt in entity.KeyAttributes.Where(k => !baseEntity.KeyAttributes.Contains(k.Key)))
             {
                 baseEntity.KeyAttributes[keyAtt.Key] = keyAtt.Value;
             }
+#endif
 
             return baseEntity;
         }
@@ -703,11 +704,13 @@ namespace Source.DLaB.Xrm
             entity.Id = source.Id;
             entity.LogicalName = source.LogicalName;
             entity.EntityState = source.EntityState;
+#if !PRE_KEYATTRIBUTE
             entity.RowVersion = source.RowVersion;
             foreach (var keyAtt in source.KeyAttributes)
             {
                 entity[keyAtt.Key] = keyAtt;
             }
+#endif
             foreach (var attribute in source.Attributes)
             {
                 if (deepClone)
@@ -718,10 +721,18 @@ namespace Source.DLaB.Xrm
                             entity[attribute.Key] = new AliasedValue(av.EntityLogicalName, av.AttributeLogicalName, av.Value);
                             break;
                         case Entity e:
-                            entity[attribute.Key] = e.Clone(deepClone);
+#if NET
+                            entity[attribute.Key] = e.Clone(true);
+#else
+                            entity[attribute.Key] = e.Clone();
+#endif
                             break;
                         case EntityCollection ec:
-                            entity[attribute.Key] = ec.Clone(deepClone);
+#if NET
+                            entity[attribute.Key] = ec.Clone(true);
+#else
+                            entity[attribute.Key] = ec.Clone();
+#endif
                             break;
                         case OptionSetValue osv:
                             entity[attribute.Key] = new OptionSetValue(osv.Value);
@@ -732,9 +743,11 @@ namespace Source.DLaB.Xrm
                         case Money m:
                             entity[attribute.Key] = new Money(m.Value);
                             break;
+#if !XRM_2013 && !XRM_2015 && !XRM_2016
                         case OptionSetValueCollection osvc:
                             entity[attribute.Key] = new OptionSetValueCollection(osvc.Select(o => new OptionSetValue(o.Value)).ToList());
                             break;
+#endif
                         default:
                             entity[attribute.Key] = attribute.Value;
                             break;
@@ -760,9 +773,9 @@ namespace Source.DLaB.Xrm
             return entity;
         }
 
-        #endregion Entity
+#endregion Entity
 
-        #region EntityCollection
+#region EntityCollection
 
 #if NET
         /// <summary>
@@ -856,20 +869,25 @@ namespace Source.DLaB.Xrm
             {
                 return null;
             }
+
             var clone = new EntityReference
             {
-                RowVersion = source.RowVersion,
                 ExtensionData = source.ExtensionData,
                 Id = source.Id,
                 LogicalName = source.LogicalName,
                 Name = source.Name,
+#if !PRE_KEYATTRIBUTE
+                RowVersion = source.RowVersion,
+#endif
             };
 
-            foreach(var kvp in source.KeyAttributes)
+#if !PRE_KEYATTRIBUTE
+            foreach (var kvp in source.KeyAttributes)
             {
                 clone.KeyAttributes[kvp.Key] = kvp.Value;
             }
 
+#endif
             return clone;
         }
 
