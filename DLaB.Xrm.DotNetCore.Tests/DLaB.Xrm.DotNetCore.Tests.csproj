@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DLaB.Common.Source" Version="1.4.0.4" />
+    <PackageReference Include="DLaB.Common.Source" Version="1.4.0.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
     <PackageReference Include="Microsoft.PowerPlatform.Cds.Client" Version="0.2.31-Alpha" />
     <PackageReference Include="Microsoft.PowerPlatform.Cds.Client.Dynamics" Version="0.2.31-Alpha" />
