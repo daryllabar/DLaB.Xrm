@@ -700,7 +700,8 @@ namespace Source.DLaB.Xrm
             {
                 return null;
             }
-            var entity = Activator.CreateInstance<T>();
+
+            var entity = (T)Activator.CreateInstance(source.GetType());
             entity.Id = source.Id;
             entity.LogicalName = source.LogicalName;
             entity.EntityState = source.EntityState;

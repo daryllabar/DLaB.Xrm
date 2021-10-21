@@ -48,7 +48,17 @@ namespace DLaB.Xrm.Tests.Core
             entity.FormattedValues["First"] = "2";
             Assert.AreNotEqual(entity.FormattedValues["First"], clone.FormattedValues["First"]);
         }
+
 #endif
+        [TestMethod]
+        public void Extensions_Entity_CloneNestedActivityParty()
+        {
+            var collection = new EntityCollection();
+            collection.Entities.Add(new MyEarlyBoundEntity());
+            var sut = new Entity {["from"] = collection};
+            var clone = sut.Clone(true);
+            Assert.AreEqual(typeof(MyEarlyBoundEntity), clone.GetAttributeValue<EntityCollection>("from").Entities[0].GetType());
+        }
 
         [TestMethod]
         public void Extensions_Entity_ToEntityInterface()
