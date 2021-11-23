@@ -790,6 +790,7 @@ namespace Source.DLaB.Xrm
 
         #endregion CreateWithSupressDuplicateDetection
 
+#if !PRE_KEYATTRIBUTE
         /// <summary>
         /// Updates or insert a record in CRM.
         /// </summary>
@@ -803,5 +804,6 @@ namespace Source.DLaB.Xrm
                 Target = entity
             });
         }
+#endif
     }
 }
