@@ -789,5 +789,19 @@ namespace Source.DLaB.Xrm
         }
 
         #endregion CreateWithSupressDuplicateDetection
+
+        /// <summary>
+        /// Updates or insert a record in CRM.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static UpsertResponse Upsert(this IOrganizationService service, Entity entity)
+        {
+            return (UpsertResponse) service.Execute(new UpsertRequest
+            {
+                Target = entity
+            });
+        }
     }
 }

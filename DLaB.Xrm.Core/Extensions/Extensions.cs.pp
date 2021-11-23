@@ -669,7 +669,7 @@ namespace Source.DLaB.Xrm
             }
         }
 
-#if NET
+//#if NET
         /// <summary>
         /// Clone Entity (deep copy)
         /// </summary>
@@ -680,20 +680,20 @@ namespace Source.DLaB.Xrm
         {
             return source?.CloneInternal(deepClone);
         }
-#else
-        /// <summary>
-        /// Clone Entity (deep copy)
-        /// </summary>
-        /// <param name="source">source entity.</param>
-        /// <param name="serialize">Clone by serializing and deserializing the Entity.  False will return a shallow clone</param>
-        /// <returns>new cloned entity</returns>
-        public static T Clone<T>(this T source, bool serialize = true) where T : Entity
-        {
-            return serialize
-                ? source?.Serialize().DeserializeEntity<T>()
-                : source?.CloneInternal();
-        }
-#endif
+//#else
+//        /// <summary>
+//        /// Clone Entity (deep copy)
+//        /// </summary>
+//        /// <param name="source">source entity.</param>
+//        /// <param name="serialize">Clone by serializing and deserializing the Entity.  False will return a shallow clone</param>
+//        /// <returns>new cloned entity</returns>
+//        public static T Clone<T>(this T source, bool serialize = true) where T : Entity
+//        {
+//            return serialize
+//                ? source?.Serialize().DeserializeEntity<T>()
+//                : source?.CloneInternal();
+//        }
+//#endif
         private static T CloneInternal<T>(this T source, bool deepClone = false) where T : Entity
         {
             if (source == null)
