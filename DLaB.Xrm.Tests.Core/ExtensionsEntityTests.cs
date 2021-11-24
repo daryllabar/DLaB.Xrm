@@ -27,9 +27,10 @@ namespace DLaB.Xrm.Tests.Core
                 AnnualIncome = new Money(10m),
                 business_unit_contacts = new BusinessUnit { Address1_City = "Detroit"},
             };
+            entity.KeyAttributes[Contact.Fields.EmployeeId] = "MyEmpId";
             entity.FormattedValues.Add("First", "1");
             entity.RowVersion = "123";
-            var clone = entity.Clone();
+            var clone = entity.Clone(true);
 
             Assert.AreEqual(entity.ParentCustomerId.LogicalName, clone.ParentCustomerId.LogicalName);
             Assert.AreEqual(entity.ParentCustomerId.Id, clone.ParentCustomerId.Id);
@@ -47,6 +48,7 @@ namespace DLaB.Xrm.Tests.Core
             Assert.AreEqual(entity.FormattedValues["First"], clone.FormattedValues["First"]);
             entity.FormattedValues["First"] = "2";
             Assert.AreNotEqual(entity.FormattedValues["First"], clone.FormattedValues["First"]);
+            Assert.AreEqual(entity.KeyAttributes[Contact.Fields.EmployeeId], clone.KeyAttributes[Contact.Fields.EmployeeId]);
         }
 
 #endif
