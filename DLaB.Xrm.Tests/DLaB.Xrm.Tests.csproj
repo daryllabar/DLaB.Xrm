@@ -150,8 +150,8 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
-    <Reference Include="XrmUnitTest.09, Version=2.3.0.13, Culture=neutral, PublicKeyToken=9172705c53320911, processorArchitecture=MSIL">
-      <HintPath>..\packages\XrmUnitTest.09.2.3.0.13\lib\net462\XrmUnitTest.09.dll</HintPath>
+    <Reference Include="XrmUnitTest.09, Version=2.3.0.22, Culture=neutral, PublicKeyToken=9172705c53320911, processorArchitecture=MSIL">
+      <HintPath>..\packages\XrmUnitTest.09.2.3.0.22\lib\net462\XrmUnitTest.09.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
