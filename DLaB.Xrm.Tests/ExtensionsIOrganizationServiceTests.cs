@@ -54,7 +54,7 @@ namespace Core.DLaB.Xrm.Tests
         #region CreateOrMinimalUpdate
 
         [TestMethod]
-        public void Extensions_IOgranizationService_CreateOrMinimalUpdate()
+        public void Extensions_IOrganizationService_CreateOrMinimalUpdate()
         {
             new CreateOrMinimalUpdate().Test();
         }
@@ -72,9 +72,11 @@ namespace Core.DLaB.Xrm.Tests
                 service = new OrganizationServiceBuilder(service).WithIdsDefaultedForCreate(Ids.Contact).Build();
                 var entity = new Contact
                 {
-                    NumberOfChildren = 3,
                     Address1_City = "Any Town",
                     Address1_AddressTypeCodeEnum = Contact_Address1_AddressTypeCode.Primary,
+                    FirstName = "Hi",
+                    LastName = "Yah",
+                    NumberOfChildren = 3,
                 };
 
                 // Should Create
@@ -94,8 +96,29 @@ namespace Core.DLaB.Xrm.Tests
 
                 var updater = new TestUpdater(entitiesById);
                 service.CreateOrMinimumUpdate(entity, updater);
-                Assert.AreEqual(1, updater.MostRecentUnchangedAttributes.Count);
-                Assert.AreEqual(Contact.Fields.Address1_Country, updater.MostRecentUnchangedAttributes.First());
+                var unchanged = updater.MostRecentUnchangedAttributes;
+                Assert.AreEqual(5, unchanged.Count);
+                AssertContains(unchanged, Contact.Fields.Address1_City);
+                AssertContains(unchanged, Contact.Fields.NumberOfChildren);
+                AssertContains(unchanged, Contact.Fields.Address1_AddressTypeCode);
+                AssertContains(unchanged, Contact.Fields.FirstName);
+                AssertContains(unchanged, Contact.Fields.LastName);
+                Assert.IsFalse(unchanged.Contains(Contact.Fields.Address1_Country));
+
+                // No existing, should Update everything:
+                updater.MostRecentUnchangedAttributes.Clear();
+                service.CreateOrMinimumUpdate(new Contact{
+                    Id = Ids.Contact,
+                    FirstName = "Updated"
+                }, new Dictionary<Guid, Contact>());
+                Assert.AreEqual(0, updater.MostRecentUnchangedAttributes.Count);
+                var value = service.GetEntity(Ids.Contact);
+                Assert.AreEqual("Updated", value.FirstName);
+            }
+
+            private void AssertContains(List<string> list, string value)
+            {
+                Assert.IsTrue(list.Contains(value), "Missing " +value);
             }
         }
 
