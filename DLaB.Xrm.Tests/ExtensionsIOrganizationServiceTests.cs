@@ -15,6 +15,77 @@ namespace Core.DLaB.Xrm.Tests
     [TestClass]
     public class ExtensionsIOrganizationServiceTests
     {
+
+        #region First
+
+        [TestMethod]
+        public void Extensions_IOrganizationService_First()
+        {
+            new First().Test();
+        }
+
+        // ReSharper disable once InconsistentNaming
+        private class First : TestMethodClassBase
+        {
+            private struct Ids
+            {
+                public static readonly Id<Contact> Contact = new Id<Contact>("9B53265E-8A29-4109-B62C-67A007AD3DAA");
+            }
+
+            protected override void InitializeTestData(IOrganizationService service)
+            {
+                new CrmEnvironmentBuilder().WithEntities<Ids>().Create(service);
+            }
+
+            protected override void Test(IOrganizationService service)
+            {
+                // Test Exists EarlyBound
+                var contact = service.GetFirst<Contact>();
+                Assert.IsNotNull(contact);
+
+                // Test Exists LateBound
+                var entity = service.GetFirst(Contact.EntityLogicalName, Contact.Fields.ContactId, contact.Id);
+                Assert.IsNotNull(entity);
+
+                // Test Not Exists EarlyBound
+                service.Delete((Id)Ids.Contact);
+                var noError = false;
+                try
+                {
+                    service.GetFirst<Contact>();
+                    noError = true;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Assert.IsTrue(ex.Message.StartsWith("No contact found where"));
+                }
+
+                if (noError)
+                {
+                    Assert.Fail("Exception Expected!");
+                }
+
+                // Test Not Exists Latebound
+                try
+                {
+                    service.GetFirst(Contact.EntityLogicalName, Contact.Fields.ContactId, contact.Id);
+                    noError = true;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Assert.IsTrue(ex.Message.StartsWith("No contact found where"));
+                }
+
+                if (noError)
+                {
+                    Assert.Fail("Exception Expected!");
+                }
+            }
+        }
+
+        #endregion First
+
+
         #region FirstOrDefault
 
         [TestMethod]
