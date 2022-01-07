@@ -2,12 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-#if DLAB_UNROOT_COMMON_NAMESPACE
-using DLaB.Common.Exceptions;
-#else
-using Source.DLaB.Common.Exceptions;
-#endif
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 namespace DLaB.Xrm
@@ -24,7 +18,14 @@ namespace Source.DLaB.Xrm
 #endif
     public class MinimumUpdaterDefault<TEntity> : IMinimumUpdater<TEntity>  where TEntity : Entity
     {
+        /// <summary>
+        /// Dictionary of Current Values
+        /// </summary>
         protected Dictionary<Guid, TEntity> CurrentValuesById { get; }
+        /// <summary>
+        /// Default Construction
+        /// </summary>
+        /// <param name="currentValuesById"></param>
         public MinimumUpdaterDefault(Dictionary<Guid, TEntity> currentValuesById = null)
         {
             CurrentValuesById = currentValuesById ?? new Dictionary<Guid, TEntity>();
