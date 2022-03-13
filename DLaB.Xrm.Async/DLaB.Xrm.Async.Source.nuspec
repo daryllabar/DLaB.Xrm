@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>DLaB.Xrm.Async.Source</id>
+    <version>1.0.0.2</version>
+    <authors>Daryl LaBar</authors>
+    <owners>Daryl LaBar</owners>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/daryllabar/DLaB.Xrm</projectUrl>
+    <icon>images\Icon.64x64.png</icon>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Contains extensions for Async Xrm development.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2022</copyright>
+    <tags>Dynamics Dataverse CRM Plugin XRM Async</tags>
+    <contentFiles>
+      <files include="cs/netcoreapp/**/*.*" buildAction="Compile" />
+    </contentFiles>
+    <dependencies>
+      <group targetFramework="net">
+        <dependency id="DLaB.Xrm.Source" version="3.4.0.15" />
+      </group>
+      <group targetFramework="netcoreapp">
+        <dependency id="System.Configuration.ConfigurationManager" version="5.0.0.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Async.Source.1.0.0.2" />
+
+    <file src="..\Icon.64x64.png" target="images\" />
+  </files>
+</package>

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <RootNamespace>Source.DLaB.Xrm</RootNamespace>
+    <AssemblyVersion>1.0.0.2</AssemblyVersion>
+    <FileVersion>1.0.0.2</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DLaB.Common.Source" Version="1.4.0.5" />
+    <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="0.6.1" />
+  </ItemGroup>
+
+  <Import Project="..\DLaB.Xrm.Core\DLaB.Xrm.Base.projitems" Label="Shared" />
+
+</Project>

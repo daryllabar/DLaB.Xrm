@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29025.244
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLaB.Xrm", "DLaB.Xrm\DLaB.Xrm.csproj", "{C11C3523-D4F4-4C7D-B072-46E96947EFC2}"
 EndProject
@@ -19,6 +19,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DLaB.Xrm.Workflow.Core", "D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{DEDEE8E9-2FCB-484A-AA86-B43C3DEA324E}"
 	ProjectSection(SolutionItems) = preProject
+		DLaB.Xrm.Async\DLaB.Xrm.Async.Source.nuspec = DLaB.Xrm.Async\DLaB.Xrm.Async.Source.nuspec
 		DLaB.Xrm\DLaB.Xrm.Source.nuspec = DLaB.Xrm\DLaB.Xrm.Source.nuspec
 		DLaB.Xrm.Workflow\DLaB.Xrm.Workflow.Source.nuspec = DLaB.Xrm.Workflow\DLaB.Xrm.Workflow.Source.nuspec
 		Icon.64x64.png = Icon.64x64.png
@@ -27,6 +28,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLaB.Xrm.DotNetCore.Tests", "DLaB.Xrm.DotNetCore.Tests\DLaB.Xrm.DotNetCore.Tests.csproj", "{3C9EC09E-B62E-4A5C-A0B1-EFD189054C7C}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DLaB.Xrm.Tests.Core", "DLaB.Xrm.Tests.Core\DLaB.Xrm.Tests.Core.shproj", "{1388D7A1-C398-44B6-AEA1-AF8B05E7BE36}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLaB.Xrm.Async", "DLaB.Xrm.Async\DLaB.Xrm.Async.csproj", "{5140D24A-55F2-45C1-A4CD-84C0273A9381}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -37,6 +40,7 @@ Global
 		DLaB.Xrm.Tests.Core\DLaB.Xrm.Tests.Core.projitems*{1df3be66-5b01-44b1-a810-03e2116e7518}*SharedItemsImports = 4
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{3c9ec09e-b62e-4a5c-a0b1-efd189054c7c}*SharedItemsImports = 5
 		DLaB.Xrm.Tests.Core\DLaB.Xrm.Tests.Core.projitems*{3c9ec09e-b62e-4a5c-a0b1-efd189054c7c}*SharedItemsImports = 5
+		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{5140d24a-55f2-45c1-a4cd-84c0273a9381}*SharedItemsImports = 5
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{a3b3ce75-dfae-4035-97a3-afd49ad47bc5}*SharedItemsImports = 13
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{c11c3523-d4f4-4c7d-b072-46e96947efc2}*SharedItemsImports = 4
 		DLaB.Xrm.Test.Core\DLaB.Xrm.Test.Core.projitems*{c987f4c2-40b4-4572-b7c5-36c138361afb}*SharedItemsImports = 13
@@ -68,6 +72,10 @@ Global
 		{3C9EC09E-B62E-4A5C-A0B1-EFD189054C7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C9EC09E-B62E-4A5C-A0B1-EFD189054C7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C9EC09E-B62E-4A5C-A0B1-EFD189054C7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5140D24A-55F2-45C1-A4CD-84C0273A9381}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5140D24A-55F2-45C1-A4CD-84C0273A9381}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5140D24A-55F2-45C1-A4CD-84C0273A9381}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5140D24A-55F2-45C1-A4CD-84C0273A9381}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
