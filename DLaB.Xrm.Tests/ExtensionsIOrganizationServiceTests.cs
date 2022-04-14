@@ -1,8 +1,5 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DLaB.Xrm.Entities;
 using DLaB.Xrm.Test;
 using DLaB.Xrm.Test.Core.Builders;
@@ -15,6 +12,73 @@ namespace Core.DLaB.Xrm.Tests
     [TestClass]
     public class ExtensionsIOrganizationServiceTests
     {
+        #region GetEntityOrDefault
+
+        [TestMethod]
+        public void Extensions_IOrganizationService_GetEntityOrDefault()
+        {
+            new GetEntityOrDefault().Test();
+        }
+
+        // ReSharper disable once InconsistentNaming
+        private class GetEntityOrDefault : TestMethodClassBase
+        {
+            private struct Ids
+            {
+                public static readonly Id<Account> Account  = new Id<Account>("9A9722A0-C8E9-40C2-9A59-F93303BEB272");
+                public static readonly Id<Contact> Contact = new Id<Contact>("62A1E913-EA48-4141-98AC-BB9995A9A22D");
+            }
+
+            protected override void InitializeTestData(IOrganizationService service)
+            {
+                Ids.Contact.Entity.MobilePhone = "888-999-2222";
+                new CrmEnvironmentBuilder().WithChildEntities(Ids.Account, Ids.Contact).Create(service);
+            }
+
+            protected override void Test(IOrganizationService service)
+            {
+                // Test Exists
+                var keys = new KeyAttributeCollection { { Contact.Fields.MobilePhone, Ids.Contact.Entity.MobilePhone } };
+                TestExists(service, keys);
+                var entityRefKey = new KeyAttributeCollection { { Contact.Fields.ParentCustomerId, Ids.Account.EntityReference } };
+                TestExists(service, entityRefKey);
+                var guidKey = new KeyAttributeCollection { { Contact.Fields.ParentCustomerId, Ids.Account.EntityId} };
+                TestExists(service, guidKey);
+                var stringKey = new KeyAttributeCollection { { Contact.Fields.ParentCustomerId, Ids.Account.EntityId.ToString() } };
+                TestExists(service, stringKey);
+
+                // Test Not Exists
+                service.Delete((Id)Ids.Contact);
+                TestNotExists(service, keys);
+                TestNotExists(service, entityRefKey);
+                TestNotExists(service, guidKey);
+                TestNotExists(service, stringKey);
+            }
+
+            private static void TestNotExists(IOrganizationService service, KeyAttributeCollection keys)
+            {
+                Contact contact;
+                Entity entity;
+                contact = service.GetEntityOrDefault<Contact>(keys);
+                Assert.IsNull(contact);
+
+                // Test NonGeneric
+                entity = service.GetEntityOrDefault(Contact.EntityLogicalName, keys);
+                Assert.IsNull(entity);
+            }
+
+            private static void TestExists(IOrganizationService service, KeyAttributeCollection keys)
+            {
+                var contact = service.GetEntityOrDefault<Contact>(keys);
+                Assert.IsNotNull(contact);
+
+                // Test NonGeneric
+                var entity = service.GetEntityOrDefault(Contact.EntityLogicalName, keys);
+                Assert.IsNotNull(entity);
+            }
+        }
+
+        #endregion GetEntityOrDefault
 
         #region First
 
@@ -84,7 +148,6 @@ namespace Core.DLaB.Xrm.Tests
         }
 
         #endregion First
-
 
         #region FirstOrDefault
 

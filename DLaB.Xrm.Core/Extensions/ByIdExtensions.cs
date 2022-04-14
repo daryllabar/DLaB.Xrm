@@ -34,7 +34,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Gets the first entity that matches the query expression.  Null is returned if none are found.
+        /// Gets the entity with the given id.  Null is returned if it isn't found.
         /// </summary>
         /// <typeparam name="T">The Entity Type.</typeparam>
         /// <param name="service">The service.</param>
@@ -49,6 +49,62 @@ namespace Source.DLaB.Xrm
                 ? service.GetFirstOrDefault<T>(idName, id)
                 : service.GetFirstOrDefault(anonymousTypeInitializer, idName, id);
         }
+
+#if !PRE_KEYATTRIBUTE
+
+        /// <summary>
+        /// Gets the entity with the given Key Value Pair collection.  Null is returned if it isn't found.
+        /// </summary>
+        /// <param name="service">open IOrganizationService</param>
+        /// <param name="logicalName">The logical name</param>
+        /// <param name="kvps">the KeyAttributes Collection</param>
+        /// <param name="columnSet">Columns to retrieve.</param>
+        /// <returns></returns>
+        public static Entity GetEntityOrDefault(this IOrganizationService service, string logicalName, KeyAttributeCollection kvps, ColumnSet columnSet = null)
+        {
+            if(kvps.Count == 0)
+            {
+                throw new ArgumentException(nameof(kvps) + " must contain at least one kvp!", nameof(kvps));
+            }
+
+            var qe = columnSet == null
+                ? QueryExpressionFactory.Create(logicalName)
+                : QueryExpressionFactory.Create(logicalName, columnSet);
+            foreach (var kvp in kvps)
+            {
+                switch (kvp.Value)
+                {
+                    case null:
+                        qe.WhereEqual(new ConditionExpression(kvp.Key, ConditionOperator.Null));
+                        break;
+                    case EntityReference ef:
+                        qe.WhereEqual(kvp.Key, ef.Id);
+                        break;
+                    default:
+                        qe.WhereEqual(kvp.Key, kvp.Value);
+                        break;
+                }
+            }
+
+            return service.GetFirstOrDefault(qe);
+        }
+
+        /// <summary>
+        /// Gets the entity with the given Key Value Pair collection.  Null is returned if it isn't found.
+        /// </summary>
+        /// <param name="service">open IOrganizationService</param>
+        /// <param name="kvps">the KeyAttributes Collection</param>
+        /// <param name="anonymousTypeInitializer">An Anonymous Type Initializer where the properties of the anonymous</param>
+        /// <returns></returns>
+        public static T GetEntityOrDefault<T>(this IOrganizationService service, KeyAttributeCollection kvps, Expression<Func<T, object>> anonymousTypeInitializer = null) where T : Entity
+        {
+            var logicalName = EntityHelper.GetEntityLogicalName<T>();
+            var cs = anonymousTypeInitializer == null
+                ? null
+                : new ColumnSet().AddColumns(anonymousTypeInitializer);
+            return GetEntityOrDefault(service, logicalName, kvps, cs)?.ToEntity<T>();
+        }
+#endif
 
         #endregion GetEntityOrDefault
 
