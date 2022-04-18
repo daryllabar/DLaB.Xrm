@@ -94,6 +94,18 @@ PreImage2: {{
         }
 
         [TestMethod]
+        public void Extensions_Entity_ToStringDebug()
+        {
+            var sut = new Contact();
+            sut.KeyAttributes.Add("One", "A");
+            sut.KeyAttributes.Add("Two", "B");
+            AssertAreEqualHandleSpaces(@"{
+  Keys: {One: ""A"", Two: ""B""},
+  LogicalName: ""contact""
+}", sut.ToStringDebug());
+        }
+
+        [TestMethod]
         public void Extensions_EntityReference_ToStringDebug()
         {
             var sut = new EntityReference
@@ -104,6 +116,16 @@ PreImage2: {{
 
             Assert.AreEqual($"{{LogicalName: \"{sut.LogicalName}\", Id: \"{sut.Id}\"}}", sut.ToStringDebug());
 
+            sut.KeyAttributes.Add("One", "A");
+            Assert.AreEqual($"{{LogicalName: \"{sut.LogicalName}\", Id: \"{sut.Id}\"}}", sut.ToStringDebug());
+
+            sut.Id = Guid.Empty;
+            Assert.AreEqual($"{{LogicalName: \"{sut.LogicalName}\", Key: \"One\", Value: \"A\"}}", sut.ToStringDebug());
+
+            sut.KeyAttributes.Add("Two", "B");
+            Assert.AreEqual($"{{LogicalName: \"{sut.LogicalName}\", Keys: {{One: \"A\", Two: \"B\"}}}}", sut.ToStringDebug());
+
+            sut.Id = Guid.NewGuid();
             sut.Name = "Test";
             Assert.AreEqual($"{{Name: \"{sut.Name}\", LogicalName: \"{sut.LogicalName}\", Id: \"{sut.Id}\"}}", sut.ToStringDebug());
         }
