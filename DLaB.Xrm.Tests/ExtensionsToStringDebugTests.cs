@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DLaB.Xrm.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
 using Source.DLaB.Xrm;
 
 namespace Core.DLaB.Xrm.Tests
@@ -302,6 +303,8 @@ PreImage2: {{
             };
             var sut = new ParameterCollection
             {
+                {"ColumnSet", new ColumnSet("b", "a")},
+                {"ColumnSetAll", new ColumnSet(true)},
                 {"EntityRef", new EntityReference(Lead.EntityLogicalName, ids[0])},
                 {
                     "EntityRefCollection", new EntityReferenceCollection(new List<EntityReference>
@@ -311,6 +314,7 @@ PreImage2: {{
                         new EntityReference(Account.EntityLogicalName, ids[3])
                     })
                 },
+                {"Fetch", new FetchExpression("FetchQuery")},
                 {"IEnumerable", new List<string> {"v1", "v2", "v3"}},
                 {
                     "EntityCollection", new EntityCollection(new List<Entity>
@@ -327,10 +331,12 @@ PreImage2: {{
                         {"Key1", "Value1"},
                         {"Key2", "Value2"}
                     }
-                }
+                },
+                {"Query", new QueryExpression(Contact.EntityLogicalName)}
             };
-            
             AssertAreEqualHandleSpaces($@"InputParameters: {{
+  ColumnSet: ""a,b"",
+  ColumnSetAll: ""ColumnSet(allColumns:true)"",
   Dict: {{
     Key1: ""Value1"",
     Key2: ""Value2""
@@ -355,6 +361,7 @@ PreImage2: {{
     {{LogicalName: ""contact"", Id: ""{ids[2]}""}},
     {{LogicalName: ""account"", Id: ""{ids[3]}""}}
   ],
+  Fetch: ""FetchQuery"",
   IEnumerable: {{
     ""List`1"": [
       ""v1"",
@@ -362,7 +369,10 @@ PreImage2: {{
       ""v3""
     ]
   }},
-  OSV: 1
+  OSV: 1,
+  Query: ""SELECT 
+FROM contact
+WHERE""
 }}", sut.ToStringDebug("InputParameters"));
 
         }
