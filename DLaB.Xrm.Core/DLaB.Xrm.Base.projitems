@@ -48,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IMaxLengthTracingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LateBoundActivePropertyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LateBoundQuerySettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugin\ContextEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\DLaBExtendedPluginContextSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\ExtendedContextCreator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\Extensions.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IExtendedPluginContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IExtendedPluginContextInitializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IRegisteredEventsPlugin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugin\IRequirementValidator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IsolationMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\DLaBExtendedPluginContextBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\MessageType.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\PipelineStage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\RegisteredEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\RegisteredEventBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugin\RequirementValidator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SolutionCheckerAvoider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\TraceTimer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PrimaryFieldInfo.cs" />

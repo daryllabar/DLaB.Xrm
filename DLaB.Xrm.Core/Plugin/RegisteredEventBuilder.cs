@@ -49,6 +49,13 @@ namespace Source.DLaB.Xrm.Plugin
         /// </summary>
         protected RegisteredEventBuilder PreviousBuilder { get; set; }
         /// <summary>
+        /// Gets or sets the requirement validator.
+        /// </summary>
+        /// <value>
+        /// The requirement validator.
+        /// </value>
+        protected IRequirementValidator RequirementValidator { get; set; }
+        /// <summary>
         /// Gets or sets the stage.
         /// </summary>
         /// <value>
@@ -201,6 +208,17 @@ namespace Source.DLaB.Xrm.Plugin
             return this;
         }
 
+        /// <summary>
+        /// Defines the Validator to use for this Registered Event
+        /// </summary>
+        /// <param name="validator"></param>
+        /// <returns></returns>
+        public RegisteredEventBuilder WithValidator(IRequirementValidator validator)
+        {
+            RequirementValidator = validator;
+            return this;
+        }
+
         #endregion Fluent Methods
 
         /// <summary>
@@ -242,7 +260,8 @@ namespace Source.DLaB.Xrm.Plugin
                         EntityLogicalNames.Select(
                             logicalName => new RegisteredEvent(Stage, messageType, Execute, logicalName)
                             {
-                                ExecuteMethodName = ExecuteMethodName
+                                ExecuteMethodName = ExecuteMethodName,
+                                RequirementValidator = RequirementValidator
                             }));
                 }
                 else
@@ -250,7 +269,8 @@ namespace Source.DLaB.Xrm.Plugin
                     events.Add(
                         new RegisteredEvent(Stage, messageType, Execute)
                         {
-                            ExecuteMethodName = ExecuteMethodName
+                            ExecuteMethodName = ExecuteMethodName,
+                            RequirementValidator = RequirementValidator
                         });
                 }
             }

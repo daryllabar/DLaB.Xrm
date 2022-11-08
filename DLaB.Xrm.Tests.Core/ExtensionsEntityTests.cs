@@ -7,7 +7,6 @@ using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
-using Source.DLaB.Xrm;
 
 namespace DLaB.Xrm.Tests.Core
 {

@@ -252,7 +252,17 @@ namespace Source.DLaB.Xrm.Plugin
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        protected virtual bool SkipExecution(T context) { return false; }
+        protected virtual bool SkipExecution(T context)
+        {
+            var skip = context.Event.RequirementValidator != null 
+                   && context.Event.RequirementValidator.SkipExecution(context);
+
+            if (skip)
+            {
+                context.Trace("The requirements for plugin execution were not met!  Skipping execution...");
+            }
+            return skip;
+        }
 
         /// <summary>
         /// Traces the Execution of the registered event of the context.

@@ -39,6 +39,13 @@ namespace Source.DLaB.Xrm.Plugin
         /// </value>
         public string MessageName => Message.ToString();
         /// <summary>
+        /// The Requirement Validator to use
+        /// </summary>
+        /// <value>
+        /// The Requirement Validator.
+        /// </value>
+        public IRequirementValidator RequirementValidator { get; set; }
+        /// <summary>
         /// The logical entity name of the entity the plugin is executing for.
         /// </summary>
         /// <value>
