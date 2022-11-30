@@ -18,6 +18,29 @@ namespace Source.DLaB.Xrm
         #region FilterExpression
 
         /// <summary>
+        /// Adds the column name and condition operator as a Condition Expression to the criteria of the given QueryExpression
+        /// </summary>
+        /// <param name="filterExpression"></param>
+        /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
+        /// <param name="conditionOperator">operator that has to be applied</param>
+        public static FilterExpression Where(this FilterExpression filterExpression, string attributeName, ConditionOperator conditionOperator)
+        {
+            return filterExpression.WhereEqual(new ConditionExpression(attributeName, conditionOperator));
+        }
+
+        /// <summary>
+        /// Adds the column name, condition operator and value, as a Condition Expression to the criteria of the given QueryExpression
+        /// </summary>
+        /// <param name="filterExpression"></param>
+        /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
+        /// <param name="conditionOperator">operator that has to be applied</param>
+        /// <param name="value">value to be compared with</param>
+        public static FilterExpression Where(this FilterExpression filterExpression, string attributeName, ConditionOperator conditionOperator, object value)
+        {
+            return filterExpression.WhereEqual(new ConditionExpression(attributeName, conditionOperator, value));
+        }
+
+        /// <summary>
         /// Adds the column name and value pairs as conditions.  The columnNameAndValuePairs can contain a paired list of attribute names and their values,
         /// -or- ConditionExpressions
         /// </summary>
@@ -653,6 +676,31 @@ namespace Source.DLaB.Xrm
         #region LinkEntity
 
         /// <summary>
+        /// Adds the column name and condition operator as a Condition Expression to the criteria of the given QueryExpression
+        /// </summary>
+        /// <param name="linkEntity"></param>
+        /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
+        /// <param name="conditionOperator">operator that has to be applied</param>
+        public static LinkEntity Where(this LinkEntity linkEntity, string attributeName, ConditionOperator conditionOperator)
+        {
+            linkEntity.LinkCriteria.WhereEqual(new ConditionExpression(attributeName, conditionOperator));
+            return linkEntity;
+        }
+
+        /// <summary>
+        /// Adds the column name, condition operator and value, as a Condition Expression to the criteria of the given QueryExpression
+        /// </summary>
+        /// <param name="linkEntity"></param>
+        /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
+        /// <param name="conditionOperator">operator that has to be applied</param>
+        /// <param name="value">value to be compared with</param>
+        public static LinkEntity Where(this LinkEntity linkEntity, string attributeName, ConditionOperator conditionOperator, object value)
+        {
+            linkEntity.LinkCriteria.WhereEqual(new ConditionExpression(attributeName, conditionOperator, value));
+            return linkEntity;
+        }
+
+        /// <summary>
         /// Adds the column name and value pairs to the linkCriteria of the given LinkEntity
         /// </summary>
         /// <param name="linkEntity"></param>
@@ -708,6 +756,31 @@ namespace Source.DLaB.Xrm
         #endregion OrganizationRequestCollection
 
         #region QueryExpression
+
+        /// <summary>
+        /// Adds the column name and condition operator as a Condition Expression to the criteria of the given QueryExpression
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
+        /// <param name="conditionOperator">operator that has to be applied</param>
+        public static QueryExpression Where(this QueryExpression query, string attributeName, ConditionOperator conditionOperator)
+        {
+            query.Criteria.WhereEqual(new ConditionExpression(attributeName, conditionOperator));
+            return query;
+        }
+
+        /// <summary>
+        /// Adds the column name, condition operator and value, as a Condition Expression to the criteria of the given QueryExpression
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
+        /// <param name="conditionOperator">operator that has to be applied</param>
+        /// <param name="value">value to be compared with</param>
+        public static QueryExpression Where(this QueryExpression query, string attributeName, ConditionOperator conditionOperator, object value)
+        {
+            query.Criteria.WhereEqual(new ConditionExpression(attributeName, conditionOperator, value));
+            return query;
+        }
 
         /// <summary>
         /// Adds the column name and value pairs to the criteria of the given QueryExpression

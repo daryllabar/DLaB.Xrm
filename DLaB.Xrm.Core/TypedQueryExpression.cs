@@ -353,6 +353,29 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
+        /// Adds the column name and condition operator as a Condition Expression to the criteria of the given QueryExpression
+        /// </summary>
+        /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
+        /// <param name="conditionOperator">operator that has to be applied</param>
+        public TypedQueryExpression<TEntity> Where(string attributeName, ConditionOperator conditionOperator)
+        {
+            Query.WhereEqual(new ConditionExpression(attributeName, conditionOperator));
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the column name, condition operator and value, as a Condition Expression to the criteria of the given QueryExpression
+        /// </summary>
+        /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
+        /// <param name="conditionOperator">operator that has to be applied</param>
+        /// <param name="value">value to be compared with</param>
+        public TypedQueryExpression<TEntity> Where(string attributeName, ConditionOperator conditionOperator, object value)
+        {
+            Query.WhereEqual(new ConditionExpression(attributeName, conditionOperator, value));
+            return this;
+        }
+
+        /// <summary>
         /// Adds the column name and value pairs to the criteria of the given QueryExpression
         /// </summary>
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
