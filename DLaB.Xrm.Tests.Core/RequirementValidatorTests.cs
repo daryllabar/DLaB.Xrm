@@ -18,6 +18,26 @@ namespace DLaB.Xrm.Tests.Core
     [TestClass]
     public class RequirementValidatorTests
     {
+        private static List<Contact> PossibleValues
+        {
+            get
+            {
+                var possibleValues = new List<Contact>
+                {
+                    new Contact(),
+                    new Contact { AssistantName = null },
+                    new Contact { AssistantName = "NotNull" },
+                    new Contact { NickName = null },
+                    new Contact { NickName = null, AssistantName = null },
+                    new Contact { NickName = null, AssistantName = "NotNull" },
+                    new Contact { NickName = "NotNull" },
+                    new Contact { NickName = "NotNull", AssistantName = null },
+                    new Contact { NickName = "NotNull", AssistantName = "NotNull" },
+                };
+                return possibleValues;
+            }
+        }
+
         [TestMethod]
         public void SkipExecution_MissingRequired_Should_Skip()
         {
@@ -39,9 +59,19 @@ namespace DLaB.Xrm.Tests.Core
         }
 
         [TestMethod]
+        public void SkipExecution_MissingRequiredNull_Should_Skip()
+        {
+            TestRequiredNull(ContextEntity.CoalesceTargetPreImage);
+            TestRequiredNull(ContextEntity.CoalesceTargetPostImage);
+            TestRequiredNull(ContextEntity.PreImage);
+            TestRequiredNull(ContextEntity.PostImage);
+            TestRequiredNull(ContextEntity.Target);
+        }
+
+        [TestMethod]
         public void SkipExecution_MissingUpdated_Should_Skip()
         {
-            var sut = new RequirementValidator().AllUpdated<Contact>(c => new { c.NickName });
+            var sut = new RequirementValidator().Updated<Contact>(c => new { c.NickName });
             var withValue = new Contact { NickName = "NotNull" };
             var withNullValue = new Contact { NickName = null };
             var empty = new Contact();
@@ -52,12 +82,12 @@ namespace DLaB.Xrm.Tests.Core
         }
 
         [TestMethod]
-        public void SkipExecution_MissingUpdatedAllowNulls_Should_Skip()
+        public void SkipExecution_MissingChanged_Should_Skip()
         {
             var withValue = new Contact { NickName = "NotNull" };
             var withNullValue = new Contact { NickName = null };
             var empty = new Contact();
-            var sut = new RequirementValidator().AllUpdatedAllowNulls<Contact>(c => new { c.NickName });
+            var sut = new RequirementValidator().Changed<Contact>(c => new { c.NickName });
             TestSkip(sut, withValue, empty);
             TestSkip(sut, withValue, withValue, $"The target did not update the column {Contact.Fields.NickName} to a non-null value!");
             TestSkip(sut, withNullValue, withValue);
@@ -65,25 +95,27 @@ namespace DLaB.Xrm.Tests.Core
         }
 
         [TestMethod]
-        public void SkipExecution_MissingAtLeastOneUpdated_Should_Skip()
+        public void SkipExecution_MissingCleared_Should_Skip()
         {
-            var sut = new RequirementValidator().AtLeastOneUpdated<Contact>(c => new { c.NickName, c.AssistantName });
-            var possibleValues = new List<Contact>
-            {
-                new Contact(),
-                new Contact { AssistantName = null },
-                new Contact { AssistantName = "NotNull" },
-                new Contact { NickName = null },
-                new Contact { NickName = null, AssistantName = null },
-                new Contact { NickName = null, AssistantName = "NotNull" },
-                new Contact { NickName = "NotNull" },
-                new Contact { NickName = "NotNull", AssistantName = null },
-                new Contact { NickName = "NotNull", AssistantName = "NotNull" },
-            };
+            var withValue = new Contact { NickName = "NotNull" };
+            var withNullValue = new Contact { NickName = null };
+            var empty = new Contact();
+            var sut = new RequirementValidator().Cleared<Contact>(c => new { c.NickName });
+            TestSkip(sut, withValue, empty, $"The target contained a non-null value for column {Contact.Fields.NickName} that was required to be updated to null!");
+            TestSkip(sut, withValue, withValue, $"The target contained a non-null value for column {Contact.Fields.NickName} that was required to be updated to null!");
+            TestSkip(sut, withNullValue, withValue);
+            TestSkip(sut, withNullValue, withNullValue, $"The target contained a null value for column {Contact.Fields.NickName} that was required to be updated to null, but it was already null!");
+            TestSkip(sut, empty, withValue, $"The target did not contain a required update of column {Contact.Fields.NickName} to null!");
+        }
 
-            foreach (var target in possibleValues)
+        [TestMethod]
+        public void SkipExecution_MissingUpdatedAny_Should_Skip()
+        {
+            var sut = new RequirementValidator().UpdatedAny<Contact>(c => new { c.NickName, c.AssistantName });
+
+            foreach (var target in PossibleValues)
             {
-                foreach (var preImage in possibleValues)
+                foreach (var preImage in PossibleValues)
                 {
                     var message = target.NickName == null
                                   && target.AssistantName == null
@@ -98,27 +130,14 @@ namespace DLaB.Xrm.Tests.Core
             }
         }
 
-
         [TestMethod]
-        public void SkipExecution__MissingAtLeastOneUpdatedAllowNulls_Should_Skip()
+        public void SkipExecution_MissingChangedAny_Should_Skip()
         {
-            var sut = new RequirementValidator().AtLeastOneUpdatedAllowNulls<Contact>(c => new { c.NickName, c.AssistantName });
-            var possibleValues = new List<Contact>
-            {
-                new Contact(),
-                new Contact { AssistantName = null },
-                new Contact { AssistantName = "NotNull" },
-                new Contact { NickName = null },
-                new Contact { NickName = null, AssistantName = null },
-                new Contact { NickName = null, AssistantName = "NotNull" },
-                new Contact { NickName = "NotNull" },
-                new Contact { NickName = "NotNull", AssistantName = null },
-                new Contact { NickName = "NotNull", AssistantName = "NotNull" },
-            };
+            var sut = new RequirementValidator().ChangedAny<Contact>(c => new { c.NickName, c.AssistantName });
 
-            foreach (var target in possibleValues)
+            foreach (var target in PossibleValues)
             {
-                foreach (var preImage in possibleValues)
+                foreach (var preImage in PossibleValues)
                 {
                     var message = !target.Contains(Contact.Fields.NickName)
                                   && !target.Contains(Contact.Fields.AssistantName)
@@ -127,6 +146,30 @@ namespace DLaB.Xrm.Tests.Core
                                   && (!target.Contains(Contact.Fields.AssistantName)
                                       || target.AssistantName == preImage.AssistantName)
                         ? $"The target did not update at least one of the following columns: {Contact.Fields.NickName}, {Contact.Fields.AssistantName}!"
+                        : null;
+                    TestSkip(sut, target, preImage, message);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void SkipExecution_MissingClearedAny_Should_Skip()
+        {
+            var sut = new RequirementValidator().ClearedAny<Contact>(c => new { c.NickName, c.AssistantName });
+
+            foreach (var target in PossibleValues)
+            {
+                foreach (var preImage in PossibleValues)
+                {
+                    var nickNameNulled = target.Contains(Contact.Fields.NickName)
+                                         && target.NickName == null
+                                         && preImage.NickName != null;
+                    var assistantNulled = target.Contains(Contact.Fields.AssistantName)
+                                          && target.AssistantName == null
+                                          && preImage.AssistantName != null;
+                    var message = !nickNameNulled
+                                  && !assistantNulled
+                        ? $"The target did not update at least one of the following columns to null: {Contact.Fields.NickName}, {Contact.Fields.AssistantName}!"
                         : null;
                     TestSkip(sut, target, preImage, message);
                 }
@@ -186,23 +229,33 @@ namespace DLaB.Xrm.Tests.Core
         }
 
         [TestMethod]
-        public void SkipExecution_AtLeastOneRequired_Should_Skip()
+        public void SkipExecution_ContainsAny_Should_Skip()
         {
-            TestAtLeastOneRequired(ContextEntity.CoalesceTargetPreImage);
-            TestAtLeastOneRequired(ContextEntity.CoalesceTargetPostImage);
-            TestAtLeastOneRequired(ContextEntity.PreImage);
-            TestAtLeastOneRequired(ContextEntity.PostImage);
-            TestAtLeastOneRequired(ContextEntity.Target);
+            TestContainsAny(ContextEntity.CoalesceTargetPreImage);
+            TestContainsAny(ContextEntity.CoalesceTargetPostImage);
+            TestContainsAny(ContextEntity.PreImage);
+            TestContainsAny(ContextEntity.PostImage);
+            TestContainsAny(ContextEntity.Target);
         }
 
         [TestMethod]
-        public void SkipExecution_AllLeastOneRequiredAllowNulls_Should_Skip()
+        public void SkipExecution_ContainsAnyNullable_Should_Skip()
         {
-            TestAllLeastOneRequiredAllowNulls(ContextEntity.CoalesceTargetPreImage);
-            TestAllLeastOneRequiredAllowNulls(ContextEntity.CoalesceTargetPostImage);
-            TestAllLeastOneRequiredAllowNulls(ContextEntity.PreImage);
-            TestAllLeastOneRequiredAllowNulls(ContextEntity.PostImage);
-            TestAllLeastOneRequiredAllowNulls(ContextEntity.Target);
+            TestContainsAnyNullable(ContextEntity.CoalesceTargetPreImage);
+            TestContainsAnyNullable(ContextEntity.CoalesceTargetPostImage);
+            TestContainsAnyNullable(ContextEntity.PreImage);
+            TestContainsAnyNullable(ContextEntity.PostImage);
+            TestContainsAnyNullable(ContextEntity.Target);
+        }
+
+        [TestMethod]
+        public void SkipExecution_ContainsAnyNull_Should_Skip()
+        {
+            TestContainsAnyNull(ContextEntity.CoalesceTargetPreImage);
+            TestContainsAnyNull(ContextEntity.CoalesceTargetPostImage);
+            TestContainsAnyNull(ContextEntity.PreImage);
+            TestContainsAnyNull(ContextEntity.PostImage);
+            TestContainsAnyNull(ContextEntity.Target);
         }
 
         [TestMethod]
@@ -214,7 +267,7 @@ namespace DLaB.Xrm.Tests.Core
 
         private static void TestRequired(ContextEntity contextEntity)
         {
-            var sut = new RequirementValidator().AllRequired<Contact>(contextEntity, c => new { c.NickName });
+            var sut = new RequirementValidator().Contains<Contact>(contextEntity, c => new { c.NickName });
             var context = GetContext(contextEntity, new Contact());
             Assert.IsTrue(sut.SkipExecution(context));
             Assert.AreEqual($"The {contextEntity} entity type did not contain the required column {Contact.Fields.NickName}!", context.FakeTraceService.Traces.Single().Trace);
@@ -225,7 +278,7 @@ namespace DLaB.Xrm.Tests.Core
             Assert.IsFalse(sut.SkipExecution(context));
             Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
 
-            sut = new RequirementValidator().AllRequired<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
+            sut = new RequirementValidator().Contains<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
             context = GetContext(contextEntity, new Contact());
             Assert.IsTrue(sut.SkipExecution(context));
             Assert.AreEqual($"The {contextEntity} entity type did not contain the required column {Contact.Fields.NickName}!", context.FakeTraceService.Traces.Single().Trace);
@@ -246,7 +299,7 @@ namespace DLaB.Xrm.Tests.Core
 
         private static void TestRequiredAllowNulls(ContextEntity contextEntity)
         {
-            var sut = new RequirementValidator().AllRequiredAllowNulls<Contact>(contextEntity, c => new { c.NickName });
+            var sut = new RequirementValidator().ContainsNullable<Contact>(contextEntity, c => new { c.NickName });
             var context = GetContext(contextEntity, new Contact());
             Assert.IsTrue(sut.SkipExecution(context));
             Assert.AreEqual($"The {contextEntity} entity type did not contain the required column {Contact.Fields.NickName}!", context.FakeTraceService.Traces.Single().Trace);
@@ -257,9 +310,23 @@ namespace DLaB.Xrm.Tests.Core
             AssertPassedValidation(sut, context);
         }
 
-        private static void TestAtLeastOneRequired(ContextEntity contextEntity)
+        private static void TestRequiredNull(ContextEntity contextEntity)
         {
-            var sut = new RequirementValidator().AtLeastOneRequired<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
+            var sut = new RequirementValidator().ContainsNull<Contact>(contextEntity, c => new { c.NickName });
+            var context = GetContext(contextEntity, new Contact());
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type did not contain the required to be null column {Contact.Fields.NickName}!", context.FakeTraceService.Traces.Single().Trace);
+            context = GetContext(contextEntity, new Contact { NickName = null });
+            Assert.IsFalse(sut.SkipExecution(context));
+            Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contained a non-null value for the required to be null column {Contact.Fields.NickName}!", context.FakeTraceService.Traces.Single().Trace);
+        }
+
+        private static void TestContainsAny(ContextEntity contextEntity)
+        {
+            var sut = new RequirementValidator().ContainsAny<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
             var context = GetContext(contextEntity, new Contact());
             Assert.IsTrue(sut.SkipExecution(context));
             Assert.AreEqual($"The {contextEntity} entity type did not contain a non-null value for at least one of the following columns: {Contact.Fields.NickName}, {Contact.Fields.AssistantName}!", context.FakeTraceService.Traces.Single().Trace);
@@ -274,9 +341,9 @@ namespace DLaB.Xrm.Tests.Core
             AssertPassedValidation(sut, context);
         }
 
-        private static void TestAllLeastOneRequiredAllowNulls(ContextEntity contextEntity)
+        private static void TestContainsAnyNullable(ContextEntity contextEntity)
         {
-            var sut = new RequirementValidator().AllLeastOneRequiredAllowNulls<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
+            var sut = new RequirementValidator().ContainsAnyNullable<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
             var context = GetContext(contextEntity, new Contact());
             Assert.IsTrue(sut.SkipExecution(context));
             Assert.AreEqual($"The {contextEntity} entity type did not contain at least one of the following columns: {Contact.Fields.NickName}, {Contact.Fields.AssistantName}!", context.FakeTraceService.Traces.Single().Trace);
@@ -288,9 +355,33 @@ namespace DLaB.Xrm.Tests.Core
             AssertPassedValidation(sut, context);
         }
 
+        private static void TestContainsAnyNull(ContextEntity contextEntity)
+        {
+            var sut = new RequirementValidator().ContainsAnyNull<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
+            var context = GetContext(contextEntity, new Contact());
+            var expectedSkipMessage = $"The {contextEntity} entity type did not contain a null value for at least one of the following columns: {Contact.Fields.NickName}, {Contact.Fields.AssistantName}!";
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual(expectedSkipMessage, context.FakeTraceService.Traces.Single().Trace);
+            context = GetContext(contextEntity, new Contact { NickName = null });
+            AssertPassedValidation(sut, context);
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual(expectedSkipMessage, context.FakeTraceService.Traces.Single().Trace);
+            context = GetContext(contextEntity, new Contact { AssistantName = null });
+            AssertPassedValidation(sut, context);
+            context = GetContext(contextEntity, new Contact { AssistantName = "NotNull" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual(expectedSkipMessage, context.FakeTraceService.Traces.Single().Trace);
+            context = GetContext(contextEntity, new Contact { NickName = null, AssistantName = null });
+            AssertPassedValidation(sut, context);
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull", AssistantName = "NotNull" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual(expectedSkipMessage, context.FakeTraceService.Traces.Single().Trace);
+        }
+
         private static void MissingPreImage(ContextEntity contextEntity)
         {
-            var sut = new RequirementValidator().AllRequired<Contact>(contextEntity, c => new { c.NickName });
+            var sut = new RequirementValidator().Contains<Contact>(contextEntity, c => new { c.NickName });
             var context = new FakeContext
             {
                 MessageName = MessageType.Update

@@ -40,206 +40,302 @@ namespace Source.DLaB.Xrm.Plugin
             return false;
         }
 
-        #region All
 
-        #region Required
+        #region Contains
+
+        #region Non-null
 
         /// <summary>
-        /// Requires all the given columns have a value
+        /// Requires all columns are in the attributes collection with a non-null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columnNames">The column names</param>
         /// <returns></returns>
-        public RequirementValidator AllRequired(ContextEntity entityType, params string[] columnNames)
+        public RequirementValidator Contains(ContextEntity entityType, params string[] columnNames)
         {
             Get(entityType).RequiredColumns.AddMissing(columnNames);
             return this;
         }
 
         /// <summary>
-        /// Requires all the given columns have a value
+        /// Requires all columns are in the attributes collection with a non-null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="anonymousTypeInitializer">The type initializer</param>
         /// <returns></returns>
-        public RequirementValidator AllRequired<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        public RequirementValidator Contains<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
         {
-            return AllRequired(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
+            return Contains(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
         }
 
-
         /// <summary>
-        /// Requires all the given columns are contained in the entity (could be null)
+        /// Requires at least one column is in the attributes collection with a non-null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columnNames">The column names</param>
         /// <returns></returns>
-        public RequirementValidator AllRequiredAllowNulls(ContextEntity entityType, params string[] columnNames)
-        {
-            Get(entityType).RequiredColumnsAllowNulls.AddMissing(columnNames);
-            return this;
-        }
-
-        /// <summary>
-        /// Requires all the given columns are contained in the entity (could be null)
-        /// </summary>
-        /// <param name="entityType">The entity type</param>
-        /// <param name="anonymousTypeInitializer">The type initializer</param>
-        /// <returns></returns>
-        public RequirementValidator AllRequiredAllowNulls<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T: Entity
-        {
-            return AllRequiredAllowNulls(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
-        }
-        #endregion Required
-
-        #region Updated
-
-        /// <summary>
-        /// Requires all the given columns to have been updated to a non-null value that is different than the pre-image
-        /// </summary>
-        /// <param name="columnNames">The column names</param>
-        /// <returns></returns>
-        public RequirementValidator AllUpdated(params string[] columnNames)
-        {
-            Get(ContextEntity.Target).UpdatedColumns.AddMissing(columnNames);
-            return this;
-        }
-
-        /// <summary>
-        /// Requires all the given columns to have been updated to a non-null value that is different than the pre-image
-        /// </summary>
-        /// <param name="anonymousTypeInitializer">The type initializer</param>
-        /// <returns></returns>
-        public RequirementValidator AllUpdated<T>(Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
-        {
-            return AllUpdated(anonymousTypeInitializer.GetAttributeNamesArray());
-        }
-
-        /// <summary>
-        /// Requires all the given columns to have been updated to a value that is different than the pre-image (allows updating to null)
-        /// </summary>
-        /// <param name="columnNames">The column names</param>
-        /// <returns></returns>
-        public RequirementValidator AllUpdatedAllowNulls(params string[] columnNames)
-        {
-            Get(ContextEntity.Target).UpdatedColumnsAllowNulls.AddMissing(columnNames);
-            return this;
-        }
-
-        /// <summary>
-        /// Requires all the given columns to have been updated to a value that is different than the pre-image (allows updating to null)
-        /// </summary>
-        /// <param name="anonymousTypeInitializer">The type initializer</param>
-        /// <returns></returns>
-        public RequirementValidator AllUpdatedAllowNulls<T>(Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
-        {
-            return AllUpdatedAllowNulls(anonymousTypeInitializer.GetAttributeNamesArray());
-        }
-
-        #endregion Updated
-
-        #endregion All
-
-        #region At Least One
-
-        #region Required
-
-        /// <summary>
-        /// Requires at least one of the columns in the set to have a value
-        /// </summary>
-        /// <param name="entityType">The entity type</param>
-        /// <param name="columnNames">The column names</param>
-        /// <returns></returns>
-        public RequirementValidator AtLeastOneRequired(ContextEntity entityType, params string[] columnNames)
+        public RequirementValidator ContainsAny(ContextEntity entityType, params string[] columnNames)
         {
             Get(entityType).RequiredOrColumns.Add(new List<string>(columnNames));
             return this;
         }
 
         /// <summary>
-        /// Requires at least one of the columns in the set to have a value
+        /// Requires at least one column is in the attributes collection with a non-null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="anonymousTypeInitializer">The type initializer</param>
         /// <returns></returns>
-        public RequirementValidator AtLeastOneRequired<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        public RequirementValidator ContainsAny<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
         {
-            return AtLeastOneRequired(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
+            return ContainsAny(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
         }
 
+        #endregion Non-null
+
+        #region Nullable
+
         /// <summary>
-        /// Requires at least one of the columns in the set to be contained in the entity (could be null)
+        /// Requires all columns are in the attributes collection (Allows nulls)
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columnNames">The column names</param>
         /// <returns></returns>
-        public RequirementValidator AllLeastOneRequiredAllowNulls(ContextEntity entityType, params string[] columnNames)
+        public RequirementValidator ContainsNullable(ContextEntity entityType, params string[] columnNames)
+        {
+            Get(entityType).RequiredColumnsAllowNulls.AddMissing(columnNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires all columns are in the attributes collection (Allows nulls)
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="anonymousTypeInitializer">The type initializer</param>
+        /// <returns></returns>
+        public RequirementValidator ContainsNullable<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T: Entity
+        {
+            return ContainsNullable(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
+        }
+
+        /// <summary>
+        /// Requires at least one column is in the attributes collection (Allows nulls)
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="columnNames">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator ContainsAnyNullable(ContextEntity entityType, params string[] columnNames)
         {
             Get(entityType).RequiredOrColumnsAllowNulls.Add(new List<string>(columnNames));
             return this;
         }
 
         /// <summary>
-        /// Requires at least one of the columns in the set to be contained in the entity (could be null)
+        /// Requires at least one column is in the attributes collection (Allows nulls)
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="anonymousTypeInitializer">The type initializer</param>
         /// <returns></returns>
-        public RequirementValidator AllLeastOneRequiredAllowNulls<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        public RequirementValidator ContainsAnyNullable<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
         {
-            return AllLeastOneRequiredAllowNulls(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
+            return ContainsAnyNullable(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
         }
 
+        #endregion Nullable
 
-        #endregion Required
-
-        #region Updated
+        #region Null
 
         /// <summary>
-        /// Requires at least one of the columns in the set to have been updated to a non-null value that is different than the pre-image
+        /// Requires all columns are in the attributes collection with a null value
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="columnNames">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator ContainsNull(ContextEntity entityType, params string[] columnNames)
+        {
+            Get(entityType).RequiredNullColumns.AddMissing(columnNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires all columns are in the attributes collection with a null value
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="anonymousTypeInitializer">The type initializer</param>
+        /// <returns></returns>
+        public RequirementValidator ContainsNull<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        {
+            return ContainsNull(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
+        }
+
+        /// <summary>
+        /// Requires at least one column is in the attributes collection with a null value
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="columnNames">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator ContainsAnyNull(ContextEntity entityType, params string[] columnNames)
+        {
+            Get(entityType).RequiredNullOrColumns.Add(new List<string>(columnNames));
+            return this;
+        }
+
+        /// <summary>
+        /// Requires at least one column is in the attributes collection with a null value
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="anonymousTypeInitializer">The type initializer</param>
+        /// <returns></returns>
+        public RequirementValidator ContainsAnyNull<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        {
+            return ContainsAnyNull(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
+        }
+
+        #endregion Null
+
+        #endregion Contains
+
+        #region Updated (Non-Null) / Changed (Nullable) / Cleared (Null)
+
+        #region Updated (Non-Null)
+
+        /// <summary>
+        /// Requires all columns have been updated to a non-null value that is different than the pre-image value
         /// </summary>
         /// <param name="columnNames">The column names</param>
         /// <returns></returns>
-        public RequirementValidator AtLeastOneUpdated(params string[] columnNames)
+        public RequirementValidator Updated(params string[] columnNames)
+        {
+            Get(ContextEntity.Target).UpdatedColumns.AddMissing(columnNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires all columns to have been updated to a non-null value that is different than the pre-image value
+        /// </summary>
+        /// <param name="anonymousTypeInitializer">The type initializer</param>
+        /// <returns></returns>
+        public RequirementValidator Updated<T>(Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        {
+            return Updated(anonymousTypeInitializer.GetAttributeNamesArray());
+        }
+
+        /// <summary>
+        /// Requires at least one column has been updated to a non-null value that is different than the pre-image value
+        /// </summary>
+        /// <param name="columnNames">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator UpdatedAny(params string[] columnNames)
         {
             Get(ContextEntity.Target).UpdatedOrColumns.Add(new List<string>(columnNames));
             return this;
         }
 
         /// <summary>
-        /// Requires at least one of the columns in the set to have been updated to a non-null value that is different than the pre-image
+        /// Requires at least one column has been updated to a non-null value that is different than the pre-image value
         /// </summary>
         /// <param name="anonymousTypeInitializer">The type initializer</param>
         /// <returns></returns>
-        public RequirementValidator AtLeastOneUpdated<T>(Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        public RequirementValidator UpdatedAny<T>(Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
         {
-            return AtLeastOneUpdated(anonymousTypeInitializer.GetAttributeNamesArray());
+            return UpdatedAny(anonymousTypeInitializer.GetAttributeNamesArray());
         }
 
+        #endregion Updated (Non-Null)
+
+        #region Changed (Nullable)
+
         /// <summary>
-        /// Requires at least one of the columns in the set to have been updated to a value that is different than the pre-image (allows updating to null)
+        /// Requires all columns to have been updated to a value that is different than the pre-image (allows updating to null)
         /// </summary>
         /// <param name="columnNames">The column names</param>
         /// <returns></returns>
-        public RequirementValidator AtLeastOneUpdatedAllowNulls(params string[] columnNames)
+        public RequirementValidator Changed(params string[] columnNames)
+        {
+            Get(ContextEntity.Target).UpdatedColumnsAllowNulls.AddMissing(columnNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires all columns to have been updated to a value that is different than the pre-image (allows updating to null)
+        /// </summary>
+        /// <param name="anonymousTypeInitializer">The type initializer</param>
+        /// <returns></returns>
+        public RequirementValidator Changed<T>(Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        {
+            return Changed(anonymousTypeInitializer.GetAttributeNamesArray());
+        }
+
+        /// <summary>
+        /// Requires at least one column has been updated to a value that is different than the pre-image value (allows updating to null)
+        /// </summary>
+        /// <param name="columnNames">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator ChangedAny(params string[] columnNames)
         {
             Get(ContextEntity.Target).UpdatedOrColumnsAllowNulls.Add(new List<string>(columnNames));
             return this;
         }
 
         /// <summary>
-        /// Requires at least one of the columns in the set to have been updated to a value that is different than the pre-image (allows updating to null)
+        /// Requires at least one column has been updated to a value that is different than the pre-image value (allows updating to null)
         /// </summary>
         /// <param name="anonymousTypeInitializer">The type initializer</param>
         /// <returns></returns>
-        public RequirementValidator AtLeastOneUpdatedAllowNulls<T>(Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        public RequirementValidator ChangedAny<T>(Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
         {
-            return AtLeastOneUpdatedAllowNulls(anonymousTypeInitializer.GetAttributeNamesArray());
+            return ChangedAny(anonymousTypeInitializer.GetAttributeNamesArray());
         }
 
-        #endregion Updated
+        #endregion Changed (Nullable)
 
-        #endregion At Least One
+        #region Cleared (Null)
+
+        /// <summary>
+        /// Requires all columns to have been updated from a non-null value to a null value
+        /// </summary>
+        /// <param name="columnNames">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator Cleared(params string[] columnNames)
+        {
+            Get(ContextEntity.Target).UpdatedNullColumns.AddMissing(columnNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires all columns to have been updated from a non-null value to a null value
+        /// </summary>
+        /// <param name="anonymousTypeInitializer">The type initializer</param>
+        /// <returns></returns>
+        public RequirementValidator Cleared<T>(Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        {
+            return Cleared(anonymousTypeInitializer.GetAttributeNamesArray());
+        }
+
+        /// <summary>
+        /// Requires at least one column has been updated from a non-null value to a null value)
+        /// </summary>
+        /// <param name="columnNames">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator ClearedAny(params string[] columnNames)
+        {
+            Get(ContextEntity.Target).UpdatedNullOrColumns.Add(new List<string>(columnNames));
+            return this;
+        }
+
+        /// <summary>
+        /// Requires at least one column has been updated from a non-null value to a null value)
+        /// </summary>
+        /// <param name="anonymousTypeInitializer">The type initializer</param>
+        /// <returns></returns>
+        public RequirementValidator ClearedAny<T>(Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        {
+            return ClearedAny(anonymousTypeInitializer.GetAttributeNamesArray());
+        }
+
+        #endregion Cleared (Null)
+
+        #endregion Updated (Non-Null) / Changed (Nullable) / Cleared (Null)
 
         private Requirement Get(ContextEntity entityType)
         {
@@ -256,17 +352,24 @@ namespace Source.DLaB.Xrm.Plugin
         private class Requirement
         {
             private ContextEntity EntityType { get; }
-            public HashSet<string> RequiredColumnsAllowNulls { get; } = new HashSet<string>();
-            public List<List<string>> RequiredOrColumnsAllowNulls { get; } = new List<List<string>>();
 
             public HashSet<string> RequiredColumns { get; } = new HashSet<string>();
             public List<List<string>> RequiredOrColumns { get; } = new List<List<string>>();
+
+            public HashSet<string> RequiredColumnsAllowNulls { get; } = new HashSet<string>();
+            public List<List<string>> RequiredOrColumnsAllowNulls { get; } = new List<List<string>>();
+
+            public HashSet<string> RequiredNullColumns { get; } = new HashSet<string>();
+            public List<List<string>> RequiredNullOrColumns { get; } = new List<List<string>>();
 
             public HashSet<string> UpdatedColumns { get; } = new HashSet<string>();
             public List<List<string>> UpdatedOrColumns { get; } = new List<List<string>>();
 
             public HashSet<string> UpdatedColumnsAllowNulls { get; } = new HashSet<string>();
             public List<List<string>> UpdatedOrColumnsAllowNulls { get; } = new List<List<string>>();
+
+            public HashSet<string> UpdatedNullColumns { get; } = new HashSet<string>();
+            public List<List<string>> UpdatedNullOrColumns { get; } = new List<List<string>>();
 
             private bool IsPreImageRequired { get; set; } = true;
 
@@ -286,8 +389,10 @@ namespace Source.DLaB.Xrm.Plugin
 
                 return SkipExecution(context, entity, RequiredColumns, RequiredOrColumns, checkNotNull: true)
                        || SkipExecution(context, entity, RequiredColumnsAllowNulls, RequiredOrColumnsAllowNulls, checkNotNull: false)
+                       || SkipNonNullExecution(context, entity, RequiredNullColumns, RequiredNullOrColumns)
                        || SkipExecutionForUpdate(context, entity, preImage, UpdatedColumns, UpdatedOrColumns, checkNotNull: true)
-                       || SkipExecutionForUpdate(context, entity, preImage, UpdatedColumnsAllowNulls, UpdatedOrColumnsAllowNulls, checkNotNull: false);
+                       || SkipExecutionForUpdate(context, entity, preImage, UpdatedColumnsAllowNulls, UpdatedOrColumnsAllowNulls, checkNotNull: false)
+                       || SkipNonNullExecutionForUpdate(context, entity, preImage, UpdatedNullColumns, UpdatedNullOrColumns);
             }
 
             private bool SkipExecution(IExtendedPluginContext context, Entity entity, HashSet<string> allColumns, List<List<string>> atLeastOneColumns, bool checkNotNull)
@@ -336,6 +441,45 @@ namespace Source.DLaB.Xrm.Plugin
                 return false;
             }
 
+            private bool SkipNonNullExecution(IExtendedPluginContext context, Entity entity, HashSet<string> requiredNulls, List<List<string>> atLeastOneNulls)
+            {
+                foreach (var column in requiredNulls)
+                {
+                    if (!entity.Contains(column))
+                    {
+                        context.Trace("The {0} entity type did not contain the required to be null column {1}!", EntityType, column);
+                        return true;
+                    }
+
+                    if (entity[column] != null)
+                    {
+                        context.Trace("The {0} entity type contained a non-null value for the required to be null column {1}!", EntityType, column);
+                        return true;
+                    }
+                }
+
+                foreach (var set in atLeastOneNulls)
+                {
+                    var requirementMet = false;
+                    foreach (var column in set)
+                    {
+                        if (entity.Contains(column) && entity[column] == null)
+                        {
+                            requirementMet = true;
+                            break;
+                        }
+                    }
+
+                    if (!requirementMet)
+                    {
+                        context.Trace("The {0} entity type did not contain a null value for at least one of the following columns: {1}!", EntityType, string.Join(", ", set));
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             private void AssertHasPreImageIfRequired(Entity preImage)
             {
                 if (preImage != null
@@ -353,6 +497,7 @@ namespace Source.DLaB.Xrm.Plugin
                 {
                     requiredPreImageColumns.AddMissing(RequiredColumns);
                     requiredPreImageColumns.AddMissing(RequiredColumnsAllowNulls);
+                    requiredPreImageColumns.AddMissing(RequiredNullColumns);
                     requiredPreImageColumns.AddMissing(RequiredOrColumns.SelectMany(c => c));
                     requiredPreImageColumns.AddMissing(RequiredOrColumnsAllowNulls.SelectMany(c => c));
                 }
@@ -411,6 +556,51 @@ namespace Source.DLaB.Xrm.Plugin
                         {
                             context.Trace("The target did not update at least one of the following columns: {0}!", string.Join(", ", set));
                         }
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            private bool SkipNonNullExecutionForUpdate(IExtendedPluginContext context, Entity target, Entity preImage, HashSet<string> allNullColumns, List<List<string>> atLeastOneNullColumns)
+            {
+                foreach (var column in allNullColumns)
+                {
+                    if (!target.Contains(column))
+                    {
+                        context.Trace("The target did not contain a required update of column {0} to null!", column);
+                        return true;
+                    }
+
+                    if (target[column] != null)
+                    {
+                        context.Trace("The target contained a non-null value for column {0} that was required to be updated to null!", column);
+                        return true;
+                    }
+
+                    if (!ColumnValueHasChanged(context, target, preImage, column))
+                    {
+                        context.Trace("The target contained a null value for column {0} that was required to be updated to null, but it was already null!", column);
+                        return true;
+                    }
+                }
+
+                foreach (var set in atLeastOneNullColumns)
+                {
+                    var requirementMet = false;
+                    foreach (var column in set)
+                    {
+                        if (target.Contains(column) && target[column] == null && ColumnValueHasChanged(context, target, preImage, column))
+                        {
+                            requirementMet = true;
+                            break;
+                        }
+                    }
+                
+                    if (!requirementMet)
+                    {
+                        context.Trace("The target did not update at least one of the following columns to null: {0}!", string.Join(", ", set));
                         return true;
                     }
                 }
