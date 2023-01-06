@@ -67,7 +67,7 @@ namespace DLaB.Xrm.Tests.Core
             var sut = new Entity(MyEarlyBoundEntity.EntityLogicalName);
             var output = sut.ToEntityInterface<IMyInterface>(Assembly.GetExecutingAssembly(), "DLaB.Xrm.Tests.Core");
             Assert.IsNotNull(output);
-            Assert.AreNotEqual(sut, output);
+            Assert.AreNotEqual<object>(sut, output);
             Assert.AreEqual(output, ((Entity)output).ToEntityInterface<IMyInterface>(Assembly.GetExecutingAssembly(), "DLaB.Xrm.Tests.Core"));
         }
 
