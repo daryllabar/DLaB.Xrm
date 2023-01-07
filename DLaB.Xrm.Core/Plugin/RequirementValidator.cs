@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections;
+﻿using DLaB.Xrm.Plugin;
+using Microsoft.Xrm.Sdk;
+using Source.DLaB.Xrm.Comparers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using DLaB.Xrm.Plugin;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
+using Source.DLaB.Common;
+
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 using DLaB.Common;
 
 namespace DLaB.Xrm.Plugin
 #else
-using Source.DLaB.Common;
 
 namespace Source.DLaB.Xrm.Plugin
 #endif
@@ -193,9 +193,37 @@ namespace Source.DLaB.Xrm.Plugin
 
         #endregion Null
 
+        #region Value
+
+        /// <summary>
+        /// Requires all columns to have the specified values
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="entity">The entity with Attributes to require to have been to</param>
+        /// <returns></returns>
+        public RequirementValidator Contains(ContextEntity entityType, Entity entity)
+        {
+            Get(entityType).ContainedValues.Add(entity);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires at least one column to have the specified value
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="entity">The entity with Attributes to require to have been to</param>
+        /// <returns></returns>
+        public RequirementValidator ContainsAny(ContextEntity entityType, Entity entity)
+        {
+            Get(entityType).ContainedOrValues.Add(entity);
+            return this;
+        }
+
+        #endregion Value
+
         #endregion Contains
 
-        #region Updated (Non-Null) / Changed (Nullable) / Cleared (Null)
+        #region Updated (Non-Null) / Changed (Nullable) / Cleared (Null) / Updated (value)
 
         #region Updated (Non-Null)
 
@@ -335,7 +363,33 @@ namespace Source.DLaB.Xrm.Plugin
 
         #endregion Cleared (Null)
 
-        #endregion Updated (Non-Null) / Changed (Nullable) / Cleared (Null)
+        #region Update (Value)
+
+        /// <summary>
+        /// Requires all columns to have been updated to the specified values, which are different than the pre-image values
+        /// </summary>
+        /// <param name="entity">The entity with Attributes to require to have been to</param>
+        /// <returns></returns>
+        public RequirementValidator Updated(Entity entity)
+        {
+            Get(ContextEntity.Target).UpdatedToValues.Add(entity);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires at least one column has been updated to the specified value, which is different than the pre-image value
+        /// </summary>
+        /// <param name="entity">The entity with Attributes to require to have been updated to</param>
+        /// <returns></returns>
+        public RequirementValidator UpdatedAny(Entity entity)
+        {
+            Get(ContextEntity.Target).UpdatedToOrValues.Add(entity);
+            return this;
+        }
+
+        #endregion Updated (Value)
+
+        #endregion Updated (Non-Null) / Changed (Nullable) / Cleared (Null) / Updated (value)
 
         private Requirement Get(ContextEntity entityType)
         {
@@ -371,6 +425,12 @@ namespace Source.DLaB.Xrm.Plugin
             public HashSet<string> UpdatedNullColumns { get; } = new HashSet<string>();
             public List<List<string>> UpdatedNullOrColumns { get; } = new List<List<string>>();
 
+            public EntityList ContainedValues { get; } = new EntityList();
+            public EntityOrList ContainedOrValues { get; } = new EntityOrList();
+
+            public EntityList UpdatedToValues { get; } = new EntityList();
+            public EntityOrList UpdatedToOrValues { get; } = new EntityOrList();
+
             private bool IsPreImageRequired { get; set; } = true;
 
             public Requirement(ContextEntity entityType)
@@ -385,14 +445,17 @@ namespace Source.DLaB.Xrm.Plugin
                 var preImage = context.GetMessageType() == MessageType.Update
                     ? context.GetPreEntity<Entity>()
                     : new Entity();
-                AssertHasPreImageIfRequired(preImage);
+                var service = context.SystemOrganizationService;
+                AssertHasPreImageIfRequired(service, preImage);
 
                 return SkipExecution(context, entity, RequiredColumns, RequiredOrColumns, checkNotNull: true)
                        || SkipExecution(context, entity, RequiredColumnsAllowNulls, RequiredOrColumnsAllowNulls, checkNotNull: false)
                        || SkipNonNullExecution(context, entity, RequiredNullColumns, RequiredNullOrColumns)
+                       || SkipValueExecution(context, entity, ContainedValues.GetValues(service), ContainedOrValues.GetValues())
                        || SkipExecutionForUpdate(context, entity, preImage, UpdatedColumns, UpdatedOrColumns, checkNotNull: true)
                        || SkipExecutionForUpdate(context, entity, preImage, UpdatedColumnsAllowNulls, UpdatedOrColumnsAllowNulls, checkNotNull: false)
-                       || SkipNonNullExecutionForUpdate(context, entity, preImage, UpdatedNullColumns, UpdatedNullOrColumns);
+                       || SkipNonNullExecutionForUpdate(context, entity, preImage, UpdatedNullColumns, UpdatedNullOrColumns)
+                       || SkipValueExecutionForUpdate(context, entity, preImage, UpdatedToValues.GetValues(service), UpdatedToOrValues.GetValues());
             }
 
             private bool SkipExecution(IExtendedPluginContext context, Entity entity, HashSet<string> allColumns, List<List<string>> atLeastOneColumns, bool checkNotNull)
@@ -480,7 +543,50 @@ namespace Source.DLaB.Xrm.Plugin
                 return false;
             }
 
-            private void AssertHasPreImageIfRequired(Entity preImage)
+            private bool SkipValueExecution(IExtendedPluginContext context, Entity entity, Dictionary<string, object> requiredValues, List<Dictionary<string, object>> atLeastOneMatches)
+            {
+                var service = context.SystemOrganizationService;
+                foreach (var att in requiredValues)
+                {
+                    if (!entity.Contains(att.Key))
+                    {
+                        context.Trace("The {0} entity type did not contain a value for column {1} which was required to be {2}!", EntityType, att.Key, att.Value.ObjectToStringDebug());
+                        return true;
+                    }
+
+                    if (!AttributeComparer.ValuesAreEqual(service, att.Value, entity[att.Key]))
+                    {
+                        context.Trace("The {0} entity type was required to contain a value of {1} for column {2} but contained the value {3}!", EntityType, att.Value, att.Key, entity[att.Key].ObjectToStringDebug());
+                        return true;
+                    }
+                }
+
+
+                var missingMatch = atLeastOneMatches.FirstOrDefault(set => !EntityContainsAtLeastOneMatch(service, entity, set));
+                if (missingMatch != null)
+                {
+                    context.Trace("The {0} entity type did not contain the required value for at least one of the following columns: {1}!", EntityType, string.Join(", ", missingMatch.Keys));
+                    return true;
+                }
+
+                return false;
+            }
+
+            private static bool EntityContainsAtLeastOneMatch(IOrganizationService service, Entity entity, Dictionary<string, object> set)
+            {
+                return set.Any(att =>
+                    entity.Contains(att.Key) && AttributeComparer.ValuesAreEqual(service, att.Value, entity[att.Key]));
+            }
+
+            private bool EntityContainsAtLeastOneMatchChanged(IOrganizationService service, Entity target, Entity preImage, Dictionary<string, object> set)
+            {
+                return set.Any(att =>
+                    target.Contains(att.Key)
+                    && AttributeComparer.ValuesAreEqual(service, att.Value, target[att.Key])
+                    && ColumnValueHasChanged(service, target, preImage, att.Key));
+            }
+
+            private void AssertHasPreImageIfRequired(IOrganizationService service, Entity preImage)
             {
                 if (preImage != null
                     || !IsPreImageRequired)
@@ -489,23 +595,35 @@ namespace Source.DLaB.Xrm.Plugin
                 }
 
                 var requiredPreImageColumns = new HashSet<string>();
+                // Updated
                 requiredPreImageColumns.AddMissing(UpdatedColumns);
                 requiredPreImageColumns.AddMissing(UpdatedColumnsAllowNulls);
+                requiredPreImageColumns.AddMissing(UpdatedNullColumns);
+                requiredPreImageColumns.AddMissing(UpdatedToValues.GetValues(service).Keys);
+
+                // Updated Or
                 requiredPreImageColumns.AddMissing(UpdatedOrColumns.SelectMany(c => c));
                 requiredPreImageColumns.AddMissing(UpdatedOrColumnsAllowNulls.SelectMany(c => c));
+                requiredPreImageColumns.AddMissing(UpdatedNullOrColumns.SelectMany(c => c));
+                requiredPreImageColumns.AddMissing(UpdatedToOrValues.GetValues().SelectMany(c => c.Keys));
                 if (EntityType == ContextEntity.PreImage || EntityType == ContextEntity.CoalesceTargetPreImage)
                 {
+                    // Required
                     requiredPreImageColumns.AddMissing(RequiredColumns);
                     requiredPreImageColumns.AddMissing(RequiredColumnsAllowNulls);
                     requiredPreImageColumns.AddMissing(RequiredNullColumns);
+                    requiredPreImageColumns.AddMissing(ContainedValues.GetValues(service).Keys);
+
+                    // Required Or
                     requiredPreImageColumns.AddMissing(RequiredOrColumns.SelectMany(c => c));
                     requiredPreImageColumns.AddMissing(RequiredOrColumnsAllowNulls.SelectMany(c => c));
+                    requiredPreImageColumns.AddMissing(RequiredNullOrColumns.SelectMany(c => c));
+                    requiredPreImageColumns.AddMissing(ContainedOrValues.GetValues().SelectMany(c => c.Keys));
                 }
 
                 if (requiredPreImageColumns.Any())
                 {
-                    throw new InvalidPluginExecutionException(
-                        $"A pre-image was required but not found!  Expected a pre-image to be registered for this step with the following columns: {string.Join(", ", requiredPreImageColumns)}");
+                    throw new InvalidPluginExecutionException($"A pre-image was required but not found!  Expected a pre-image to be registered for this step with the following columns: {string.Join(", ", requiredPreImageColumns)}");
                 }
 
                 IsPreImageRequired = false;
@@ -513,6 +631,7 @@ namespace Source.DLaB.Xrm.Plugin
 
             private bool SkipExecutionForUpdate(IExtendedPluginContext context, Entity target, Entity preImage, HashSet<string> allColumns, List<List<string>> atLeastOneColumns, bool checkNotNull)
             {
+                var service = context.SystemOrganizationService;
                 foreach (var column in allColumns)
                 {
                     if (!target.Contains(column))
@@ -527,7 +646,7 @@ namespace Source.DLaB.Xrm.Plugin
                         return true;
                     }
 
-                    if (!ColumnValueHasChanged(context, target, preImage, column))
+                    if (!ColumnValueHasChanged(service, target, preImage, column))
                     {
                         context.Trace("The target did not update the column {1} to a non-null value!", EntityType, column);
                         return true;
@@ -539,7 +658,7 @@ namespace Source.DLaB.Xrm.Plugin
                     var requirementMet = false;
                     foreach (var column in set)
                     {
-                        if (target.Contains(column) && (!checkNotNull || target[column] != null) && ColumnValueHasChanged(context, target, preImage, column))
+                        if (target.Contains(column) && (!checkNotNull || target[column] != null) && ColumnValueHasChanged(service, target, preImage, column))
                         {
                             requirementMet = true;
                             break;
@@ -565,6 +684,7 @@ namespace Source.DLaB.Xrm.Plugin
 
             private bool SkipNonNullExecutionForUpdate(IExtendedPluginContext context, Entity target, Entity preImage, HashSet<string> allNullColumns, List<List<string>> atLeastOneNullColumns)
             {
+                var service = context.SystemOrganizationService;
                 foreach (var column in allNullColumns)
                 {
                     if (!target.Contains(column))
@@ -579,7 +699,7 @@ namespace Source.DLaB.Xrm.Plugin
                         return true;
                     }
 
-                    if (!ColumnValueHasChanged(context, target, preImage, column))
+                    if (!ColumnValueHasChanged(service, target, preImage, column))
                     {
                         context.Trace("The target contained a null value for column {0} that was required to be updated to null, but it was already null!", column);
                         return true;
@@ -591,7 +711,7 @@ namespace Source.DLaB.Xrm.Plugin
                     var requirementMet = false;
                     foreach (var column in set)
                     {
-                        if (target.Contains(column) && target[column] == null && ColumnValueHasChanged(context, target, preImage, column))
+                        if (target.Contains(column) && target[column] == null && ColumnValueHasChanged(service, target, preImage, column))
                         {
                             requirementMet = true;
                             break;
@@ -607,115 +727,48 @@ namespace Source.DLaB.Xrm.Plugin
 
                 return false;
             }
+            private bool SkipValueExecutionForUpdate(IExtendedPluginContext context, Entity target, Entity preImage, Dictionary<string, object> allValueColumns, List<Dictionary<string, object>> atLeastOneValueColumns)
+            {
+                var service = context.SystemOrganizationService;
+                foreach (var att in allValueColumns)
+                {
+                    if (!target.Contains(att.Key))
+                    {
+                        context.Trace("The target did not contain a required update of column {0} to {1}!", att.Key, att.Value.ObjectToStringDebug());
+                        return true;
+                    }
 
-            private bool ColumnValueHasChanged(IExtendedPluginContext context, Entity target, Entity preImage, string column)
+                    if (!AttributeComparer.ValuesAreEqual(service, att.Value, target[att.Key])) 
+                    {
+                        context.Trace("The target contained value {0} for column {1} that was required to be updated to {2}!", target[att.Key].ObjectToStringDebug(), att.Key, att.Value.ObjectToStringDebug());
+                        return true;
+                    }
+
+                    if (!ColumnValueHasChanged(service, target, preImage, att.Key))
+                    {
+                        context.Trace("The target contained value {0} for column {1} which it was be updated to, but it already had that value!", att.Value.ObjectToStringDebug(), att.Key);
+                        return true;
+                    }
+                }
+
+                var missingMatch = atLeastOneValueColumns.FirstOrDefault(set => EntityContainsAtLeastOneMatchChanged(service, target, preImage, set));
+                if (missingMatch != null)
+                {
+                    context.Trace("The target did not update at least one of the following columns: {0} to the required value!", missingMatch.Keys.ToCsv());
+                    return true;
+                }
+
+                return false;
+            }
+
+            private bool ColumnValueHasChanged(IOrganizationService service, Entity target, Entity preImage, string column)
             {
                 if (!target.Contains(column))
                 {
                     return false;
                 }
 
-                return !ColumnValuesAreEqual(context, target[column], preImage.Contains(column) ? preImage[column] : null);
-            }
-
-            private static bool ColumnValuesAreEqual(IExtendedPluginContext context, object value, object preValue)
-            {
-                if (preValue == null)
-                {
-                    return value == null;
-                }
-
-                switch (value)
-                {
-                    case null:
-                        return false;
-
-                    //case ColumnSet cs:
-                    //    value = cs.AllColumns
-                    //        ? "\"ColumnSet(allColumns:true)\""
-                    //        : $"\"{string.Join(",", cs.Columns.OrderBy(c => c))}\"";
-                    //    break;
-
-                    //case Entity entity:
-                    //    value = entity.ToStringAttributes(info);
-                    //    break;
-
-                    case EntityReference entityRef:
-                        var preEntityRef = (EntityReference)preValue;
-                        if (entityRef.Id == Guid.Empty
-                            && entityRef.KeyAttributes?.Any() == true)
-                        {
-                            var entity = context.SystemOrganizationService.GetEntityOrDefault(entityRef.LogicalName, entityRef.KeyAttributes, new ColumnSet(false));
-                            entityRef = entity.ToEntityReference();
-                        }
-
-                        return entityRef.Id != preEntityRef.Id
-                               || entityRef.LogicalName != preEntityRef.LogicalName;
-
-                    //case EntityCollection entities:
-                    //    value = entities.ToStringDebug(info);
-                    //    break;
-                    //
-                    //case EntityReferenceCollection entityRefCollection:
-                    //    value = entityRefCollection.ToStringDebug(info);
-                    //    break;
-
-                    case Dictionary<string, string> dict:
-                        var preDict = (Dictionary<string, string>)preValue;
-                        return dict.Keys.OrderBy(k => k).SequenceEqual(preDict.Keys.OrderBy(k => k))
-                               && dict.OrderBy(k => k).Select(kvp => kvp.Value).SequenceEqual(preDict.OrderBy(k => k).Select(kvp => kvp.Value));
-
-                    //case FetchExpression fetch:
-                    //    value = $"\"{fetch.Query.Trim()}\"";
-                    //    break;
-
-                    case byte[] imageArray:
-                        return imageArray.SequenceEqual((byte[])preValue);
-
-                    case IEnumerable enumerable when !(enumerable is string):
-                    
-                        var preItems = new Dictionary<Type,List<object>>();
-                        var preCount = 0;
-                        foreach (var item in ((IEnumerable)preValue))
-                        {
-                            preItems.AddOrAppend(item.GetType(), item);
-                            preCount++;
-                        }
-                    
-                        var items = new List<object>();
-                        foreach (var item in enumerable)
-                        {
-                            if (!preItems.TryGetValue(item.GetType(), out var typedValues))
-                            {
-                                return false;
-                            }
-
-                            var match = typedValues.FirstOrDefault(v => ColumnValuesAreEqual(context, item, v));
-                            if (match == null)
-                            {
-                                return false;
-                            }
-
-                            typedValues.Remove(match);
-                            items.Add(item);
-                        }
-
-                        return items.Count == preCount;
-
-
-                    case OptionSetValue optionSet:
-                        return optionSet.Value == ((OptionSetValue)preValue).Value;
-
-                    case Money money:
-                        return money.Value == ((Money)preValue).Value;
-
-                    //case QueryExpression qe:
-                    //    value = $"\"{qe.GetSqlStatement().Trim()}\"";
-                    //    break;
-
-                    default:
-                        return value.Equals(preValue);
-                }
+                return !AttributeComparer.ValuesAreEqual(service, target[column], preImage.Contains(column) ? preImage[column] : null);
             }
 
             private Entity GetEntity(IExtendedPluginContext context)
@@ -735,6 +788,72 @@ namespace Source.DLaB.Xrm.Plugin
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+            }
+        }
+
+        private class EntityList: EntityListBase
+        {
+            private Dictionary<string, object> Values { get; set; }
+
+            public Dictionary<string, object> GetValues(IOrganizationService service)
+            {
+                if (IsDirty)
+                {
+                    Values = new Dictionary<string, object>();
+                    foreach (var entity in Entities)
+                    {
+                        foreach (var att in entity.Attributes)
+                        {
+                            if (Values.TryGetValue(att.Key, out var value))
+                            {
+                                if (!AttributeComparer.ValuesAreEqual(service, value, att.Value))
+                                {
+                                    throw new Exception($"RequirementValidator Configuration Error!  Multiple values have been defined for column {att.Key}!");
+                                }
+                            }
+                            else
+                            {
+                                Values.Add(att.Key, att.Value);
+                            }
+                        }
+                    }
+                }
+
+                IsDirty = false;
+                return Values;
+            }
+        }
+
+        private class EntityOrList : EntityListBase
+        {
+            private List<Dictionary<string, object>> Values { get; set; }
+
+            public List<Dictionary<string, object>> GetValues()
+            {
+                if (IsDirty)
+                {
+                    Values = new List<Dictionary<string, object>>();
+                    foreach (var entity in Entities)
+                    {
+                        Values.Add(entity.Attributes.ToDictionary(att => att.Key, att => att.Value));
+                    }
+                }
+
+                IsDirty = false;
+                return Values;
+            }
+        }
+
+        private abstract class EntityListBase
+        {
+            protected List<Entity> Entities { get; } = new List<Entity>();
+
+            protected bool IsDirty { get; set; } = true;
+
+            public void Add(Entity entity)
+            {
+                IsDirty = true;
+                Entities.Add(entity);
             }
         }
     }

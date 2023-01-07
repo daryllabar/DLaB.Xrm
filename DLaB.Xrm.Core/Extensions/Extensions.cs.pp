@@ -7,7 +7,9 @@ using System.Text;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System.Collections.Generic;
+#if !DLAB_XRM_DEBUG
 using System.Diagnostics;
+#endif
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Xml;
@@ -38,7 +40,7 @@ namespace Source.DLaB.Xrm
 #endif
     public static partial class Extensions
     {
-        #region AttributeMetadata
+#region AttributeMetadata
         /// <summary>
         /// Determines whether the attribute is a local option set.
         /// </summary>
@@ -60,9 +62,9 @@ namespace Source.DLaB.Xrm
             return false;
         }
 
-        #endregion AttributeMetadata
+#endregion AttributeMetadata
 
-        #region ColumnSet
+#region ColumnSet
 
         /// <summary>
         /// Allows for adding column names in an early bound manner:
@@ -79,9 +81,9 @@ namespace Source.DLaB.Xrm
             return columnSet;
         }
 
-        #endregion ColumnSet
+#endregion ColumnSet
 
-        #region DataCollection<string,Entity>
+#region DataCollection<string,Entity>
 
         /// <summary>
         /// If the imageName is populated, then if images collection contains the given imageName Key, the Value is cast to the Entity type T, else null is returned
@@ -117,9 +119,9 @@ namespace Source.DLaB.Xrm
                 : images.Values.FirstOrDefault(v => v != null).AsEntity<T>();
         }
 
-        #endregion DataCollection<string,Entity>
+#endregion DataCollection<string,Entity>
 
-        #region Entity
+#region Entity
 
 
         /// <summary>
@@ -136,7 +138,7 @@ namespace Source.DLaB.Xrm
             return tEntity ?? entity.ToEntity<T>();
         }
 
-        #region AssertContainsAllNonNull
+#region AssertContainsAllNonNull
 
         /// <summary>
         /// Checks to see if the Entity Contains the attribute names, and the value is not null.  Any missing/null attributes will result in an exception, listing the missing attributes.
@@ -169,7 +171,7 @@ namespace Source.DLaB.Xrm
             AssertContainsAllNonNull(entity, GetAttributeNamesArray(anonymousTypeInitializer));
         }
 
-        #endregion AssertContainsAllNonNull
+#endregion AssertContainsAllNonNull
 
         /// <summary>
         /// Clears the id of an entity so it can be saved as a new entity
@@ -227,7 +229,7 @@ namespace Source.DLaB.Xrm
             return baseEntity;
         }
 
-        #region ContainsAllNonNull
+#region ContainsAllNonNull
 
         /// <summary>
         /// Checks to see if the Entity Contains the attribute names, and the value is not null
@@ -281,9 +283,9 @@ namespace Source.DLaB.Xrm
             return ContainsAllNonNull(entity, out nullAttributeNames, GetAttributeNamesArray(anonymousTypeInitializer));
         }
 
-        #endregion ContainsAllNonNull
+#endregion ContainsAllNonNull
 
-        #region ContainsAnyNonNull
+#region ContainsAnyNonNull
 
         /// <summary>
         /// Checks to see if the Entity Contains any of the attribute names, and the value is not null
@@ -309,7 +311,7 @@ namespace Source.DLaB.Xrm
             return ContainsAnyNonNull(entity, GetAttributeNamesArray(anonymousTypeInitializer));
         }
 
-        #endregion ContainsAnyNonNull
+#endregion ContainsAnyNonNull
 
         /// <summary>
         /// Gets the url of the form.

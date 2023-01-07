@@ -46,11 +46,11 @@ namespace Source.DLaB.Xrm
         {
             foreach (var item in items.OrderBy(kvp => kvp.Key))
             {
-                yield return item.Key + ": " + ObjectToStringDebug(item.Value, info).TrimStart();
+                yield return item.Key + ": " + ObjectToStringDebugInternal(item.Value, info).TrimStart();
             }
         }
 
-        private static string ObjectToStringDebug(object obj, StringDebugInfo info)
+        private static string ObjectToStringDebugInternal(object obj, StringDebugInfo info)
         {
             string value;
             switch (obj)
@@ -380,7 +380,7 @@ namespace Source.DLaB.Xrm
                 ? "]}"
                 : $"]{Environment.NewLine + info.Indent}}}";
             return Wrap(start,
-                from object item in collection select ObjectToStringDebug(item, info),
+                from object item in collection select ObjectToStringDebugInternal(item, info),
                 end,
                 info.IncreaseIndent());
         }
@@ -432,6 +432,15 @@ namespace Source.DLaB.Xrm
         }
 
         #endregion IExecutionContext
+
+        #region Object
+
+        public static string ObjectToStringDebug(this object obj, StringDebugInfo info = null)
+        {
+            return ObjectToStringDebugInternal(obj, info ?? StringDebugInfo.Default);
+        }
+
+        #endregion Object
 
         #region ParameterCollection
 
