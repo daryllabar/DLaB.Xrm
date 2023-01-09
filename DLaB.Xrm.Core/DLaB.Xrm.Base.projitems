@@ -49,6 +49,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IMaxLengthTracingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LateBoundActivePropertyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LateBoundQuerySettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugin\AssertValidator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\ContextEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\DLaBExtendedPluginContextSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\ExtendedContextCreator.cs" />

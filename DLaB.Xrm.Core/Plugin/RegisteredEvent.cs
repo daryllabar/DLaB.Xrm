@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 namespace DLaB.Xrm.Plugin
@@ -16,7 +17,10 @@ namespace Source.DLaB.Xrm.Plugin
         /// Defines an Any Message Type
         /// </summary>
         public static MessageType Any = new MessageType("Any");
-
+        /// <summary>
+        /// Gets or sets the Assert Validators
+        /// </summary>
+        public List<AssertValidator> AssertValidators { get; set; } = new List<AssertValidator>();
         /// <summary>
         /// Gets or sets the pipeline stage.
         /// </summary>

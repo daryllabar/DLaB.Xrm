@@ -254,12 +254,23 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         protected virtual bool SkipExecution(T context)
         {
-            var skip = context.Event.RequirementValidator != null 
-                   && context.Event.RequirementValidator.SkipExecution(context);
+            var @event = context.Event;
+            var skip = @event.RequirementValidator != null 
+                       && @event.RequirementValidator.SkipExecution(context);
 
             if (skip)
             {
                 context.Trace("The requirements for plugin execution were not met!  Skipping execution...");
+            }
+            else
+            {
+                foreach (var validator in @event.AssertValidators)
+                {
+                    if (validator.Validator.SkipExecution(context))
+                    {
+                        throw validator.ExceptionToThrow;
+                    }
+                }
             }
             return skip;
         }

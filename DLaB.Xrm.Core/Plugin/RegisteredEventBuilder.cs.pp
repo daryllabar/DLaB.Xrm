@@ -16,6 +16,10 @@ namespace Source.DLaB.Xrm.Plugin
     public class RegisteredEventBuilder
     {
         /// <summary>
+        /// Gets or sets the Assert Validators
+        /// </summary>
+        public List<AssertValidator> AssertValidators { get; set; } = new List<AssertValidator>();
+        /// <summary>
         /// Gets or sets the entity logical names.
         /// </summary>
         /// <value>
@@ -29,7 +33,6 @@ namespace Source.DLaB.Xrm.Plugin
         /// The execute.
         /// </value>
         protected Action<IExtendedPluginContext> Execute { get; set; }
-
         /// <summary>
         /// Gets or sets the name of the Execute method for logging purposes.
         /// </summary>
@@ -51,9 +54,6 @@ namespace Source.DLaB.Xrm.Plugin
         /// <summary>
         /// Gets or sets the requirement validator.
         /// </summary>
-        /// <value>
-        /// The requirement validator.
-        /// </value>
         protected IRequirementValidator RequirementValidator { get; set; }
         /// <summary>
         /// Gets or sets the stage.
@@ -208,16 +208,70 @@ namespace Source.DLaB.Xrm.Plugin
             return this;
         }
 
+        #region Validator
+
         /// <summary>
-        /// Defines the Validator to use for this Registered Event
+        /// Defines the Validator to use to throw an exception for this Registered Event if it isn't met.
+        /// Assert Validators will only be evaluated after the Validator (if defined) allows execution of the plugin
         /// </summary>
-        /// <param name="validator"></param>
+        /// <param name="validator">Validator</param>
+        /// <param name="exToThrow">Exception to throw if execution shouldn't happen</param>
+        /// <returns></returns>
+        public RegisteredEventBuilder WithAssertValidator(IRequirementValidator validator, Exception exToThrow)
+        {
+            AssertValidators.Add(new AssertValidator(validator, exToThrow));
+            return this;
+        }
+
+        /// <summary>
+        /// Defines the Validator to use to throw an exception for this Registered Event if it isn't met.
+        /// Assert Validators will only be evaluated after the Validator (if defined) allows execution of the plugin
+        /// </summary>
+        /// <param name="validator">Validator</param>
+        /// <param name="exMessageToThrow">Message to throw in an InvalidPluginExecutionException if execution shouldn't happen</param>
+        /// <returns></returns>
+        public RegisteredEventBuilder WithAssertValidator(IRequirementValidator validator, string exMessageToThrow)
+        {
+            AssertValidators.Add(new AssertValidator(validator, exMessageToThrow));
+            return this;
+        }
+
+        /// <summary>
+        /// Defines the Validator to use to throw an exception for this Registered Event if it isn't met.
+        /// Assert Validators will only be evaluated after the Validator (if defined) allows execution of the plugin
+        /// </summary>
+        /// <param name="assertValidator">The validator</param>
+        /// <returns></returns>
+        public RegisteredEventBuilder WithAssertValidator(AssertValidator assertValidator)
+        {
+            AssertValidators.Add(assertValidator);
+            return this;
+        }
+
+        /// <summary>
+        /// Defines the Validator to use to throw an exception for this Registered Event if it isn't met.
+        /// Assert Validators will only be evaluated after the Validator (if defined) allows execution of the plugin
+        /// </summary>
+        /// <param name="validators">The validators</param>
+        /// <returns></returns>
+        public RegisteredEventBuilder WithAssertValidators(IEnumerable<AssertValidator> validators)
+        {
+            AssertValidators.AddRange(validators);
+            return this;
+        }
+
+        /// <summary>
+        /// Defines the Validator to use for this Registered Event.  A registered event can only have a single validator.
+        /// </summary>
+        /// <param name="validator">Validator</param>
         /// <returns></returns>
         public RegisteredEventBuilder WithValidator(IRequirementValidator validator)
         {
             RequirementValidator = validator;
             return this;
         }
+
+        #endregion Validator
 
         #endregion Fluent Methods
 
@@ -260,6 +314,7 @@ namespace Source.DLaB.Xrm.Plugin
                         EntityLogicalNames.Select(
                             logicalName => new RegisteredEvent(Stage, messageType, Execute, logicalName)
                             {
+                                AssertValidators = AssertValidators,
                                 ExecuteMethodName = ExecuteMethodName,
                                 RequirementValidator = RequirementValidator
                             }));
@@ -269,6 +324,7 @@ namespace Source.DLaB.Xrm.Plugin
                     events.Add(
                         new RegisteredEvent(Stage, messageType, Execute)
                         {
+                            AssertValidators = AssertValidators,
                             ExecuteMethodName = ExecuteMethodName,
                             RequirementValidator = RequirementValidator
                         });

@@ -9,7 +9,7 @@ namespace Source.DLaB.Xrm.Plugin
 	
 {
     /// <summary>
-    /// An abstract base Plugin that implments the DLaBGenericPluginBase.
+    /// An abstract base Plugin that implements the DLaBGenericPluginBase.
     /// </summary>
     public abstract class DLaBPluginBase: DLaBGenericPluginBase<IExtendedPluginContext>
     {

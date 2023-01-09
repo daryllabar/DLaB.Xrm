@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-#if DLAB_UNROOT_NAMESPACE || DLAB_XRM
+﻿#if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 namespace DLaB.Xrm.Plugin
 #else
 namespace Source.DLaB.Xrm.Plugin
