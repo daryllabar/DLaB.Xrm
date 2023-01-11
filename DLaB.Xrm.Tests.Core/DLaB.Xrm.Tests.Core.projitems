@@ -9,6 +9,7 @@
     <Import_RootNamespace>DLaB.Xrm.Tests.Core</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Comparers\AttributeComparerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionsEntityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FakeContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RequirementValidatorTests.cs" />

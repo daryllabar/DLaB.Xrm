@@ -1,5 +1,9 @@
-﻿using DLaB.Xrm.Entities;
+﻿#if NET
+using DataverseUnitTest;
+#else
 using DLaB.Xrm.Test;
+#endif
+using DLaB.Xrm.Entities;
 
 namespace DLaB.Xrm.Test.Core.Builders
 {

@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ActivityPropertyInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Comparers\AttributeValueComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Comparers\AttributeComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\ColumnSetComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\ConditionExpressionComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\EnumerableComparer.cs" />

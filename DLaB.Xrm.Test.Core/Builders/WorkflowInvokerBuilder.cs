@@ -1,8 +1,10 @@
-﻿using System.Activities;
+﻿#if !NET
+using DLaB.Xrm.Test.Builders;
+using System.Activities;
 
 namespace DLaB.Xrm.Test.Core.Builders
 {
-    public class WorkflowInvokerBuilder : DLaB.Xrm.Test.Builders.WorkflowInvokerBuilderBase<WorkflowInvokerBuilder>
+    public class WorkflowInvokerBuilder : WorkflowInvokerBuilderBase<WorkflowInvokerBuilder>
     {
         protected override WorkflowInvokerBuilder This => this;
 
@@ -16,3 +18,4 @@ namespace DLaB.Xrm.Test.Core.Builders
         }
     }
 }
+#endif

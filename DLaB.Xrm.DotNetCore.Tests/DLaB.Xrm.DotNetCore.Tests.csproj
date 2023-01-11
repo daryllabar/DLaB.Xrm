@@ -30,4 +30,6 @@
 
   <Import Project="..\DLaB.Xrm.Core\DLaB.Xrm.Base.projitems" Label="Shared" />
 
+  <Import Project="..\DLaB.Xrm.Test.Core\DLaB.Xrm.Test.Core.projitems" Label="Shared" />
+
 </Project>

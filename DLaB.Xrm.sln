@@ -31,7 +31,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DLaB.Xrm.Tests.Core", "DLaB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLaB.Xrm.Async", "DLaB.Xrm.Async\DLaB.Xrm.Async.csproj", "{5140D24A-55F2-45C1-A4CD-84C0273A9381}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLaB.Xrm.DotNetCore.Test", "DLaB.Xrm.DotNetCore.Test\DLaB.Xrm.DotNetCore.Test.csproj", "{EA2B61C8-8978-4DAF-9A07-8523E22AA6EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLaB.Xrm.DotNetCore.Test", "DLaB.Xrm.DotNetCore.Test\DLaB.Xrm.DotNetCore.Test.csproj", "{EA2B61C8-8978-4DAF-9A07-8523E22AA6EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +81,7 @@ Global
 		DLaB.Xrm.Test.Core\DLaB.Xrm.Test.Core.projitems*{1df3be66-5b01-44b1-a810-03e2116e7518}*SharedItemsImports = 4
 		DLaB.Xrm.Tests.Core\DLaB.Xrm.Tests.Core.projitems*{1df3be66-5b01-44b1-a810-03e2116e7518}*SharedItemsImports = 4
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{3c9ec09e-b62e-4a5c-a0b1-efd189054c7c}*SharedItemsImports = 5
+		DLaB.Xrm.Test.Core\DLaB.Xrm.Test.Core.projitems*{3c9ec09e-b62e-4a5c-a0b1-efd189054c7c}*SharedItemsImports = 5
 		DLaB.Xrm.Tests.Core\DLaB.Xrm.Tests.Core.projitems*{3c9ec09e-b62e-4a5c-a0b1-efd189054c7c}*SharedItemsImports = 5
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{5140d24a-55f2-45c1-a4cd-84c0273a9381}*SharedItemsImports = 5
 		DLaB.Xrm.Core\DLaB.Xrm.Base.projitems*{a3b3ce75-dfae-4035-97a3-afd49ad47bc5}*SharedItemsImports = 13

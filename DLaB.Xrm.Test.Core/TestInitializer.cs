@@ -1,4 +1,7 @@
-﻿using DLaB.Xrm.Client;
+﻿#if NET
+using DataverseUnitTest;
+#endif
+using DLaB.Xrm.Client;
 using DLaB.Xrm.Entities;
 using DLaB.Xrm.Test.Core.Builders;
 using Microsoft.Xrm.Sdk;
@@ -6,23 +9,36 @@ using Microsoft.Xrm.Sdk;
 namespace DLaB.Xrm.Test
 {
     /// <summary>
-    /// Class to Initalize all TestSettings used by the Framework
+    /// Class to Initialize all TestSettings used by the Framework
     /// </summary>
     public class TestInitializer
     {
         public static void InitializeTestSettings()
         {
-            if (!TestSettings.AssumptionXmlPath.IsConfigured)
+
+#if NET
+            if (!TestSettings.AssumptionJsonPath.IsConfigured)
             {
-                TestSettings.AssumptionXmlPath.Configure(new PatherFinderProjectOfType(typeof(MsTestProvider), "Assumptions\\Entity Xml"));
-            }
-            if (!TestSettings.UserTestConfigPath.IsConfigured)
-            {
-                TestSettings.UserTestConfigPath.Configure(new PatherFinderProjectOfType(typeof(MsTestProvider), "UnitTestSettings.user.config"));
+                TestSettings.AssumptionJsonPath.Configure(new PatherFinderProjectOfType(typeof(MsTestProvider), "Assumptions\\Entity Xml"));
             }
             if (!TestSettings.EntityBuilder.IsConfigured)
             {
                 TestSettings.EntityBuilder.ConfigureDerivedAssembly<EntityBuilder<Entity>>();
+            }
+#else
+            if (!TestSettings.AssumptionXmlPath.IsConfigured)
+            {
+                TestSettings.AssumptionXmlPath.Configure(new PatherFinderProjectOfType(typeof(MsTestProvider), "Assumptions\\Entity Xml"));
+            }
+            if (!TestSettings.EntityBuilder.IsConfigured)
+            {
+                TestSettings.EntityBuilder.ConfigureDerivedAssembly<EntityBuilder<Entity>>();
+            }
+#endif
+
+            if (!TestSettings.UserTestConfigPath.IsConfigured)
+            {
+                TestSettings.UserTestConfigPath.Configure(new PatherFinderProjectOfType(typeof(MsTestProvider), "UnitTestSettings.user.config"));
             }
             if (!TestSettings.EarlyBound.IsConfigured)
             {

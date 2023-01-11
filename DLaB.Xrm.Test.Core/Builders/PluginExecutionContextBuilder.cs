@@ -1,10 +1,15 @@
-﻿using System;
+﻿#if NET
+using DataverseUnitTest.Builders;
+#else
+using DLaB.Xrm.Test.Builders;
+#endif
+using System;
 using System.Linq;
 using Source.DLaB.Xrm.Plugin;
 
 namespace DLaB.Xrm.Test.Core.Builders
 {
-    public class PluginExecutionContextBuilder : DLaB.Xrm.Test.Builders.PluginExecutionContextBuilderBase<PluginExecutionContextBuilder>
+    public class PluginExecutionContextBuilder : PluginExecutionContextBuilderBase<PluginExecutionContextBuilder>
     {
         protected override PluginExecutionContextBuilder This => this;
 

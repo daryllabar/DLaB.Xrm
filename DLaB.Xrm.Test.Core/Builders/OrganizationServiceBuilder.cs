@@ -1,9 +1,14 @@
-﻿using DLaB.Xrm.Test;
+﻿#if NET
+using DataverseUnitTest;
+using DataverseUnitTest.Builders;
+#else
+using DLaB.Xrm.Test.Builders;
+#endif
 using Microsoft.Xrm.Sdk;
 
 namespace DLaB.Xrm.Test.Core.Builders
 {
-    public class OrganizationServiceBuilder : DLaB.Xrm.Test.Builders.OrganizationServiceBuilderBase<OrganizationServiceBuilder>
+    public class OrganizationServiceBuilder : OrganizationServiceBuilderBase<OrganizationServiceBuilder>
     {
         protected override OrganizationServiceBuilder This => this;
 

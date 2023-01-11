@@ -40,11 +40,8 @@ namespace Source.DLaB.Xrm.Comparers
                 case null:
                     return false;
 
-                //case ColumnSet cs:
-                //    value = cs.AllColumns
-                //        ? "\"ColumnSet(allColumns:true)\""
-                //        : $"\"{string.Join(",", cs.Columns.OrderBy(c => c))}\"";
-                //    break;
+                case ColumnSet cs:
+                    throw new NotImplementedException("ColumnSet is not Implemented!");
 
                 //case Entity entity:
                 //    value = entity.ToStringAttributes(info);
@@ -52,32 +49,38 @@ namespace Source.DLaB.Xrm.Comparers
 
                 case EntityReference entityRef:
                     var preEntityRef = (EntityReference)preValue;
-                    if (entityRef.Id == Guid.Empty
-                        && entityRef.KeyAttributes?.Any() == true)
+#if !PRE_KEYATTRIBUTE
+                    var entityRefHasAttributes = entityRef.Id == Guid.Empty
+                                                 && entityRef.KeyAttributes?.Any() == true;
+                    var preEntityRefHasAttributes = preEntityRef.Id == Guid.Empty
+                                                    && preEntityRef.KeyAttributes?.Any() == true;
+                    if (entityRefHasAttributes != preEntityRefHasAttributes)
                     {
-                        var entity = service.GetEntityOrDefault(entityRef.LogicalName, entityRef.KeyAttributes, new ColumnSet(false));
-                        entityRef = entity.ToEntityReference();
+                        if (entityRefHasAttributes)
+                        {
+                            entityRef = GetEntityReferenceWithoutKeyAttributes(service, entityRef);
+                        }
+                        else
+                        {
+                            preEntityRef = GetEntityReferenceWithoutKeyAttributes(service, preEntityRef);
+                        }
                     }
+#endif
+                    return entityRef.Equals(preEntityRef);
 
-                    return entityRef.Id != preEntityRef.Id
-                           || entityRef.LogicalName != preEntityRef.LogicalName;
+                case EntityCollection entities:
+                    throw new NotImplementedException("EntityCollection is not Implemented!");
 
-                //case EntityCollection entities:
-                //    value = entities.ToStringDebug(info);
-                //    break;
-                //
-                //case EntityReferenceCollection entityRefCollection:
-                //    value = entityRefCollection.ToStringDebug(info);
-                //    break;
+                case EntityReferenceCollection entityRefCollection:
+                    throw new NotImplementedException("EntityReferenceCollection is not Implemented!");
 
                 case Dictionary<string, string> dict:
                     var preDict = (Dictionary<string, string>)preValue;
                     return dict.Keys.OrderBy(k => k).SequenceEqual(preDict.Keys.OrderBy(k => k))
-                           && dict.OrderBy(k => k).Select(kvp => kvp.Value).SequenceEqual(preDict.OrderBy(k => k).Select(kvp => kvp.Value));
+                           && dict.OrderBy(k => k.Key).Select(kvp => kvp.Value).SequenceEqual(preDict.OrderBy(k => k.Key).Select(kvp => kvp.Value));
 
-                //case FetchExpression fetch:
-                //    value = $"\"{fetch.Query.Trim()}\"";
-                //    break;
+                case FetchExpression fetch:
+                    throw new NotImplementedException("FetchExpression is not Implemented!");
 
                 case byte[] imageArray:
                     return imageArray.SequenceEqual((byte[])preValue);
@@ -119,13 +122,24 @@ namespace Source.DLaB.Xrm.Comparers
                 case Money money:
                     return money.Value == ((Money)preValue).Value;
 
-                //case QueryExpression qe:
-                //    value = $"\"{qe.GetSqlStatement().Trim()}\"";
-                //    break;
+                case QueryExpression qe:
+                    throw new NotImplementedException("QueryExpression is not Implemented!");
 
                 default:
                     return value.Equals(preValue);
             }
+        }
+
+        private static EntityReference GetEntityReferenceWithoutKeyAttributes(IOrganizationService service, EntityReference entityRef)
+        {
+            if (entityRef.Id == Guid.Empty
+                && entityRef.KeyAttributes?.Any() == true)
+            {
+                var entity = service.GetEntityOrDefault(entityRef.LogicalName, entityRef.KeyAttributes, new ColumnSet(false)) ?? new Entity(entityRef.LogicalName);
+                entityRef = entity.ToEntityReference();
+            }
+
+            return entityRef;
         }
     }
 }
