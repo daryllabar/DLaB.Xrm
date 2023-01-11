@@ -6,7 +6,7 @@ The DLaB.Xrm Library is full of tons of helpful extension methods and classes in
 Checkout the [Wiki](../../wiki) for more documentation.
 
 # Source Only Nuget Packages
-Since IL Merging isn't technically supported by Microsoft, the code is available on NuGet as a [Source only Package](blob/master/Packaging%20Source%20Code%20With%20NuGet%20_%20nik%20codes.pdf).  This also allows you to control the version of the Xrm Assemblies it references. If you truly want to make your own DLL, you'd need to add "DLAB_XRM" to the Conditional Compilation Symbols for the project.
+Since IL Merging isn't technically supported by Microsoft, the code is available on NuGet as a [Source only Package](Packaging%20Source%20Code%20With%20NuGet%20_%20nik%20codes.pdf).  This also allows you to control the version of the Xrm Assemblies it references. If you truly want to make your own DLL, you'd need to add "DLAB_XRM" to the Conditional Compilation Symbols for the project.
 
 # How Can I Help?
 
