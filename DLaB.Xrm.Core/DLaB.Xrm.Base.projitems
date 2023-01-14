@@ -69,6 +69,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\RegisteredEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\RegisteredEventBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\RequirementValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ReadOnlyCachedService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SolutionCheckerAvoider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\TraceTimer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PrimaryFieldInfo.cs" />

@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\AttributeComparerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionsEntityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FakeContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ReadOnlyCachedServiceTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RequirementValidatorTests.cs" />
   </ItemGroup>
 </Project>

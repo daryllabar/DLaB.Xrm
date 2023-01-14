@@ -20,6 +20,8 @@ using Microsoft.Xrm.Sdk.Metadata;
 using DLaB.Common;
 #else
 using Source.DLaB.Common;
+using System.Collections.Concurrent;
+using System.Runtime.Caching;
 #endif
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 using DLaB.Xrm.Exceptions;
@@ -1282,7 +1284,7 @@ namespace Source.DLaB.Xrm
             return link;
         }
 
-#endregion LinkEntity
+        #endregion LinkEntity
 
 #region Money
 
@@ -1337,6 +1339,47 @@ namespace Source.DLaB.Xrm
         }
 
 #endregion Money
+
+#region ObjectCache
+
+        private static readonly ConcurrentDictionary<string, object> LocksByKey = new ConcurrentDictionary<string, object>();
+
+        /// <summary>
+        /// Gets the item from the cache or adds it using the factory functions to both get the value and set the expiration time.
+        /// </summary>
+        /// <param name="cache">The Cache</param>
+        /// <param name="key">The key</param>
+        /// <param name="getValue">The getValue factory</param>
+        /// <param name="getExpirationTime">The getExpirationTime factory</param>
+        /// <returns></returns>
+        public static T GetOrAdd<T>(this ObjectCache cache, string key, Func<string, T> getValue, Func<string, T, DateTime> getExpirationTime)
+        {
+            var value = (T)cache.Get(key);
+            if (value != null)
+            {
+                return value;
+            }
+
+            var lockForKey = LocksByKey.GetOrAdd(key, k => new object());
+            lock (lockForKey)
+            {
+                value = (T)cache.Get(key);
+                if (value != null)
+                {
+                    return value;
+                }
+
+                value = getValue(key);
+                cache.Set(key, value, new CacheItemPolicy
+                {
+                    AbsoluteExpiration = new DateTimeOffset(getExpirationTime(key, value))
+                });
+            }
+
+            return value;
+        }
+
+#endregion ObjectCache
 
 #region OptionSetValue
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Caching;
 #if DLAB_UNROOT_COMMON_NAMESPACE
 using DLaB.Common;
 #else
@@ -13,9 +14,9 @@ namespace Source.DLaB.Xrm
 {
     /// <summary>
     /// Implement this class to be able to provide config information to be used by the DLaB.Xrm code base.
-    /// Currently this isn't needed, but may additional config at a later date.
+    /// Currently this isn't needed, but may add additional config at a later date.
     /// </summary>
-    public interface IDLaBXrmConfig: IEntityHelperConfig { }
+    public interface IDLaBXrmConfig: IEntityHelperConfig, ICacheConfig { }
 
     /// <summary>
     /// Implement this class to be able to provide config information to be used by the Entity Helper code base
@@ -39,6 +40,18 @@ namespace Source.DLaB.Xrm
     }
 
     /// <summary>
+    /// Implement this class to be able to provide cache config information
+    /// </summary>
+    public interface ICacheConfig
+    {
+        /// <summary>
+        /// The default cache to use.
+        /// </summary>
+        /// <returns></returns>
+        MemoryCache GetCache();
+    }
+
+    /// <summary>
     /// Searches the current assembly for the first public class that implements the request config interfaces searching for IDLaBXrmConfig first, then the specific interfaces later
     /// </summary>
     // ReSharper disable once InconsistentNaming
@@ -50,7 +63,12 @@ namespace Source.DLaB.Xrm
         // ReSharper disable once InconsistentNaming
         private static IDLaBXrmConfig _dLaBConfig;
         private static readonly Lazy<IEntityHelperConfig> LazyEntityHelperConfig = new Lazy<IEntityHelperConfig>(CreateConfigInstance<IEntityHelperConfig>);
+        private static readonly Lazy<ICacheConfig> LazyCacheConfig = new Lazy<ICacheConfig>(CreateConfigInstance<ICacheConfig>);
+        /// <summary>
+        /// The Entity Helper Config
+        /// </summary>
         public static IEntityHelperConfig EntityHelperConfig => LazyEntityHelperConfig.Value;
+        public static ICacheConfig CacheConfig => LazyCacheConfig.Value;
 
         private static T CreateConfigInstance<T>()
         {
@@ -92,8 +110,10 @@ namespace Source.DLaB.Xrm
             }
         }
 
-        private class DefaultConfig : IEntityHelperConfig
+        private class DefaultConfig : IDLaBXrmConfig
         {
+            private static readonly MemoryCache Cache = new MemoryCache(typeof(DefaultConfig).FullName ?? "DLaB.Xrm.DefaultMemoryCache");
+
             public string GetIrregularIdAttributeName(string logicalName)
             {
                 return null;
@@ -102,6 +122,11 @@ namespace Source.DLaB.Xrm
             public PrimaryFieldInfo GetIrregularPrimaryFieldInfo(string logicalName, PrimaryFieldInfo defaultInfo = null)
             {
                 return null;
+            }
+
+            public MemoryCache GetCache()
+            {
+                return Cache;
             }
         }
     }
