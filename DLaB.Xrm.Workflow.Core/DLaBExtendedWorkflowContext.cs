@@ -29,6 +29,7 @@ namespace Source.DLaB.Xrm.Workflow
 
         #region IExtendedExecutionContext Implementation
 
+        private IOrganizationService _cachedOrganizationService;
         private IOrganizationService _organizationService;
         private IOrganizationService _systemOrganizationService;
         private IOrganizationService _triggeredUserOrganizationService;
@@ -56,6 +57,11 @@ namespace Source.DLaB.Xrm.Workflow
         /// The IOrganizationService of the workflow, Impersonated as the user that the plugin is registered to run as.
         /// </summary>
         public IOrganizationService OrganizationService => _organizationService ?? (_organizationService = Settings.InitializeIOrganizationService(ServiceFactory, UserId, TracingService));
+
+        /// <summary>
+        /// A service that will cache the retrieve/retrieve multiple results and reuse them.  Uses the SystemService to prevent different users from retrieving different results.
+        /// </summary>
+        public IOrganizationService CachedOrganizationService => _cachedOrganizationService ?? (_cachedOrganizationService = new ReadOnlyCachedService(SystemOrganizationService));
 
         /// <summary>
         /// The IOrganizationService of the workflow, using the System User

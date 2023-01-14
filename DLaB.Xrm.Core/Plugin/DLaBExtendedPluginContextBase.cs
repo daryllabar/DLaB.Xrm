@@ -1,5 +1,7 @@
 using System;
+#if !DLAB_XRM_DEBUG
 using System.Diagnostics;
+#endif
 using Microsoft.Xrm.Sdk;
 #if DLAB_UNROOT_COMMON_NAMESPACE
 using DLaB.Common;
@@ -22,9 +24,9 @@ namespace Source.DLaB.Xrm.Plugin
 #endif
     public class DLaBExtendedPluginContextBase : IExtendedPluginContext
     {
-        #region Properties
+#region Properties
 
-        #region IPluginContext Properties
+#region IPluginContext Properties
 
         /// <summary>
         /// Gets or sets the plugin execution context.
@@ -217,9 +219,9 @@ namespace Source.DLaB.Xrm.Plugin
         /// </value>
         public virtual IPluginExecutionContext ParentContext => PluginExecutionContext.ParentContext;
 
-        #endregion // IPluginContext Properties
+#endregion // IPluginContext Properties
 
-        #region IExtendedPluginContext Properties
+#region IExtendedPluginContext Properties
 
         /// <summary>
         /// Gets the isolation mode of the plugin assembly.
@@ -252,6 +254,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// </summary>
         public RegisteredEvent Event { get; private set; }
 
+        private IOrganizationService _cachedOrganizationService;
         private IOrganizationService _organizationService;
         private IOrganizationService _systemOrganizationService;
         private IOrganizationService _triggeredUserOrganizationService;
@@ -294,6 +297,11 @@ namespace Source.DLaB.Xrm.Plugin
         public IOrganizationServiceFactory ServiceFactory => _serviceFactory ?? (_serviceFactory = Settings.InitializeServiceFactory(ServiceProvider, TracingService));
 
         /// <summary>
+        /// A service that will cache the retrieve/retrieve multiple results and reuse them.  Uses the SystemService to prevent different users from retrieving different results.
+        /// </summary>
+        public IOrganizationService CachedOrganizationService => _cachedOrganizationService ?? (_cachedOrganizationService = new ReadOnlyCachedService(SystemOrganizationService));
+
+        /// <summary>
         /// The IOrganizationService of the plugin, using the System User
         /// </summary>
         public IOrganizationService SystemOrganizationService => _systemOrganizationService ?? (_systemOrganizationService = Settings.InitializeIOrganizationService(ServiceFactory, null, TracingService));
@@ -303,13 +311,13 @@ namespace Source.DLaB.Xrm.Plugin
         /// </summary>
         public ITracingService TracingService => _tracingService ?? (_tracingService = Settings.InitializeTracingService(ServiceProvider));
 
-        #endregion IExtendedPluginContext Properties
+#endregion IExtendedPluginContext Properties
 
         private IExtendedPluginContextInitializer Settings { get; }
 
-        #endregion Properties
+#endregion Properties
 
-        #region ImageNames struct
+#region ImageNames struct
 
         /// <summary>
         /// Struct for the Standard Plugin Image Names
@@ -326,9 +334,9 @@ namespace Source.DLaB.Xrm.Plugin
             public const string PostImage = "PostImage";
         }
 
-        #endregion ImageNames struct
+#endregion ImageNames struct
 
-        #region Constructors
+#region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DLaBExtendedPluginContextBase"/> class.
@@ -354,9 +362,9 @@ namespace Source.DLaB.Xrm.Plugin
             InitializePluginProperties(plugin);
         }
 
-        #endregion Constructors
+#endregion Constructors
 
-        #region PropertyInitializers
+#region PropertyInitializers
 
         /// <summary>
         /// Initializes the plugin properties.
@@ -385,9 +393,9 @@ namespace Source.DLaB.Xrm.Plugin
             PluginTypeName = plugin.GetType().FullName;
         }
 
-        #endregion PropertyInitializers
+#endregion PropertyInitializers
 
-        #region Exception Logging
+#region Exception Logging
 
         /// <summary>
         /// Logs the exception.
@@ -399,9 +407,9 @@ namespace Source.DLaB.Xrm.Plugin
             TracingService.Trace(this.GetContextInfo());
         }
 
-        #endregion Exception Logging
+#endregion Exception Logging
 
-        #region Trace
+#region Trace
 
         /// <summary>
         /// Traces the specified message.  By default, is guaranteed to not throw an exception.
@@ -432,6 +440,6 @@ namespace Source.DLaB.Xrm.Plugin
             return new TraceTimer(TracingService, string.Format(format, args));
         }
 
-        #endregion Trace
+#endregion Trace
     }
 }

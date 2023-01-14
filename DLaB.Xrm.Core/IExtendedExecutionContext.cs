@@ -28,6 +28,11 @@ namespace Source.DLaB.Xrm
         bool IsSync { get; }
 
         /// <summary>
+        /// A service that will cache the retrieve/retrieve multiple results and reuse them.  Uses the SystemService to prevent different users from retrieving different results.
+        /// </summary>
+        IOrganizationService CachedOrganizationService { get; }
+
+        /// <summary>
         /// The IOrganizationService of the plugin, Impersonated as the user that plugin is registered to run as, using the PluginExecutionContext.UserId.
         /// </summary>
         IOrganizationService OrganizationService { get; }

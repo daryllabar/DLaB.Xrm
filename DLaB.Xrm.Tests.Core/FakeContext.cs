@@ -66,6 +66,7 @@ namespace DLaB.Xrm.Tests.Core
         public bool IsSync { get; set; }
         public IOrganizationService OrganizationService { get; set; }
         public IOrganizationServiceFactory ServiceFactory { get; set; }
+        public IOrganizationService CachedOrganizationService { get; set; }
         public IOrganizationService SystemOrganizationService { get; set; }
         public FakeTraceService FakeTraceService { get; set; } = new FakeTraceService(new DebugLogger());
         public ITracingService TracingService => FakeTraceService;
