@@ -31,8 +31,8 @@ namespace Source.DLaB.Xrm
         /// </summary>
         protected virtual string KeyPrefix => DefaultKeyPrefix;
 
-        private ObjectCache _cache;
-        private ObjectCache Cache => _cache ?? (_cache = GetCache());
+        private MemoryCache _cache;
+        public MemoryCache Cache => _cache ?? (_cache = GetCache());
 
         /// <summary>
         /// Constructor
@@ -46,7 +46,7 @@ namespace Source.DLaB.Xrm
         /// <summary>
         /// The Cache to be used by the service.  Defaults to the DLaBXrmConfig.CacheConfig.GetCache().
         /// </summary>
-        protected virtual ObjectCache GetCache()
+        protected virtual MemoryCache GetCache()
         {
             return DLaBXrmConfig.CacheConfig.GetCache();
         }
