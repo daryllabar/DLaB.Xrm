@@ -1,11 +1,11 @@
 ﻿using DLaB.Xrm.Plugin;
 using Microsoft.Xrm.Sdk;
+using Source.DLaB.Common;
 using Source.DLaB.Xrm.Comparers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Source.DLaB.Common;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 using DLaB.Common;
@@ -773,21 +773,32 @@ namespace Source.DLaB.Xrm.Plugin
 
             private Entity GetEntity(IExtendedPluginContext context)
             {
+                Entity entity = null;
                 switch (EntityType)
                 {
                     case ContextEntity.CoalesceTargetPostImage:
-                        return context.CoalesceTargetWithPostEntity<Entity>();
+                        entity = context.CoalesceTargetWithPostEntity<Entity>();
+                        break;
                     case ContextEntity.CoalesceTargetPreImage:
-                        return context.CoalesceTargetWithPreEntity<Entity>();
+                        entity = context.CoalesceTargetWithPreEntity<Entity>();
+                        break;
                     case ContextEntity.PostImage:
                         return context.GetPostEntity<Entity>();
                     case ContextEntity.PreImage:
                         return context.GetPreEntity<Entity>();
                     case ContextEntity.Target:
-                        return context.GetTarget<Entity>();
+                        entity = context.GetTarget<Entity>();
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
+                if (entity == null )
+                {
+                    throw new Exception($"A Requirement has been defined for entity fo type {EntityType} but the entity type was not found in the context.");
+                }
+
+                return entity;
             }
         }
 
