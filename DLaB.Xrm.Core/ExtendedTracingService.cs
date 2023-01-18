@@ -43,11 +43,18 @@ namespace Source.DLaB.Xrm
                     return;
                 }
 
-                var trace = args.Length == 0
-                    ? format
-                    : string.Format(format, args);
-                TraceHistory.AppendLine(trace);
-                TraceService.Trace(trace);
+                if (args.Length == 0)
+                {
+                    TraceHistory.AppendLine(format);
+                }
+                else
+                {
+                    TraceHistory.AppendFormat(format, args);
+                    TraceHistory.AppendLine();
+                }
+                
+                // Preserve Trace Formatting for Unit Test Traceability
+                TraceService.Trace(format, args);
             }
             catch (Exception ex)
             {
