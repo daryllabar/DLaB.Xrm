@@ -1,7 +1,4 @@
-﻿using DLaB.Xrm.Plugin;
-using Microsoft.Xrm.Sdk;
-using Source.DLaB.Common;
-using Source.DLaB.Xrm.Comparers;
+﻿using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +6,12 @@ using System.Linq.Expressions;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 using DLaB.Common;
+using DLaB.Xrm.Comparers;
 
 namespace DLaB.Xrm.Plugin
 #else
+using Source.DLaB.Common;
+using Source.DLaB.Xrm.Comparers;
 
 namespace Source.DLaB.Xrm.Plugin
 #endif
@@ -24,6 +24,11 @@ namespace Source.DLaB.Xrm.Plugin
         private Dictionary<ContextEntity, Requirement> Requirements { get; } = new Dictionary<ContextEntity,Requirement>();
 
         /// <summary>
+        /// The reason why the requirement was not met.  SkipExecution must be called first.
+        /// </summary>
+        public InvalidRequirementReason Reason { get; protected set; }
+
+        /// <summary>
         /// Returns true if the context does not meet the requirements for execution
         /// </summary>
         /// <param name="context">The Context</param>
@@ -34,6 +39,7 @@ namespace Source.DLaB.Xrm.Plugin
             {
                 if (requirement.SkipExecution(context))
                 {
+                    Reason = requirement.Reason;
                     return true;
                 }
             }
@@ -430,8 +436,11 @@ namespace Source.DLaB.Xrm.Plugin
 
             public EntityList UpdatedToValues { get; } = new EntityList();
             public EntityOrList UpdatedToOrValues { get; } = new EntityOrList();
+            
+            public InvalidRequirementReason Reason { get; private set; }
 
             private bool IsPreImageRequired { get; set; } = true;
+
 
             public Requirement(ContextEntity entityType)
             {
@@ -460,16 +469,38 @@ namespace Source.DLaB.Xrm.Plugin
 
             private bool SkipExecution(IExtendedPluginContext context, Entity entity, HashSet<string> allColumns, List<List<string>> atLeastOneColumns, bool checkNotNull)
             {
+                var type = checkNotNull
+                    ? ColumnRequirementCheck.Contains
+                    : ColumnRequirementCheck.ContainsNullable;
+                var columnReason = checkNotNull
+                    ? InvalidColumnReason.Null
+                    : InvalidColumnReason.Missing;
                 foreach (var column in allColumns)
                 {
                     if (!entity.Contains(column))
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { column },
+                            ColumnReason = InvalidColumnReason.Missing,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = type
+                        };
                         context.Trace("The {0} entity type did not contain the required column {1}!", EntityType, column);
                         return true;
                     }
 
                     if (checkNotNull && entity[column] == null)
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { column },
+                            ColumnReason = columnReason,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = type
+                        };
                         context.Trace("The {0} entity type contained a null value for the required column {1}!", EntityType, column);
                         return true;
                     }
@@ -489,6 +520,14 @@ namespace Source.DLaB.Xrm.Plugin
 
                     if (!requirementMet)
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = set,
+                            ColumnReason = columnReason,
+                            ContextEntity = EntityType,
+                            IsAny = true,
+                            RequirementType = type
+                        };
                         if (checkNotNull)
                         {
                             context.Trace("The {0} entity type did not contain a non-null value for at least one of the following columns: {1}!", EntityType, string.Join(", ", set));
@@ -510,12 +549,28 @@ namespace Source.DLaB.Xrm.Plugin
                 {
                     if (!entity.Contains(column))
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { column },
+                            ColumnReason = InvalidColumnReason.Missing,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = ColumnRequirementCheck.ContainsNull
+                        };
                         context.Trace("The {0} entity type did not contain the required to be null column {1}!", EntityType, column);
                         return true;
                     }
 
                     if (entity[column] != null)
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { column },
+                            ColumnReason = InvalidColumnReason.NotNull,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = ColumnRequirementCheck.ContainsNull
+                        };
                         context.Trace("The {0} entity type contained a non-null value for the required to be null column {1}!", EntityType, column);
                         return true;
                     }
@@ -535,6 +590,14 @@ namespace Source.DLaB.Xrm.Plugin
 
                     if (!requirementMet)
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = set,
+                            ColumnReason = InvalidColumnReason.NotNull,
+                            ContextEntity = EntityType,
+                            IsAny = true,
+                            RequirementType = ColumnRequirementCheck.ContainsNull
+                        };
                         context.Trace("The {0} entity type did not contain a null value for at least one of the following columns: {1}!", EntityType, string.Join(", ", set));
                         return true;
                     }
@@ -550,12 +613,28 @@ namespace Source.DLaB.Xrm.Plugin
                 {
                     if (!entity.Contains(att.Key))
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { att.Key },
+                            ColumnReason = InvalidColumnReason.Missing,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = ColumnRequirementCheck.ContainsValue
+                        };
                         context.Trace("The {0} entity type did not contain a value for column {1} which was required to be {2}!", EntityType, att.Key, att.Value.ObjectToStringDebug());
                         return true;
                     }
 
                     if (!AttributeComparer.ValuesAreEqual(service, att.Value, entity[att.Key]))
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { att.Key },
+                            ColumnReason = InvalidColumnReason.UnspecifiedValue,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = ColumnRequirementCheck.ContainsValue
+                        };
                         context.Trace("The {0} entity type was required to contain a value of {1} for column {2} but contained the value {3}!", EntityType, att.Value, att.Key, entity[att.Key].ObjectToStringDebug());
                         return true;
                     }
@@ -565,6 +644,14 @@ namespace Source.DLaB.Xrm.Plugin
                 var missingMatch = atLeastOneMatches.FirstOrDefault(set => !EntityContainsAtLeastOneMatch(service, entity, set));
                 if (missingMatch != null)
                 {
+                    Reason = new InvalidRequirementReason
+                    {
+                        Columns = new List<string>(missingMatch.Keys),
+                        ColumnReason = InvalidColumnReason.UnspecifiedValue,
+                        ContextEntity = EntityType,
+                        IsAny = true,
+                        RequirementType = ColumnRequirementCheck.ContainsValue
+                    };
                     context.Trace("The {0} entity type did not contain the required value for at least one of the following columns: {1}!", EntityType, string.Join(", ", missingMatch.Keys));
                     return true;
                 }
@@ -632,16 +719,38 @@ namespace Source.DLaB.Xrm.Plugin
             private bool SkipExecutionForUpdate(IExtendedPluginContext context, Entity target, Entity preImage, HashSet<string> allColumns, List<List<string>> atLeastOneColumns, bool checkNotNull)
             {
                 var service = context.SystemOrganizationService;
+                var type = checkNotNull
+                    ? ColumnRequirementCheck.Updated
+                    : ColumnRequirementCheck.Changed;
+                var columnReason = checkNotNull
+                    ? InvalidColumnReason.Null
+                    : InvalidColumnReason.Missing;
                 foreach (var column in allColumns)
                 {
                     if (!target.Contains(column))
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { column },
+                            ColumnReason = InvalidColumnReason.Missing,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = type
+                        };
                         context.Trace("The target did not contain a required update of column {1}!", EntityType, column);
                         return true;
                     }
 
                     if (checkNotNull && target[column] == null)
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { column },
+                            ColumnReason = columnReason,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = type
+                        };
                         context.Trace("The target did not contain a required update of column {1} to a non-null value!", EntityType, column);
                         return true;
                     }
@@ -667,14 +776,18 @@ namespace Source.DLaB.Xrm.Plugin
 
                     if (!requirementMet)
                     {
-                        if (checkNotNull)
+                        Reason = new InvalidRequirementReason
                         {
-                            context.Trace("The target did not update to a non-null value for at least one of the following columns: {0}!", string.Join(", ", set));
-                        }
-                        else
-                        {
-                            context.Trace("The target did not update at least one of the following columns: {0}!", string.Join(", ", set));
-                        }
+                            Columns = set,
+                            ColumnReason = columnReason,
+                            ContextEntity = EntityType,
+                            IsAny = true,
+                            RequirementType = type
+                        };
+                        context.Trace(
+                            checkNotNull
+                                ? "The target did not update to a non-null value for at least one of the following columns: {0}!"
+                                : "The target did not update at least one of the following columns: {0}!", string.Join(", ", set));
                         return true;
                     }
                 }
@@ -689,18 +802,42 @@ namespace Source.DLaB.Xrm.Plugin
                 {
                     if (!target.Contains(column))
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { column },
+                            ColumnReason = InvalidColumnReason.Missing,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = ColumnRequirementCheck.Cleared
+                        };
                         context.Trace("The target did not contain a required update of column {0} to null!", column);
                         return true;
                     }
 
                     if (target[column] != null)
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { column },
+                            ColumnReason = InvalidColumnReason.Null,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = ColumnRequirementCheck.Cleared
+                        };
                         context.Trace("The target contained a non-null value for column {0} that was required to be updated to null!", column);
                         return true;
                     }
 
                     if (!ColumnValueHasChanged(service, target, preImage, column))
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { column },
+                            ColumnReason = InvalidColumnReason.UnchangedValue,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = ColumnRequirementCheck.Cleared
+                        };
                         context.Trace("The target contained a null value for column {0} that was required to be updated to null, but it was already null!", column);
                         return true;
                     }
@@ -720,6 +857,14 @@ namespace Source.DLaB.Xrm.Plugin
                 
                     if (!requirementMet)
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = set,
+                            ColumnReason = InvalidColumnReason.UnchangedValue,
+                            ContextEntity = EntityType,
+                            IsAny = true,
+                            RequirementType = ColumnRequirementCheck.Cleared
+                        };
                         context.Trace("The target did not update at least one of the following columns to null: {0}!", string.Join(", ", set));
                         return true;
                     }
@@ -734,18 +879,42 @@ namespace Source.DLaB.Xrm.Plugin
                 {
                     if (!target.Contains(att.Key))
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { att.Key },
+                            ColumnReason = InvalidColumnReason.Missing,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = ColumnRequirementCheck.UpdatedValue
+                        };
                         context.Trace("The target did not contain a required update of column {0} to {1}!", att.Key, att.Value.ObjectToStringDebug());
                         return true;
                     }
 
                     if (!AttributeComparer.ValuesAreEqual(service, att.Value, target[att.Key])) 
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { att.Key },
+                            ColumnReason = InvalidColumnReason.UnspecifiedValue,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = ColumnRequirementCheck.UpdatedValue
+                        };
                         context.Trace("The target contained value {0} for column {1} that was required to be updated to {2}!", target[att.Key].ObjectToStringDebug(), att.Key, att.Value.ObjectToStringDebug());
                         return true;
                     }
 
                     if (!ColumnValueHasChanged(service, target, preImage, att.Key))
                     {
+                        Reason = new InvalidRequirementReason
+                        {
+                            Columns = new List<string> { att.Key },
+                            ColumnReason = InvalidColumnReason.UnchangedValue,
+                            ContextEntity = EntityType,
+                            IsAny = false,
+                            RequirementType = ColumnRequirementCheck.UpdatedValue
+                        };
                         context.Trace("The target contained value {0} for column {1} which it was be updated to, but it already had that value!", att.Value.ObjectToStringDebug(), att.Key);
                         return true;
                     }
@@ -754,6 +923,14 @@ namespace Source.DLaB.Xrm.Plugin
                 var missingMatch = atLeastOneValueColumns.FirstOrDefault(set => EntityContainsAtLeastOneMatchChanged(service, target, preImage, set));
                 if (missingMatch != null)
                 {
+                    Reason = new InvalidRequirementReason
+                    {
+                        Columns = new List<string>(missingMatch.Keys),
+                        ColumnReason = InvalidColumnReason.UnchangedValue,
+                        ContextEntity = EntityType,
+                        IsAny = true,
+                        RequirementType = ColumnRequirementCheck.UpdatedValue
+                    };
                     context.Trace("The target did not update at least one of the following columns: {0} to the required value!", missingMatch.Keys.ToCsv());
                     return true;
                 }
@@ -773,7 +950,7 @@ namespace Source.DLaB.Xrm.Plugin
 
             private Entity GetEntity(IExtendedPluginContext context)
             {
-                Entity entity = null;
+                Entity entity;
                 switch (EntityType)
                 {
                     case ContextEntity.CoalesceTargetPostImage:
@@ -795,7 +972,7 @@ namespace Source.DLaB.Xrm.Plugin
 
                 if (entity == null )
                 {
-                    throw new Exception($"A Requirement has been defined for entity fo type {EntityType} but the entity type was not found in the context.");
+                    throw new Exception($"A Requirement has been defined for entity of type {EntityType} but the entity type was not found in the context.");
                 }
 
                 return entity;

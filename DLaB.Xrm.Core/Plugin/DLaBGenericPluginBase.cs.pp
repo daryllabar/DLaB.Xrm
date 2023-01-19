@@ -264,14 +264,9 @@ namespace Source.DLaB.Xrm.Plugin
             }
             else
             {
-                foreach (var validator in @event.AssertValidators)
-                {
-                    if (validator.Validator.SkipExecution(context))
-                    {
-                        throw validator.ExceptionToThrow;
-                    }
-                }
+                @event.AssertRequirements(context);
             }
+
             return skip;
         }
 

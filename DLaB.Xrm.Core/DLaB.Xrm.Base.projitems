@@ -50,6 +50,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LateBoundActivePropertyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LateBoundQuerySettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\AssertValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugin\ColumnRequirementCheck.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\ContextEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\DLaBExtendedPluginContextSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\ExtendedContextCreator.cs" />
@@ -59,6 +60,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IExtendedContextCreator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IExtendedPluginContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IExtendedPluginContextInitializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugin\InvalidColumnReason.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugin\InvalidRequirementReason.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IRegisteredEventsPlugin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IRequirementValidator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IsolationMode.cs" />

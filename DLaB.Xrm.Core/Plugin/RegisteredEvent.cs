@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 namespace DLaB.Xrm.Plugin
@@ -140,6 +141,33 @@ namespace Source.DLaB.Xrm.Plugin
         public override string ToString()
         {
             return ToString(null);
+        }
+
+        /// <summary>
+        /// Throws an exception for the first AssertValidator that is not value
+        /// </summary>
+        /// <param name="context"></param>
+        public void AssertRequirements(IExtendedPluginContext context)
+        {
+            if (AssertValidators.Count == 0)
+            {
+                return;
+            }
+            var invalidRequirement = AssertValidators.FirstOrDefault(v => v.Validator.SkipExecution(context));
+            if (invalidRequirement.Equals(default(AssertValidator)))
+            {
+                return;
+            }
+
+            if (invalidRequirement.ExceptionToThrow == null)
+            {
+                throw invalidRequirement.ExceptionFactory(invalidRequirement.Validator.Reason, context);
+            }
+            else
+            {
+                throw invalidRequirement.ExceptionToThrow;
+            }
+
         }
     }
 }

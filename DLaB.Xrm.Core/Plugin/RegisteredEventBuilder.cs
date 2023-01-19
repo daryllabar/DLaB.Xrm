@@ -240,6 +240,19 @@ namespace Source.DLaB.Xrm.Plugin
         /// Defines the Validator to use to throw an exception for this Registered Event if it isn't met.
         /// Assert Validators will only be evaluated after the Validator (if defined) allows execution of the plugin
         /// </summary>
+        /// <param name="validator">Validator</param>
+        /// <param name="errorFactory">Function that creates an exception based on the InvalidColumnRequirementReason</param>
+        /// <returns></returns>
+        public RegisteredEventBuilder WithAssertValidator(IRequirementValidator validator, Func<InvalidRequirementReason, IExtendedPluginContext, Exception> errorFactory)
+        {
+            AssertValidators.Add(new AssertValidator(validator, errorFactory));
+            return this;
+        }
+
+        /// <summary>
+        /// Defines the Validator to use to throw an exception for this Registered Event if it isn't met.
+        /// Assert Validators will only be evaluated after the Validator (if defined) allows execution of the plugin
+        /// </summary>
         /// <param name="assertValidator">The validator</param>
         /// <returns></returns>
         public RegisteredEventBuilder WithAssertValidator(AssertValidator assertValidator)

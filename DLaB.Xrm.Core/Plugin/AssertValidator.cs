@@ -20,6 +20,10 @@ namespace Source.DLaB.Xrm.Plugin
         /// The Exception
         /// </summary>
         public Exception ExceptionToThrow { get; set; }
+        /// <summary>
+        /// The Exception Factory
+        /// </summary>
+        public Func<InvalidRequirementReason, IExtendedPluginContext, Exception> ExceptionFactory { get; set; }
 
         /// <summary>
         /// Constructor
@@ -28,8 +32,9 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="exceptionToThrow">The Exception to Throw</param>
         public AssertValidator(IRequirementValidator validator, Exception exceptionToThrow)
         {
-            Validator = validator;
-            ExceptionToThrow = exceptionToThrow;
+            ExceptionFactory = null;
+            ExceptionToThrow = exceptionToThrow ?? throw new ArgumentNullException(nameof(exceptionToThrow)); ;
+            Validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
         /// <summary>
@@ -39,8 +44,25 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="errorMessage">The error message to Throw as an InvalidPluginExecutionException</param>
         public AssertValidator(IRequirementValidator validator, string errorMessage)
         {
-            Validator = validator;
+            if (errorMessage == null)
+            {
+                throw new ArgumentNullException(nameof(errorMessage));
+            }
+            ExceptionFactory = null; 
             ExceptionToThrow = new InvalidPluginExecutionException(errorMessage);
+            Validator = validator ?? throw new ArgumentNullException(nameof(validator));
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="validator">Validator</param>
+        /// <param name="errorFactory">Function that creates an exception based on the InvalidColumnRequirementReason</param>
+        public AssertValidator(IRequirementValidator validator, Func<InvalidRequirementReason, IExtendedPluginContext, Exception> errorFactory)
+        {
+            ExceptionFactory = errorFactory ?? throw new ArgumentException(nameof(errorFactory));
+            ExceptionToThrow = null;
+            Validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
     }
 }
