@@ -475,10 +475,15 @@ namespace Source.DLaB.Xrm.Plugin
                 var columnReason = checkNotNull
                     ? InvalidColumnReason.Null
                     : InvalidColumnReason.Missing;
+                var treatNotContainsAsNull =  !checkNotNull && (EntityType == ContextEntity.PreImage || EntityType == ContextEntity.CoalesceTargetPreImage);
                 foreach (var column in allColumns)
                 {
                     if (!entity.Contains(column))
                     {
+                        if (treatNotContainsAsNull)
+                        {
+                            continue;
+                        }
                         Reason = new InvalidRequirementReason
                         {
                             Columns = new List<string> { column },
@@ -511,7 +516,8 @@ namespace Source.DLaB.Xrm.Plugin
                     var requirementMet = false;
                     foreach (var column in set)
                     {
-                        if (entity.Contains(column) && (!checkNotNull || entity[column] != null))
+                        if (entity.Contains(column) && (!checkNotNull || entity[column] != null)
+                            || treatNotContainsAsNull && !entity.Contains(column))
                         {
                             requirementMet = true;
                             break;
@@ -545,10 +551,15 @@ namespace Source.DLaB.Xrm.Plugin
 
             private bool SkipNonNullExecution(IExtendedPluginContext context, Entity entity, HashSet<string> requiredNulls, List<List<string>> atLeastOneNulls)
             {
+                var treatNotContainsAsNull = EntityType == ContextEntity.PreImage || EntityType == ContextEntity.CoalesceTargetPreImage;
                 foreach (var column in requiredNulls)
                 {
                     if (!entity.Contains(column))
                     {
+                        if (treatNotContainsAsNull)
+                        {
+                            continue;
+                        }
                         Reason = new InvalidRequirementReason
                         {
                             Columns = new List<string> { column },
@@ -581,7 +592,8 @@ namespace Source.DLaB.Xrm.Plugin
                     var requirementMet = false;
                     foreach (var column in set)
                     {
-                        if (entity.Contains(column) && entity[column] == null)
+                        if (entity.Contains(column) && entity[column] == null
+                            || treatNotContainsAsNull && !entity.Contains(column))
                         {
                             requirementMet = true;
                             break;
@@ -609,10 +621,15 @@ namespace Source.DLaB.Xrm.Plugin
             private bool SkipValueExecution(IExtendedPluginContext context, Entity entity, Dictionary<string, object> requiredValues, List<Dictionary<string, object>> atLeastOneMatches)
             {
                 var service = context.SystemOrganizationService;
+                var treatNotContainsAsNull = EntityType == ContextEntity.PreImage || EntityType == ContextEntity.CoalesceTargetPreImage;
                 foreach (var att in requiredValues)
                 {
                     if (!entity.Contains(att.Key))
                     {
+                        if (treatNotContainsAsNull && att.Value == null)
+                        {
+                            continue;
+                        }
                         Reason = new InvalidRequirementReason
                         {
                             Columns = new List<string> { att.Key },
@@ -641,7 +658,7 @@ namespace Source.DLaB.Xrm.Plugin
                 }
 
 
-                var missingMatch = atLeastOneMatches.FirstOrDefault(set => !EntityContainsAtLeastOneMatch(service, entity, set));
+                var missingMatch = atLeastOneMatches.FirstOrDefault(set => !EntityContainsAtLeastOneMatch(service, entity, set, treatNotContainsAsNull));
                 if (missingMatch != null)
                 {
                     Reason = new InvalidRequirementReason
@@ -659,10 +676,11 @@ namespace Source.DLaB.Xrm.Plugin
                 return false;
             }
 
-            private static bool EntityContainsAtLeastOneMatch(IOrganizationService service, Entity entity, Dictionary<string, object> set)
+            private static bool EntityContainsAtLeastOneMatch(IOrganizationService service, Entity entity, Dictionary<string, object> set, bool treatNotContainsAsNull)
             {
                 return set.Any(att =>
-                    entity.Contains(att.Key) && AttributeComparer.ValuesAreEqual(service, att.Value, entity[att.Key]));
+                    entity.Contains(att.Key) && AttributeComparer.ValuesAreEqual(service, att.Value, entity[att.Key])
+                    || treatNotContainsAsNull && !entity.Contains(att.Key) && att.Value == null);
             }
 
             private bool EntityContainsAtLeastOneMatchChanged(IOrganizationService service, Entity target, Entity preImage, Dictionary<string, object> set)
