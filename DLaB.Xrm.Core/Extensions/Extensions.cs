@@ -606,7 +606,7 @@ namespace Source.DLaB.Xrm
                 throw new ArgumentException("lambda must return an object initializer");
             }
 
-            // Search for and replace any occurence of Id with the actual Entity's Id
+            // Search for and replace any occurrence of Id with the actual Entity's Id
             return initializer.Members.Select(GetLogicalAttributeName<T>).ToArray();
         }
 
