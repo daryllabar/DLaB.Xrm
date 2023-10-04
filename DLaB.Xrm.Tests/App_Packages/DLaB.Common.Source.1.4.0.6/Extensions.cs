@@ -5,6 +5,8 @@ using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -773,6 +775,26 @@ namespace Source.DLaB.Common
         }
 #endif
         #endregion IExtensibleDataObject
+
+        #region KeyValueConfigurationCollection
+
+        /// <summary>
+        /// Converts the KeyValueConfigurationCollection to a NameValueCollection
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public static NameValueCollection ToNameValueCollection(this KeyValueConfigurationCollection collection)
+        {
+            var nvc = new NameValueCollection();
+            foreach (KeyValueConfigurationElement element in collection)
+            {
+                nvc.Set(element.Key, element.Value);
+            }
+
+            return nvc;
+        }
+
+        #endregion KeyValueConfigurationCollection
 
         #region MemberInfo
 

@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DLaB.Common.Source" Version="1.4.0.5" />
-    <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.0.26" />
+    <PackageReference Include="DLaB.Common.Source" Version="1.4.0.6" />
+    <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.1.14" />
   </ItemGroup>
 
   <Import Project="..\DLaB.Xrm.Core\DLaB.Xrm.Base.projitems" Label="Shared" />
