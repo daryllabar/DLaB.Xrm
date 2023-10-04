@@ -143,6 +143,7 @@ namespace Source.DLaB.Xrm.Comparers
             return items.Count == preCount;
         }
 
+#if !PRE_KEYATTRIBUTE
         private static EntityReference GetEntityReferenceWithoutKeyAttributes(IOrganizationService service, EntityReference entityRef)
         {
             if (entityRef.Id == Guid.Empty
@@ -154,5 +155,6 @@ namespace Source.DLaB.Xrm.Comparers
 
             return entityRef;
         }
+#endif
     }
 }
