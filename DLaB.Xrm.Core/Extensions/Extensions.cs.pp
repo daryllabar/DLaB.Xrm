@@ -20,9 +20,9 @@ using Microsoft.Xrm.Sdk.Metadata;
 using DLaB.Common;
 #else
 using Source.DLaB.Common;
+#endif
 using System.Collections.Concurrent;
 using System.Runtime.Caching;
-#endif
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 using DLaB.Xrm.Exceptions;
 
