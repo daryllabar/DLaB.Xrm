@@ -915,6 +915,32 @@ namespace Source.DLaB.Common
         }
 
         /// <summary>
+        /// The standard string.GetHashCode can result in different domains.  This is a deterministic version of the hash code so it will always return the same int value for the given string.
+        /// Warning: it's not safe to use in any situations vulnerable to hash-based attacks!
+        /// </summary>
+        /// <param name="str"></param>
+        /// <remarks>Taken from https://andrewlock.net/why-is-string-gethashcode-different-each-time-i-run-my-program-in-net-core/#a-deterministic-gethashcode-implementation</remarks>
+        /// <returns></returns>
+        public static int GetDeterministicHashCode(this string str)
+        {
+            unchecked
+            {
+                var hash1 = (5381 << 16) + 5381;
+                var hash2 = hash1;
+
+                for (var i = 0; i < str.Length; i += 2)
+                {
+                    hash1 = ((hash1 << 5) + hash1) ^ str[i];
+                    if (i == str.Length - 1)
+                        break;
+                    hash2 = ((hash2 << 5) + hash2) ^ str[i + 1];
+                }
+
+                return hash1 + hash2 * 1566083941;
+            }
+        }
+
+        /// <summary>
         /// Converts a string that is a base64 (UTF8 by default) encoded string.
         /// </summary>
         /// <param name="text">The text.</param>

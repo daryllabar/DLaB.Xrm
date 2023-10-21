@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DLaB.Common.Source" Version="1.4.0.6" />
+    <PackageReference Include="DLaB.Common.Source" Version="1.4.0.7" />
     <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.1.14" />
   </ItemGroup>
 
