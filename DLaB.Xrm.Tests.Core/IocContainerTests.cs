@@ -70,29 +70,21 @@ namespace DLaB.Xrm.Tests.Core
         [TestMethod]
         public void CircularDependency_Should_Throw()
         {
+            var nl = Environment.NewLine;
             ExpectException<InvalidOperationException>(() =>
             {
                 _sut.BuildServiceProvider().Get<Grandpa>();
-            }, $@"Circular dependency detected for type {typeof(Grandpa).FullName}.
-  - {typeof(Father).FullName},
-  - {typeof(Me).FullName},
-  - {typeof(Grandpa).FullName}");
+            }, $"Circular dependency detected for type {typeof(Grandpa).FullName}.{nl}  - {typeof(Father).FullName},{nl}  - {typeof(Me).FullName},{nl}  - {typeof(Grandpa).FullName}");
 
             ExpectException<InvalidOperationException>(() =>
             {
                 _sut.BuildServiceProvider().Get<Me>();
-            }, $@"Circular dependency detected for type {typeof(Me).FullName}.
-  - {typeof(Grandpa).FullName},
-  - {typeof(Father).FullName},
-  - {typeof(Me).FullName}");
+            }, $"Circular dependency detected for type {typeof(Me).FullName}.{nl}  - {typeof(Grandpa).FullName},{nl}  - {typeof(Father).FullName},{nl}  - {typeof(Me).FullName}");
 
             ExpectException<InvalidOperationException>(() =>
             {
                 _sut.BuildServiceProvider().Get<Father>();
-            }, $@"Circular dependency detected for type {typeof(Father).FullName}.
-  - {typeof(Me).FullName},
-  - {typeof(Grandpa).FullName},
-  - {typeof(Father).FullName}");
+            }, $"Circular dependency detected for type {typeof(Father).FullName}.{nl}  - {typeof(Me).FullName},{nl}  - {typeof(Grandpa).FullName},{nl}  - {typeof(Father).FullName}");
 
             // Break Dependency
             _sut.AddSingleton(new Father(null));
