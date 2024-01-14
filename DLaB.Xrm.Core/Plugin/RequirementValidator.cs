@@ -60,7 +60,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator Contains(ContextEntity entityType, params string[] columnNames)
         {
-            Get(entityType).RequiredColumns.AddMissing(columnNames);
+            Get(entityType).RequiredColumns.UnionWith(columnNames);
             return this;
         }
 
@@ -72,7 +72,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator Contains(ContextEntity entityType, ColumnSet columns)
         {
-            Get(entityType).RequiredColumns.AddMissing(columns.Columns);
+            Get(entityType).RequiredColumns.UnionWith(columns.Columns);
             return this;
         }
 
@@ -134,7 +134,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator ContainsNullable(ContextEntity entityType, params string[] columnNames)
         {
-            Get(entityType).RequiredColumnsAllowNulls.AddMissing(columnNames);
+            Get(entityType).RequiredColumnsAllowNulls.UnionWith(columnNames);
             return this;
         }
 
@@ -146,7 +146,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator ContainsNullable(ContextEntity entityType, ColumnSet columns)
         {
-            Get(entityType).RequiredColumnsAllowNulls.AddMissing(columns.Columns);
+            Get(entityType).RequiredColumnsAllowNulls.UnionWith(columns.Columns);
             return this;
         }
 
@@ -208,7 +208,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator ContainsNull(ContextEntity entityType, params string[] columnNames)
         {
-            Get(entityType).RequiredNullColumns.AddMissing(columnNames);
+            Get(entityType).RequiredNullColumns.UnionWith(columnNames);
             return this;
         }
 
@@ -220,7 +220,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator ContainsNull(ContextEntity entityType, ColumnSet columns)
         {
-            Get(entityType).RequiredNullColumns.AddMissing(columns.Columns);
+            Get(entityType).RequiredNullColumns.UnionWith(columns.Columns);
             return this;
         }
 
@@ -313,7 +313,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator Updated(params string[] columnNames)
         {
-            Get(ContextEntity.Target).UpdatedColumns.AddMissing(columnNames);
+            Get(ContextEntity.Target).UpdatedColumns.UnionWith(columnNames);
             return this;
         }
 
@@ -324,7 +324,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator Updated(ColumnSet columns)
         {
-            Get(ContextEntity.Target).UpdatedColumns.AddMissing(columns.Columns);
+            Get(ContextEntity.Target).UpdatedColumns.UnionWith(columns.Columns);
             return this;
         }
 
@@ -381,7 +381,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator Changed(params string[] columnNames)
         {
-            Get(ContextEntity.Target).UpdatedColumnsAllowNulls.AddMissing(columnNames);
+            Get(ContextEntity.Target).UpdatedColumnsAllowNulls.UnionWith(columnNames);
             return this;
         }
 
@@ -392,7 +392,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator Changed(ColumnSet columns)
         {
-            Get(ContextEntity.Target).UpdatedColumnsAllowNulls.AddMissing(columns.Columns);
+            Get(ContextEntity.Target).UpdatedColumnsAllowNulls.UnionWith(columns.Columns);
             return this;
         }
 
@@ -449,7 +449,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator Cleared(params string[] columnNames)
         {
-            Get(ContextEntity.Target).UpdatedNullColumns.AddMissing(columnNames);
+            Get(ContextEntity.Target).UpdatedNullColumns.UnionWith(columnNames);
             return this;
         }
 
@@ -460,7 +460,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public RequirementValidator Cleared(ColumnSet columns)
         {
-            Get(ContextEntity.Target).UpdatedNullColumns.AddMissing(columns.Columns);
+            Get(ContextEntity.Target).UpdatedNullColumns.UnionWith(columns.Columns);
             return this;
         }
 
@@ -840,29 +840,29 @@ namespace Source.DLaB.Xrm.Plugin
 
                 var requiredPreImageColumns = new HashSet<string>();
                 // Updated
-                requiredPreImageColumns.AddMissing(UpdatedColumns);
-                requiredPreImageColumns.AddMissing(UpdatedColumnsAllowNulls);
-                requiredPreImageColumns.AddMissing(UpdatedNullColumns);
-                requiredPreImageColumns.AddMissing(UpdatedToValues.GetValues(service).Keys);
+                requiredPreImageColumns.UnionWith(UpdatedColumns);
+                requiredPreImageColumns.UnionWith(UpdatedColumnsAllowNulls);
+                requiredPreImageColumns.UnionWith(UpdatedNullColumns);
+                requiredPreImageColumns.UnionWith(UpdatedToValues.GetValues(service).Keys);
 
                 // Updated Or
-                requiredPreImageColumns.AddMissing(UpdatedOrColumns.SelectMany(c => c));
-                requiredPreImageColumns.AddMissing(UpdatedOrColumnsAllowNulls.SelectMany(c => c));
-                requiredPreImageColumns.AddMissing(UpdatedNullOrColumns.SelectMany(c => c));
-                requiredPreImageColumns.AddMissing(UpdatedToOrValues.GetValues().SelectMany(c => c.Keys));
+                requiredPreImageColumns.UnionWith(UpdatedOrColumns.SelectMany(c => c));
+                requiredPreImageColumns.UnionWith(UpdatedOrColumnsAllowNulls.SelectMany(c => c));
+                requiredPreImageColumns.UnionWith(UpdatedNullOrColumns.SelectMany(c => c));
+                requiredPreImageColumns.UnionWith(UpdatedToOrValues.GetValues().SelectMany(c => c.Keys));
                 if (EntityType == ContextEntity.PreImage || EntityType == ContextEntity.CoalesceTargetPreImage)
                 {
                     // Required
-                    requiredPreImageColumns.AddMissing(RequiredColumns);
-                    requiredPreImageColumns.AddMissing(RequiredColumnsAllowNulls);
-                    requiredPreImageColumns.AddMissing(RequiredNullColumns);
-                    requiredPreImageColumns.AddMissing(ContainedValues.GetValues(service).Keys);
+                    requiredPreImageColumns.UnionWith(RequiredColumns);
+                    requiredPreImageColumns.UnionWith(RequiredColumnsAllowNulls);
+                    requiredPreImageColumns.UnionWith(RequiredNullColumns);
+                    requiredPreImageColumns.UnionWith(ContainedValues.GetValues(service).Keys);
 
                     // Required Or
-                    requiredPreImageColumns.AddMissing(RequiredOrColumns.SelectMany(c => c));
-                    requiredPreImageColumns.AddMissing(RequiredOrColumnsAllowNulls.SelectMany(c => c));
-                    requiredPreImageColumns.AddMissing(RequiredNullOrColumns.SelectMany(c => c));
-                    requiredPreImageColumns.AddMissing(ContainedOrValues.GetValues().SelectMany(c => c.Keys));
+                    requiredPreImageColumns.UnionWith(RequiredOrColumns.SelectMany(c => c));
+                    requiredPreImageColumns.UnionWith(RequiredOrColumnsAllowNulls.SelectMany(c => c));
+                    requiredPreImageColumns.UnionWith(RequiredNullOrColumns.SelectMany(c => c));
+                    requiredPreImageColumns.UnionWith(ContainedOrValues.GetValues().SelectMany(c => c.Keys));
                 }
 
                 if (requiredPreImageColumns.Any())

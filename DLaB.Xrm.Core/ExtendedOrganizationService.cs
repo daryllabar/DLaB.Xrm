@@ -30,7 +30,7 @@ namespace Source.DLaB.Xrm
         /// <summary>
         /// Constructor for determining if statements are timed and or logged.
         /// </summary>
-        /// <param name="service">IOrganziationService to wrap.</param>
+        /// <param name="service">IOrganizationService to wrap.</param>
         /// <param name="trace">Tracing Service Required</param>
         /// <param name="settings">Settings</param>
         public ExtendedOrganizationService(IOrganizationService service, ITracingService trace, ExtendedOrganizationServiceSettings settings = null)

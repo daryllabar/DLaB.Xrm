@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 namespace DLaB.Xrm
@@ -23,7 +21,7 @@ namespace Source.DLaB.Xrm
         private string _timeEndMessageFormat;
 
         /// <summary>
-        /// All Fetch Xml or QueryExpressions (SQL Equivalent) made with IOrganziationServices executed will be traced
+        /// All Fetch Xml or QueryExpressions (SQL Equivalent) made with IOrganizationServices executed will be traced
         /// </summary>
         public bool LogDetailedRequests { get; set; }
 
@@ -77,6 +75,7 @@ namespace Source.DLaB.Xrm
                 const string errMsg = "The format of the TimeEndMessageFormat must include \"{0}\" for the elapsed seconds of the request.";
                 try
                 {
+                    // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                     string.Format(value, key);
                 }
                 catch (FormatException)
@@ -94,7 +93,9 @@ namespace Source.DLaB.Xrm
 
         #endregion Properties
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public ExtendedOrganizationServiceSettings()
         {
             LogDetailedRequests = true;

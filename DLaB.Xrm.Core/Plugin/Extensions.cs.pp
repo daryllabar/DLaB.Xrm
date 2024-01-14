@@ -5,6 +5,8 @@ using System.Diagnostics;
 #endif
 using System.Linq;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Extensions;
+
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 using DLaB.Xrm.Exceptions;
 
@@ -23,44 +25,9 @@ namespace Source.DLaB.Xrm.Plugin
 #endif
     public static class Extensions
     {
-#region HashSet<T>
+        #region List<RegisteredEvent>
 
-        /// <summary>
-        /// Adds the all values that don't already exist in the HashSet
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="hashSet"></param>
-        /// <param name="values"></param>
-        public static void AddMissing<T>(this HashSet<T> hashSet, IEnumerable<T> values)
-        {
-            foreach (var value in values)
-            {
-                if (!hashSet.Contains(value))
-                {
-                    hashSet.Add(value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Adds the value if it doesn't already exist in the HashSet
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="hashSet"></param>
-        /// <param name="value"></param>
-        public static void AddMissing<T>(this HashSet<T> hashSet, T value)
-        {
-            if (!hashSet.Contains(value))
-            {
-                hashSet.Add(value);
-            }
-        }
-
-#endregion HashSet<T>
-
-#region List<RegisteredEvent>
-
-#region AddEvent
+        #region AddEvent
 
         /// <summary>
         /// Defaults the execute method to be InternalExecute and run against all entities.
@@ -109,9 +76,9 @@ namespace Source.DLaB.Xrm.Plugin
             events.Add(new RegisteredEvent(stage, message, execute, entityLogicalName));
         }
 
-#endregion AddEvent
+        #endregion AddEvent
 
-#region AddEvents
+        #region AddEvents
 
         /// <summary>
         /// Defaults the execute method to be InternalExecute and run against all entities.
@@ -165,13 +132,13 @@ namespace Source.DLaB.Xrm.Plugin
             }
         }
 
-#endregion AddEvent
+        #endregion AddEvent
 
-#endregion List<RegisteredEvent>
+        #endregion List<RegisteredEvent>
 
-#region IExtendedPluginContext
+        #region IExtendedPluginContext
 
-#region GetContextInfo
+        #region GetContextInfo
 
         /// <summary>
         /// Gets the context information.
@@ -186,7 +153,7 @@ namespace Source.DLaB.Xrm.Plugin
                 context.ToStringDebug();
         }
 
-#endregion GetContextInfo
+        #endregion GetContextInfo
 
         /// <summary>
         /// Determines whether a shared variable exists that specifies that the plugin or the plugin and specific message type should be prevented from executing.
@@ -217,11 +184,11 @@ namespace Source.DLaB.Xrm.Plugin
             return null;
         }
 
-#endregion IExtendedPluginContext
+        #endregion IExtendedPluginContext
 
-#region IPluginExecutionContext
+        #region IPluginExecutionContext
 
-#region AssertEntityImageAttributesExist
+        #region AssertEntityImageAttributesExist
 
         /// <summary>
         /// Checks the Pre/Post Entity Images to determine if the image collections contains an image with the given key, that contains the attributes.
@@ -247,9 +214,9 @@ namespace Source.DLaB.Xrm.Plugin
             }
         }
 
-#endregion AssertEntityImageAttributesExist
+        #endregion AssertEntityImageAttributesExist
 
-#region AssertEntityImageRegistered
+        #region AssertEntityImageRegistered
 
         /// <summary>
         /// Checks the Pre/Post Entity Images to determine if the the collection contains an image with the given key.
@@ -273,9 +240,9 @@ namespace Source.DLaB.Xrm.Plugin
             }
         }
 
-#endregion AssertEntityImageRegistered
+        #endregion AssertEntityImageRegistered
 
-#region CalledFrom
+        #region CalledFrom
 
         /// <summary>
         /// Returns true if the current plugin maps to the Registered Event, or the current plugin has been triggered by the given registered event
@@ -304,9 +271,9 @@ namespace Source.DLaB.Xrm.Plugin
                 (stage == null || c.Stage == stage.Value));
         }
 
-#endregion CalledFrom
+        #endregion CalledFrom
 
-#region CoalesceTarget
+        #region CoalesceTarget
 
         /// <summary>
         /// Creates a new Entity of type T, adding the attributes from both the Target and the Post Image if they exist.
@@ -337,9 +304,9 @@ namespace Source.DLaB.Xrm.Plugin
             return DereferenceTarget<T>(context).CoalesceEntity(context.GetPostEntity<T>(imageName));
         }
 
-#endregion CoalesceTarget
+        #endregion CoalesceTarget
 
-#region GetContexts
+        #region GetContexts
 
         /// <summary>
         /// The current PluginExecutionContext and the parent context hierarchy of the plugin.
@@ -368,7 +335,7 @@ namespace Source.DLaB.Xrm.Plugin
             }
         }
 
-#endregion GetContexts
+        #endregion GetContexts
 
         /// <summary>
         /// Gets the event by iterating over all of the expected registered events to ensure that the plugin has been invoked by an expected event.
@@ -388,7 +355,7 @@ namespace Source.DLaB.Xrm.Plugin
                 .FirstOrDefault();
         }
 
-#region GetFirstSharedVariable
+        #region GetFirstSharedVariable
 
         /// <summary>
         /// Gets the variable value from the PluginExecutionContext.SharedVariables or anywhere in the Plugin Context Hierarchy collection, cast to type 'T', or default(T) if the collection doesn't contain a variable with the given name.
@@ -429,7 +396,7 @@ namespace Source.DLaB.Xrm.Plugin
             return null;
         }
 
-#endregion GetFirstSharedVariable
+        #endregion GetFirstSharedVariable
 
         /// <summary>
         /// Gets the type of the message.
@@ -438,7 +405,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public static MessageType GetMessageType(this IPluginExecutionContext context) { return new MessageType(context.MessageName); }
 
-#region Get(Pre/Post)Entities
+        #region Get(Pre/Post)Entities
 
         /// <summary>
         /// If the imageName is populated and the PreEntityImages contains the given imageName Key, the Value is cast to the Entity type T, else null is returned
@@ -466,7 +433,7 @@ namespace Source.DLaB.Xrm.Plugin
             return context.PostEntityImages.GetEntity<T>(imageName, DLaBExtendedPluginContextBase.PluginImageNames.PostImage);
         }
 
-#endregion Get(Pre/Post)Entities
+        #endregion Get(Pre/Post)Entities
 
         /// <summary>
         /// Gets the pipeline stage.
@@ -475,7 +442,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public static PipelineStage GetPipelineStage(this IPluginExecutionContext context) { return (PipelineStage)context.Stage; }
 
-#region GetTarget
+        #region GetTarget
 
         /// <summary>
         /// Dereferences the target so an update to it will not cause an update to the actual target and result in a crm update post plugin execution
@@ -524,11 +491,11 @@ namespace Source.DLaB.Xrm.Plugin
             return entity;
         }
 
-#endregion GetTarget
+        #endregion GetTarget
 
-#region Prevent Plugin Execution
+        #region Prevent Plugin Execution
 
-#region PreventPluginExecution
+        #region PreventPluginExecution
 
         /// <summary>
         /// Adds a shared Variable to the context that is checked by the GenericPluginBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
@@ -581,9 +548,9 @@ namespace Source.DLaB.Xrm.Plugin
             }
         }
 
-#endregion PreventPluginExecution
+        #endregion PreventPluginExecution
 
-#region PreventPluginExecution<T>
+        #region PreventPluginExecution<T>
 
         /// <summary>
         /// Adds a shared Variable to the context that is checked by the GenericPluginBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
@@ -619,7 +586,7 @@ namespace Source.DLaB.Xrm.Plugin
             context.PreventPluginExecution(typeof(T).FullName, messageName, logicalName, stage);
         }
 
-#endregion PreventPluginExecution<T>
+        #endregion PreventPluginExecution<T>
 
         private static string GetPreventionRule(string messageName = null, string logicalName = null, PipelineStage? stage = null)
         {
@@ -634,7 +601,7 @@ namespace Source.DLaB.Xrm.Plugin
             return pluginTypeName + "PreventExecution";
         }
 
-#region HasPluginExecutionBeenPrevented
+        #region HasPluginExecutionBeenPrevented
 
         /// <summary>
         /// Determines whether a shared variable exists that specifies that the plugin or the plugin and specifc message type should be prevented from executing.
@@ -668,10 +635,30 @@ namespace Source.DLaB.Xrm.Plugin
                    hash.Contains(GetPreventionRule(stage: @event.Stage));
         }
 
-#endregion HasPluginExecutionBeenPrevented
+        #endregion HasPluginExecutionBeenPrevented
 
-#endregion Prevent Plugin Execution
+        #endregion Prevent Plugin Execution
 
-#endregion IPluginExecutionContext
+        #endregion IPluginExecutionContext
+
+        #region IServiceProvider
+
+        /// <summary>
+        /// Creates an extended organization service with the specified user ID and settings.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="userId">The user ID.</param>
+        /// <param name="settings">The extended organization service settings.</param>
+        /// <returns>The extended organization service.</returns>
+        public static ExtendedOrganizationService CreateExtendedOrganizationService(this IServiceProvider serviceProvider, Guid? userId, ExtendedOrganizationServiceSettings settings = null)
+        {
+            var factory = serviceProvider.Get<IOrganizationServiceFactory>();
+            var tracingService = serviceProvider.Get<ITracingService>();
+            settings = settings ?? serviceProvider.Get<ExtendedOrganizationServiceSettings>();
+
+            return new ExtendedOrganizationService(factory.CreateOrganizationService(userId), tracingService, settings);
+        }
+
+        #endregion IServiceProvider
     }
 }

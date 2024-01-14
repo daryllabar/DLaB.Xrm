@@ -3,17 +3,24 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Extensions;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
+using DLaB.Xrm.Ioc;
+
 namespace DLaB.Xrm.Plugin
 #else
+using Source.DLaB.Xrm.Ioc;
+
 namespace Source.DLaB.Xrm.Plugin
 #endif
 
 {
     /// <inheritdoc />
     /// <summary>
-    /// Plugin Base.  Allows for Registered Events, preventing infinite loops, and auto logging
+    /// Plugin Base.  Allows for Registered Events, preventing infinite loops, and auto logging.
     /// </summary>
 #if !DLAB_XRM_DEBUG
     [DebuggerNonUserCode]
@@ -34,6 +41,12 @@ namespace Source.DLaB.Xrm.Plugin
         /// Key to look for in the Security Settings for Tracing the Post Context
         /// </summary>
         public const string TracePostContext = "PluginBase.TracePostContext";
+
+        private readonly Lazy<IIocContainer> _container;
+        /// <summary>
+        /// Container to use for Dependency Injection
+        /// </summary>
+        private IIocContainer Container => _container.Value;
 
         #endregion Constants
 
@@ -68,23 +81,22 @@ namespace Source.DLaB.Xrm.Plugin
         /// </summary>
         /// <param name="unsecureConfig"></param>
         /// <param name="secureConfig"></param>
-        protected DLaBGenericPluginBase(string unsecureConfig, string secureConfig)
+        /// <param name="container"></param>
+        protected DLaBGenericPluginBase(string unsecureConfig, string secureConfig, IIocContainer container = null)
         {
             _lazyIsInitialized = new Lazy<bool>(LazyTriggeredInitialize);
             SecureConfig = secureConfig;
             UnsecureConfig = unsecureConfig;
+
+            container = container ?? new IocContainer();
+            // Because child classes should be able to override the registration, Lazy is used here so the initialization of the IIocContainer and subsequent call to RegisterServices
+            // is delayed until after the base class is fully instantiated.
+            _container = new Lazy<IIocContainer>(() => RegisterServices(container), LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
         #endregion Constructors
 
         #region Abstract Methods
-
-        /// <summary>
-        /// Creates the local plugin context.
-        /// </summary>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <returns></returns>
-        protected abstract T CreatePluginContext(IServiceProvider serviceProvider);
 
         /// <summary>
         /// The default method to be executed by the plugin.  The Registered Event could specify a different method.
@@ -112,23 +124,44 @@ namespace Source.DLaB.Xrm.Plugin
             return true;
         }
 
-        private void InitializeMain(IServiceProvider serviceProvider)
-        {
-            _initializerServiceProvider = serviceProvider;
-            if (_lazyIsInitialized.Value)
-            {
-                return;
-            }
-            throw new InvalidOperationException("Lazy Initialization Failed for plugin!");
-        }
-
         /// <summary>
         /// Called once directly before the plugin instance is executed for the first time.
         /// </summary>
         protected virtual void Initialize(IServiceProvider serviceProvider) { }
 
+        private void CallInitializeOnFirstExecutionOnly(IServiceProvider serviceProvider)
+        {
+            if (!_lazyIsInitialized.IsValueCreated)
+            {
+                _initializerServiceProvider = serviceProvider;
+                if (!_lazyIsInitialized.Value)
+                {
+                    throw new InvalidOperationException("Lazy Initialization Failed for plugin!");
+                }
+            }
+        }
 
         #endregion Initialize
+
+        /// <summary>
+        /// Registers the services for the IocContainer for the plugin.
+        /// If a plugin requires it's own specific registrations, this should be overridden and more than likely, base.RegisterServices called first before stepping on the registrations with the plugin specific ones.
+        /// This is called only once per plugin instance.
+        /// This must be overriden if T is not IExtendedPluginContext
+        /// </summary>
+        /// <param name="container"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected virtual IIocContainer RegisterServices(IIocContainer container)
+        {
+            if (container == null)
+            {
+                throw new ArgumentNullException(nameof(container));
+            }
+
+            return container.RegisterDataversePluginDefaults(UnsecureConfig, SecureConfig, this);
+        }
+
+        #region Execute
 
         /// <summary>
         /// Executes the plug-in.
@@ -137,25 +170,26 @@ namespace Source.DLaB.Xrm.Plugin
         /// <exception cref="T:System.ArgumentNullException"></exception>
         /// <remarks>
         /// For improved performance, Microsoft Dynamics CRM caches plug-in instances.
-        /// The plug-in's Execute method should be written to be stateless as the constructor
-        /// is not called for every invocation of the plug-in. Also, multiple system threads
-        /// could execute the plug-in at the same time. All per invocation state information
-        /// is stored in the context. This means that you should not use class level fields/properties in plug-ins.
+        /// The plug-in's Execute method should be written to be stateless as the constructor is not called for every invocation of the plug-in.
+        /// Also, multiple system threads could execute the plug-in at the same time.
+        /// All per invocation state information is stored in the context.
+        /// This means that you should not use class level fields/properties in plug-ins that are not multi-thread safe or execution context specific.
         /// </remarks>
         public void Execute(IServiceProvider serviceProvider)
         {
-            if (!_lazyIsInitialized.IsValueCreated)
-            {
-                InitializeMain(serviceProvider);
-            }
-            PreExecute(serviceProvider);
-
             if (serviceProvider == null)
             {
                 throw new ArgumentNullException(nameof(serviceProvider));
             }
 
-            var context = CreatePluginContext(serviceProvider);
+            serviceProvider = Container.BuildServiceProvider(serviceProvider);
+
+            CallInitializeOnFirstExecutionOnly(serviceProvider);
+
+            PreExecute(serviceProvider);
+
+            var context = serviceProvider.Get<T>();
+            AssertContextIsNotNull(context);
 
             try
             {
@@ -211,6 +245,21 @@ namespace Source.DLaB.Xrm.Plugin
             }
         }
 
+        private static void AssertContextIsNotNull(T context)
+        {
+            if (context == null)
+            {
+                if (typeof(T) == typeof(IExtendedPluginContext))
+                {
+                    throw new InvalidPluginExecutionException(
+                        $"Unable to create context of type {typeof(T).FullName}!  When overriding RegisterServices either call base.RegisterServices() or explicitly define a registration for IExtendedPluginContext with the container.");
+                }
+
+                throw new InvalidPluginExecutionException(
+                    $"Unable to create context of type {typeof(T).FullName}!  Override the RegisterServices method and explicitly define a registration for IExtendedPluginContext with the container.");
+            }
+        }
+
         /// <summary>
         /// Method that gets called when an exception occurs in the Execute method.  Return true if the exception should be rethrown.
         /// This prevents losing the stack trace by rethrowing the originally caught error.
@@ -239,7 +288,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// Method that gets called in the finally block of the Execute
         /// </summary>
         /// <param name="context">The context.</param>
-        protected virtual void PostExecute(IExtendedPluginContext context)
+        protected virtual void PostExecute(T context)
         {
             if (context.TracingService is IMaxLengthTracingService maxLengthService)
             {
@@ -288,11 +337,11 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Allows Plugin to trigger itself.  Delete Messge Types always return False since you can't delete something twice, all other message types return true if the execution key is found in the shared parameters.
+        /// Allows Plugin to trigger itself.  Delete Message Types always return False since you can't delete something twice, all other message types return true if the execution key is found in the shared parameters.
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        protected virtual bool PreventRecursiveCall(IExtendedPluginContext context)
+        protected virtual bool PreventRecursiveCall(T context)
         {
             if (context.Event.Message == MessageType.Delete)
             {
@@ -323,5 +372,7 @@ namespace Source.DLaB.Xrm.Plugin
             return source != null
                 && values.Any(v => CultureInfo.InvariantCulture.CompareInfo.IndexOf(source, v, CompareOptions.IgnoreCase) >= 0);
         }
+
+        #endregion Execute
     }
 }

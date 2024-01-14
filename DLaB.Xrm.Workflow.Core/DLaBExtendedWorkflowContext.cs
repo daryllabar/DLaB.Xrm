@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Activities;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Extensions;
 using Microsoft.Xrm.Sdk.Workflow;
 #if DLAB_UNROOT_COMMON_NAMESPACE
 using DLaB.Common;
@@ -21,6 +22,7 @@ namespace Source.DLaB.Xrm.Workflow
 {
     public class DLaBExtendedWorkflowContext : IExtendedWorkflowContext
     {
+
         #region Properties
 
         public string CodeActivityTypeName { get; }
@@ -29,18 +31,13 @@ namespace Source.DLaB.Xrm.Workflow
 
         #region IExtendedExecutionContext Implementation
 
-        private IOrganizationService _cachedOrganizationService;
-        private IOrganizationService _organizationService;
-        private IOrganizationService _systemOrganizationService;
-        private IOrganizationService _triggeredUserOrganizationService;
-        private IOrganizationServiceFactory _serviceFactory;
-        private ITracingService _tracingService;
         private IWorkflowContext _workflowContext;
+        private readonly OrganizationServicesWrapper _orgServices;
 
         /// <summary>
         /// The IOrganizationService of the workflow, Impersonated as the user that the plugin is was initiated by
         /// </summary>
-        public IOrganizationService InitiatingUserOrganizationService => _triggeredUserOrganizationService ?? (_triggeredUserOrganizationService = Settings.InitializeIOrganizationService(ServiceFactory, InitiatingUserId, TracingService));
+        public IOrganizationService InitiatingUserOrganizationService => _orgServices.InitiatingUser.Value;
 
         /// <summary>
         /// Returns true if the execution context is asynchronous (Mode = 1)
@@ -52,31 +49,33 @@ namespace Source.DLaB.Xrm.Workflow
         /// </summary>
         public bool IsSync => Mode == 0;
 
+        private IServiceProvider ServiceProvider { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// The IOrganizationService of the workflow, Impersonated as the user that the plugin is registered to run as.
         /// </summary>
-        public IOrganizationService OrganizationService => _organizationService ?? (_organizationService = Settings.InitializeIOrganizationService(ServiceFactory, UserId, TracingService));
+        public IOrganizationService OrganizationService => _orgServices.Organization.Value;
 
         /// <summary>
         /// A service that will cache the retrieve/retrieve multiple results and reuse them.  Uses the SystemService to prevent different users from retrieving different results.
         /// </summary>
-        public IOrganizationService CachedOrganizationService => _cachedOrganizationService ?? (_cachedOrganizationService = new ReadOnlyCachedService(SystemOrganizationService));
+        public IOrganizationService CachedOrganizationService => _orgServices.Cached.Value;
 
         /// <summary>
         /// The IOrganizationService of the workflow, using the System User
         /// </summary>
-        public IOrganizationService SystemOrganizationService => _systemOrganizationService ?? (_systemOrganizationService = Settings.InitializeIOrganizationService(ServiceFactory, null, TracingService));
+        public IOrganizationService SystemOrganizationService => _orgServices.Cached.Value;
 
         /// <summary>
         /// The IOrganizationServiceFactory for the workflow
         /// </summary>
-        public IOrganizationServiceFactory ServiceFactory => _serviceFactory ?? (_serviceFactory = Settings.InitializeServiceFactory(CodeActivityContext, TracingService));
+        public IOrganizationServiceFactory ServiceFactory => ServiceProvider.Get<IOrganizationServiceFactory>();
 
         /// <summary>
         /// The TracingService for the workflow
         /// </summary>
-        public ITracingService TracingService => _tracingService ?? (_tracingService = Settings.InitializeTracingService(CodeActivityContext));
+        public ITracingService TracingService => ServiceProvider.Get<ITracingService>();
 
         #endregion IExtendedExecutionContext Implementation
 
@@ -85,7 +84,7 @@ namespace Source.DLaB.Xrm.Workflow
         /// <summary>
         /// The WorkflowContext for the workflow
         /// </summary>
-        public IWorkflowContext WorkflowContext => _workflowContext ?? (_workflowContext = Settings.InitializeWorkflowContext(CodeActivityContext, TracingService));
+        public IWorkflowContext WorkflowContext => _workflowContext ?? (_workflowContext = ServiceProvider.Get<IWorkflowContext>());
 
         public int Mode => WorkflowContext.Mode;
 
@@ -167,8 +166,6 @@ namespace Source.DLaB.Xrm.Workflow
 
         #endregion CodeActivityContext Accessors
 
-        private IExtendedWorkflowContextInitializer Settings { get; }
-
         #endregion Properties
         
         #region ImageNames struct
@@ -192,12 +189,12 @@ namespace Source.DLaB.Xrm.Workflow
 
         #region Constructors
 
-        public DLaBExtendedWorkflowContext(CodeActivityContext executionContext, CodeActivity codeActivity, IExtendedWorkflowContextInitializer settings = null)
+        public DLaBExtendedWorkflowContext(IServiceProvider serviceProvider, CodeActivityContext executionContext, CodeActivity codeActivity)
         {
+            ServiceProvider = serviceProvider;
             CodeActivityContext = executionContext;
             CodeActivityTypeName = codeActivity.GetType().FullName;
-
-            Settings = settings ?? new DLaBExtendedWorkflowContextSettings();
+            _orgServices = serviceProvider.Get<OrganizationServicesWrapper>();
         }
 
         #endregion Constructors

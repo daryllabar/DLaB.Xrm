@@ -9,12 +9,12 @@
     <Import_RootNamespace>DLaB.Xrm.Workflow.Base</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CodeActivityContextServiceProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DLaBCodeActivityBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DLaBExtendedWorkflowContextSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IExtendedWorkflowContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DLaBExtendedWorkflowContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IExtendedWorkflowContextInitializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IocExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkflowCategory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkflowMode.cs" />
   </ItemGroup>

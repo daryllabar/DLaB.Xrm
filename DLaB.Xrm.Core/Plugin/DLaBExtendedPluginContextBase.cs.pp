@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 #endif
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Extensions;
 #if DLAB_UNROOT_COMMON_NAMESPACE
 using DLaB.Common;
 #else
@@ -24,9 +25,11 @@ namespace Source.DLaB.Xrm.Plugin
 #endif
     public class DLaBExtendedPluginContextBase : IExtendedPluginContext
     {
-#region Properties
+        #region Properties
 
-#region IPluginContext Properties
+        private readonly OrganizationServicesWrapper _organizationServices;
+
+        #region IPluginContext Properties
 
         /// <summary>
         /// Gets or sets the plugin execution context.
@@ -34,290 +37,98 @@ namespace Source.DLaB.Xrm.Plugin
         /// <value>
         /// The plugin execution context.
         /// </value>
-        protected IPluginExecutionContext PluginExecutionContext { get; set; }
-        /// <summary>
-        /// Gets the mode.
-        /// </summary>
-        /// <value>
-        /// The mode.
-        /// </value>
+        protected IPluginExecutionContext PluginExecutionContext { get; }
+        /// <inheritdoc />
         public virtual int Mode => PluginExecutionContext.Mode;
+        /// <inheritdoc />
         int IExecutionContext.IsolationMode => PluginExecutionContext.IsolationMode;
-        /// <summary>
-        /// Gets the depth.
-        /// </summary>
-        /// <value>
-        /// The depth.
-        /// </value>
+        /// <inheritdoc />
         public virtual int Depth => PluginExecutionContext.Depth;
-        /// <summary>
-        /// Gets the name of the message.
-        /// </summary>
-        /// <value>
-        /// The name of the message.
-        /// </value>
+        /// <inheritdoc />
         public string MessageName => PluginExecutionContext.MessageName;
-        /// <summary>
-        /// Gets the name of the primary entity.
-        /// </summary>
-        /// <value>
-        /// The name of the primary entity.
-        /// </value>
+        /// <inheritdoc />
         public string PrimaryEntityName => PluginExecutionContext.PrimaryEntityName;
-        /// <summary>
-        /// Gets the request identifier.
-        /// </summary>
-        /// <value>
-        /// The request identifier.
-        /// </value>
+        /// <inheritdoc />
         public virtual Guid? RequestId => PluginExecutionContext.RequestId;
-        /// <summary>
-        /// Gets the name of the secondary entity.
-        /// </summary>
-        /// <value>
-        /// The name of the secondary entity.
-        /// </value>
+        /// <inheritdoc />
         public virtual string SecondaryEntityName => PluginExecutionContext.SecondaryEntityName;
-        /// <summary>
-        /// Gets the input parameters.
-        /// </summary>
-        /// <value>
-        /// The input parameters.
-        /// </value>
+        /// <inheritdoc />
         public virtual ParameterCollection InputParameters => PluginExecutionContext.InputParameters;
-        /// <summary>
-        /// Gets the output parameters.
-        /// </summary>
-        /// <value>
-        /// The output parameters.
-        /// </value>
+        /// <inheritdoc />
         public virtual ParameterCollection OutputParameters => PluginExecutionContext.OutputParameters;
-        /// <summary>
-        /// Gets the shared variables.
-        /// </summary>
-        /// <value>
-        /// The shared variables.
-        /// </value>
+        /// <inheritdoc />
         public virtual ParameterCollection SharedVariables => PluginExecutionContext.SharedVariables;
-        /// <summary>
-        /// Gets the user identifier.
-        /// </summary>
-        /// <value>
-        /// The user identifier.
-        /// </value>
+        /// <inheritdoc />
         public virtual Guid UserId => PluginExecutionContext.UserId;
-        /// <summary>
-        /// Gets the initiating user identifier.
-        /// </summary>
-        /// <value>
-        /// The initiating user identifier.
-        /// </value>
+        /// <inheritdoc />
         public virtual Guid InitiatingUserId => PluginExecutionContext.InitiatingUserId;
-        /// <summary>
-        /// Gets the business unit identifier.
-        /// </summary>
-        /// <value>
-        /// The business unit identifier.
-        /// </value>
+        /// <inheritdoc />
         public virtual Guid BusinessUnitId => PluginExecutionContext.BusinessUnitId;
-        /// <summary>
-        /// Gets the organization identifier.
-        /// </summary>
-        /// <value>
-        /// The organization identifier.
-        /// </value>
+        /// <inheritdoc />
         public virtual Guid OrganizationId => PluginExecutionContext.OrganizationId;
-        /// <summary>
-        /// Gets the name of the organization.
-        /// </summary>
-        /// <value>
-        /// The name of the organization.
-        /// </value>
+        /// <inheritdoc />
         public virtual string OrganizationName => PluginExecutionContext.OrganizationName;
-        /// <summary>
-        /// Gets the primary entity identifier.
-        /// </summary>
-        /// <value>
-        /// The primary entity identifier.
-        /// </value>
+        /// <inheritdoc />
         public virtual Guid PrimaryEntityId => PluginExecutionContext.PrimaryEntityId;
-        /// <summary>
-        /// Gets the pre entity images.
-        /// </summary>
-        /// <value>
-        /// The pre entity images.
-        /// </value>
+        /// <inheritdoc />
         public virtual EntityImageCollection PreEntityImages => PluginExecutionContext.PreEntityImages;
-        /// <summary>
-        /// Gets the post entity images.
-        /// </summary>
-        /// <value>
-        /// The post entity images.
-        /// </value>
+        /// <inheritdoc />
         public virtual EntityImageCollection PostEntityImages => PluginExecutionContext.PostEntityImages;
-        /// <summary>
-        /// Gets the owning extension.
-        /// </summary>
-        /// <value>
-        /// The owning extension.
-        /// </value>
+        /// <inheritdoc />
         public virtual EntityReference OwningExtension => PluginExecutionContext.OwningExtension;
-        /// <summary>
-        /// Gets the correlation identifier.
-        /// </summary>
-        /// <value>
-        /// The correlation identifier.
-        /// </value>
+        /// <inheritdoc />
         public virtual Guid CorrelationId => PluginExecutionContext.CorrelationId;
-        /// <summary>
-        /// Gets a value indicating whether this instance is executing offline.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is executing offline; otherwise, <c>false</c>.
-        /// </value>
+        /// <inheritdoc />
         public virtual bool IsExecutingOffline => PluginExecutionContext.IsExecutingOffline;
-        /// <summary>
-        /// Gets a value indicating whether this instance is offline playback.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is offline playback; otherwise, <c>false</c>.
-        /// </value>
+        /// <inheritdoc />
         public virtual bool IsOfflinePlayback => PluginExecutionContext.IsOfflinePlayback;
-        /// <summary>
-        /// Gets a value indicating whether this instance is in transaction.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is in transaction; otherwise, <c>false</c>.
-        /// </value>
+        /// <inheritdoc />
         public virtual bool IsInTransaction => PluginExecutionContext.IsInTransaction;
-        /// <summary>
-        /// Gets the operation identifier.
-        /// </summary>
-        /// <value>
-        /// The operation identifier.
-        /// </value>
+        /// <inheritdoc />
         public virtual Guid OperationId => PluginExecutionContext.OperationId;
-        /// <summary>
-        /// Gets the operation created on.
-        /// </summary>
-        /// <value>
-        /// The operation created on.
-        /// </value>
+        /// <inheritdoc />
         public virtual DateTime OperationCreatedOn => PluginExecutionContext.OperationCreatedOn;
-        /// <summary>
-        /// Gets the stage.
-        /// </summary>
-        /// <value>
-        /// The stage.
-        /// </value>
+        /// <inheritdoc />
         public virtual int Stage => PluginExecutionContext.Stage;
-        /// <summary>
-        /// Gets the parent context.
-        /// </summary>
-        /// <value>
-        /// The parent context.
-        /// </value>
+        /// <inheritdoc />
         public virtual IPluginExecutionContext ParentContext => PluginExecutionContext.ParentContext;
 
-#endregion // IPluginContext Properties
+        #endregion // IPluginContext Properties
 
-#region IExtendedPluginContext Properties
-
-        /// <summary>
-        /// Gets the isolation mode of the plugin assembly.
-        /// </summary>
-        /// <value>
-        /// The isolation mode of the plugin assembly.
-        /// </value>
-        public IsolationMode IsolationMode => (IsolationMode) PluginExecutionContext.IsolationMode;
-
-        /// <summary>
-        /// Returns true if the execution context is asynchronous (Mode = 1)
-        /// </summary>
-        public bool IsAsync => Mode == 1;
-
-        /// <summary>
-        /// Returns true if the execution context is synchronous (Mode = 0)
-        /// </summary>
-        public bool IsSync => Mode == 0;
-
-        /// <summary>
-        /// Gets or sets the service provider.
-        /// </summary>
-        /// <value>
-        /// The service provider.
-        /// </value>
-        public IServiceProvider ServiceProvider { get; private set; }
-
-        /// <summary>
-        /// The current event the plugin is executing for.
-        /// </summary>
-        public RegisteredEvent Event { get; private set; }
-
-        private IOrganizationService _cachedOrganizationService;
-        private IOrganizationService _organizationService;
-        private IOrganizationService _systemOrganizationService;
-        private IOrganizationService _triggeredUserOrganizationService;
-        private IOrganizationServiceFactory _serviceFactory;
-        private ITracingService _tracingService;
-
-        /// <summary>
-        /// The IOrganizationService of the plugin, Impersonated as the user that the plugin is was initiated by
-        /// </summary>
-        public IOrganizationService InitiatingUserOrganizationService => _triggeredUserOrganizationService ?? (_triggeredUserOrganizationService = Settings.InitializeIOrganizationService(ServiceFactory, InitiatingUserId, TracingService));
+        #region IExtendedPluginContext Properties
 
         /// <inheritdoc />
-        /// <summary>
-        /// The IOrganizationService of the plugin, Impersonated as the user that the plugin is registered to run as.
-        /// </summary>
-        public IOrganizationService OrganizationService => _organizationService ?? (_organizationService = Settings.InitializeIOrganizationService(ServiceFactory, UserId, TracingService));
-
-        /// <summary>
-        /// The IPluginExecutionContext of the plugin.
-        /// </summary>
-        ///internal IPluginExecutionContext PluginExecutionContext { get; private set; }
-        
-        /// <summary>
-        /// The Type.FullName of the plugin.
-        /// </summary>
-        /// 
+        public IsolationMode IsolationMode => (IsolationMode) PluginExecutionContext.IsolationMode;
+        /// <inheritdoc />
+        public bool IsAsync => Mode == 1;
+        /// <inheritdoc />
+        public bool IsSync => Mode == 0;
+        /// <inheritdoc />
+        public IServiceProvider ServiceProvider { get; }
+        /// <inheritdoc />
+        public RegisteredEvent Event { get; private set; }
+        /// <inheritdoc />
+        public IOrganizationService InitiatingUserOrganizationService => _organizationServices.InitiatingUser.Value;
+        /// <inheritdoc />
+        public IOrganizationService OrganizationService => _organizationServices.Organization.Value;
+        /// <inheritdoc />
         public string PluginTypeName { get; private set; }
-
-        /// <summary>
-        /// Pulls the PrimaryEntityName, and PrimaryEntityId from the context and returns it as an Entity Reference
-        /// </summary>
-        /// <value>
-        /// The primary entity.
-        /// </value>
+        /// <inheritdoc />
         public virtual EntityReference PrimaryEntity => new EntityReference(PrimaryEntityName, PrimaryEntityId);
+        /// <inheritdoc />
+        public IOrganizationServiceFactory ServiceFactory => ServiceProvider.Get<IOrganizationServiceFactory>();
+        /// <inheritdoc />
+        public IOrganizationService CachedOrganizationService => _organizationServices.Cached.Value;
+        /// <inheritdoc />
+        public IOrganizationService SystemOrganizationService => _organizationServices.System.Value;
+        /// <inheritdoc />
+        public ITracingService TracingService => ServiceProvider.Get<ITracingService>();
 
-        /// <summary>
-        /// Service Factory
-        /// </summary>
-        public IOrganizationServiceFactory ServiceFactory => _serviceFactory ?? (_serviceFactory = Settings.InitializeServiceFactory(ServiceProvider, TracingService));
+        #endregion IExtendedPluginContext Properties
 
-        /// <summary>
-        /// A service that will cache the retrieve/retrieve multiple results and reuse them.  Uses the SystemService to prevent different users from retrieving different results.
-        /// </summary>
-        public IOrganizationService CachedOrganizationService => _cachedOrganizationService ?? (_cachedOrganizationService = new ReadOnlyCachedService(SystemOrganizationService));
+        #endregion Properties
 
-        /// <summary>
-        /// The IOrganizationService of the plugin, using the System User
-        /// </summary>
-        public IOrganizationService SystemOrganizationService => _systemOrganizationService ?? (_systemOrganizationService = Settings.InitializeIOrganizationService(ServiceFactory, null, TracingService));
-
-        /// <summary>
-        /// The ITracingService of the plugin.
-        /// </summary>
-        public ITracingService TracingService => _tracingService ?? (_tracingService = Settings.InitializeTracingService(ServiceProvider));
-
-#endregion IExtendedPluginContext Properties
-
-        private IExtendedPluginContextInitializer Settings { get; }
-
-#endregion Properties
-
-#region ImageNames struct
+        #region ImageNames struct
 
         /// <summary>
         /// Struct for the Standard Plugin Image Names
@@ -334,45 +145,62 @@ namespace Source.DLaB.Xrm.Plugin
             public const string PostImage = "PostImage";
         }
 
-#endregion ImageNames struct
+        #endregion ImageNames struct
 
-#region Constructors
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DLaBExtendedPluginContextBase"/> class.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="plugin">The plugin.</param>
-        /// <param name="settings">Settings used to control services of context</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// serviceProvider
-        /// or
-        /// plugin
-        /// </exception>
-        public DLaBExtendedPluginContextBase(IServiceProvider serviceProvider, IRegisteredEventsPlugin plugin, IExtendedPluginContextInitializer settings = null)
+        public DLaBExtendedPluginContextBase(IServiceProvider serviceProvider, IRegisteredEventsPlugin plugin) : this(serviceProvider)
         {
-            if (plugin == null)
-            {
-                throw new ArgumentNullException(nameof(plugin));
-            }
-
-            Settings = settings ?? new DLaBExtendedPluginContextSettings();
-            ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            PluginExecutionContext = Settings.InitializePluginExecutionContext(serviceProvider, TracingService);
             InitializePluginProperties(plugin);
         }
 
-#endregion Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DLaBExtendedPluginContextBase"/> class.  Useful for testing or when not using an IRegisteredEventsPlugin.
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <param name="pluginTypeName"></param>
+        /// <param name="event"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public DLaBExtendedPluginContextBase(IServiceProvider serviceProvider, string pluginTypeName, RegisteredEvent @event = null) : this(serviceProvider)
+        {
+            InitializePluginProperties(null, pluginTypeName, @event);
+        }
 
-#region PropertyInitializers
+        private DLaBExtendedPluginContextBase(IServiceProvider serviceProvider)
+        {
+            ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            PluginExecutionContext = serviceProvider.Get<IPluginExecutionContext>();
+            _organizationServices = serviceProvider.Get<OrganizationServicesWrapper>();
+        }
+
+        #endregion Constructors
+
+        #region PropertyInitializers
 
         /// <summary>
         /// Initializes the plugin properties.
         /// </summary>
         /// <param name="plugin">The plugin.</param>
-        private void InitializePluginProperties(IRegisteredEventsPlugin plugin)
+        /// <param name="pluginTypeName">The name of the Plugin Type</param>
+        /// <param name="event">The registered Event for this context</param>
+        private void InitializePluginProperties(IRegisteredEventsPlugin plugin, string pluginTypeName = null, RegisteredEvent @event = null)
         {
-            Event = PluginExecutionContext.GetEvent(plugin.RegisteredEvents);
+            if (plugin == null)
+            {
+                Event = @event;
+                PluginTypeName = pluginTypeName;
+            }
+            else
+            {
+                Event = PluginExecutionContext.GetEvent(plugin.RegisteredEvents);
+                PluginTypeName = plugin.GetType().FullName;
+            }
+
             if (Event == null)
             {
                 var message = $"No RegisteredEvent found for the current context of Stage: {this.GetPipelineStage()}, Message: {MessageName}, Entity: {PrimaryEntityName}.  Either Unregister the plugin for this event, or include this as a RegisteredEvent in the Plugin's RegisteredEvents.";
@@ -386,16 +214,16 @@ namespace Source.DLaB.Xrm.Plugin
                     throw new InvalidPluginExecutionException(message);
                 }
             }
+
             if (Event.Message == RegisteredEvent.Any)
             {
                 Event = new RegisteredEvent(Event.Stage, PluginExecutionContext.GetMessageType(), Event.Execute);
             }
-            PluginTypeName = plugin.GetType().FullName;
         }
 
 #endregion PropertyInitializers
 
-#region Exception Logging
+        #region Exception Logging
 
         /// <summary>
         /// Logs the exception.
@@ -407,9 +235,9 @@ namespace Source.DLaB.Xrm.Plugin
             TracingService.Trace(this.GetContextInfo());
         }
 
-#endregion Exception Logging
+        #endregion Exception Logging
 
-#region Trace
+        #region Trace
 
         /// <summary>
         /// Traces the specified message.  By default, is guaranteed to not throw an exception.
@@ -440,6 +268,6 @@ namespace Source.DLaB.Xrm.Plugin
             return new TraceTimer(TracingService, string.Format(format, args));
         }
 
-#endregion Trace
+        #endregion Trace
     }
 }

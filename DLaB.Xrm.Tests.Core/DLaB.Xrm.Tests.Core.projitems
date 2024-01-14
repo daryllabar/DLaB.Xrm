@@ -15,5 +15,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)OrganizationServiceExtensionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadOnlyCachedServiceTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RequirementValidatorTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IocContainerTests.cs" />
   </ItemGroup>
 </Project>
