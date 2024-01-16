@@ -44,7 +44,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\WhereEqualExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\WhereInExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DLaBXrmConfig.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IocExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Ioc\IocExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ioc\DuplicateRegistrationStrategy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ioc\WrappedServiceProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IocExtensions.cs" />

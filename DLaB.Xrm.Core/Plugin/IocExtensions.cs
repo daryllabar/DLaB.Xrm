@@ -56,6 +56,9 @@ namespace Source.DLaB.Xrm.Plugin
                 // ConfigWrapper
                 .AddSingleton(configWrapper)
 
+                // IExtendedPluginContext
+                .AddScoped<IExtendedPluginContext, DLaBExtendedPluginContextBase>()
+
                 // IOrganizationService
                 .AddScoped<IOrganizationService>(s =>
                 {
