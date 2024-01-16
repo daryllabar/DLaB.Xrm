@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\OrganizationServiceExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\OptimisticConcurrencyExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\QueryExpressionConvertExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ToStringDebugExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\WhereEqualExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\WhereInExtensions.cs" />
