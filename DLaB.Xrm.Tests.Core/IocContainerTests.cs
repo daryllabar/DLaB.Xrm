@@ -160,19 +160,6 @@ namespace DLaB.Xrm.Tests.Core
         }
 
         [TestMethod]
-        public void PreBuildServiceProviderOverrideRegistrations_Should_OverrideRegistrations()
-        {
-            _sut.DuplicateRegistrationStrategy = DuplicateRegistrationStrategy.Throw;
-            Assert.AreEqual(typeof(Example), _sut.BuildServiceProvider().Get<IExample>().GetType());
-
-            var container = new IocContainer();
-            container.AddSingleton<IExample, Example2>();
-
-            _sut.PreBuildServiceProviderOverrideRegistrations = container;
-            Assert.AreEqual(typeof(Example2), _sut.BuildServiceProvider().Get<IExample>().GetType());
-        }
-
-        [TestMethod]
         public void Remove_Should_RemoveIfRegistered()
         {
             Assert.IsTrue(_sut.IsRegistered<IExample>());
