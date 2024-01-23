@@ -171,6 +171,16 @@ namespace DLaB.Xrm.Tests.Core
             _sut.PreBuildServiceProviderOverrideRegistrations = container;
             Assert.AreEqual(typeof(Example2), _sut.BuildServiceProvider().Get<IExample>().GetType());
         }
+
+        [TestMethod]
+        public void Remove_Should_RemoveIfRegistered()
+        {
+            Assert.IsTrue(_sut.IsRegistered<IExample>());
+
+            _sut.Remove<IExample>();
+
+            Assert.IsFalse(_sut.IsRegistered<IExample>());
+        }
     }
 
     public class BigClass
