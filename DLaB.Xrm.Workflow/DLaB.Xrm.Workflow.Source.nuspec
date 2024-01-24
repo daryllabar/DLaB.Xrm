@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DLaB.Xrm.Workflow.Source</id>
-    <version>4.0.0.7</version>
+    <version>4.0.0.8</version>
     <authors>Daryl LaBar</authors>
     <owners>Daryl LaBar</owners>
     <license type="expression">MIT</license>
@@ -16,7 +16,7 @@
     <dependencies>
       <group>
         <dependency id="DLaB.Common.Source" version="1.4.0.7" />
-        <dependency id="DLaB.Xrm.Source" version="4.0.0.1" />
+        <dependency id="DLaB.Xrm.Source" version="4.0.0.8" />
       </group>
     </dependencies>
     <frameworkAssemblies>
@@ -26,7 +26,7 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="content\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.7" />
+    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="content\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.8" />
     <file src="..\Icon.64x64.png" target="images\" />
   </files>
 </package>
