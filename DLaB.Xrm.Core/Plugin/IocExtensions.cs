@@ -83,7 +83,7 @@ namespace Source.DLaB.Xrm.Plugin
                     var admin = new Lazy<IOrganizationService>(() => s.CreateExtendedOrganizationService(null));
                     return new OrganizationServicesWrapper(
                         // Standard
-                        s.Get<Lazy<IOrganizationService>>(), 
+                        new Lazy<IOrganizationService>(() => s.Get<IOrganizationService>()), 
                         // Admin
                         admin,
                         // InitiatingUser
