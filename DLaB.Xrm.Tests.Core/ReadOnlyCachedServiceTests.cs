@@ -8,7 +8,6 @@ using DLaB.Xrm.Test.Builders;
 using System;
 using DLaB.Xrm.Entities;
 using DLaB.Xrm.Test;
-using Microsoft.Crm.Sdk.Messages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
@@ -130,7 +129,7 @@ namespace DLaB.Xrm.Tests.Core
 
             try
             {
-                sut.Execute(new WhoAmIRequest());
+                sut.Execute(new DeleteEntityRequest());
             }
             catch (NotImplementedException)
             {
