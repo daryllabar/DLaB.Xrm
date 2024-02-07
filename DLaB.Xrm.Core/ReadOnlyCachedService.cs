@@ -265,13 +265,13 @@ namespace Source.DLaB.Xrm
         /// <returns>A string representing the generated key.</returns>
         protected virtual string GetKey(OrganizationRequest request)
         {
-            var parts = request.Parameters.Select(kvp => ReplaceSeparators(kvp.Key) + ParamKeySeparator + ReplaceSeparators(kvp.Value?.ToString()));
+            var parts = request.Parameters.Select(kvp => ReplaceSeparators(kvp.Key) + ParamKeySeparator + ReplaceSeparators(kvp.Value?.ObjectToStringDebug()));
             return ReplaceSeparators(request.RequestName) + ParamKvpSeparator + string.Join(ParamKvpSeparator, parts);
 
             string ReplaceSeparators(string value)
             {
                 return string.IsNullOrWhiteSpace(value)
-                    ? string.Empty 
+                    ? string.Empty
                     : value.Replace(ParamKeySeparator, ' ').Replace(ParamKvpSeparator, " ");
             }
         }

@@ -8,7 +8,9 @@ using DLaB.Xrm.Test.Builders;
 using System;
 using DLaB.Xrm.Entities;
 using DLaB.Xrm.Test;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
@@ -136,6 +138,43 @@ namespace DLaB.Xrm.Tests.Core
                 return;
             }
             Assert.Fail("Should have thrown NotImplementedException!");
+        }
+
+                [TestMethod]
+        public void RetrievePrincipalAccessResponse_Should_Cache()
+        {
+            TestInitializer.InitializeTestSettings();
+            var count = 0;
+            var service = new OrganizationServiceBuilder(TestBase.GetOrganizationService())
+                .WithFakeExecute((s, r) =>
+                {
+                    count++;
+                    return new RetrievePrincipalAccessResponse();
+                }).Build();
+            var sut = new ReadOnlyCachedService(service);
+
+            Assert.AreEqual(0, count);
+            var request1 = new RetrievePrincipalAccessRequest
+            {
+                Principal = new EntityReference(SystemUser.EntityLogicalName, Guid.NewGuid()),
+                Target = new EntityReference(Contact.EntityLogicalName, Guid.NewGuid())
+            };
+            var request2 = new RetrievePrincipalAccessRequest
+            {
+                Principal = new EntityReference(SystemUser.EntityLogicalName, Guid.NewGuid()),
+                Target = request1.Target
+            };
+
+            sut.Execute(request1);
+            Assert.AreEqual(1, count);
+            sut.Execute(request1);
+            Assert.AreEqual(1, count);
+            sut.Execute(request2);
+            Assert.AreEqual(2, count);
+            sut.Execute(request2);
+            Assert.AreEqual(2, count);
+            sut.Execute(request1);
+            Assert.AreEqual(2, count);
         }
     }
 }
