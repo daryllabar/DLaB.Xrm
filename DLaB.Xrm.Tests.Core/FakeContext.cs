@@ -92,6 +92,15 @@ namespace DLaB.Xrm.Tests.Core
             throw new NotImplementedException();
         }
 
+        #region ServiceProvider
+
+        public object GetService(Type serviceType)
+        {
+            return ServiceProvider.GetService(serviceType);
+        }
+
+        #endregion ServiceProvider
+
         #endregion IExtendedPluginContext Implementation
 
     }
