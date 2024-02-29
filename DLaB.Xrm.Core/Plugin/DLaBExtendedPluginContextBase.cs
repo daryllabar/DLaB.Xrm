@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 #if !DLAB_XRM_DEBUG
 using System.Diagnostics;
+
 #endif
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Extensions;
@@ -231,6 +233,10 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="ex">The exception.</param>
         public virtual void LogException(Exception ex)
         {
+            while (ex is AggregateException aggEx && aggEx.InnerExceptions.Count == 1)
+            {
+                ex = aggEx.InnerExceptions.First();
+            }
             TracingService.Trace("Exception: {0}", ex.ToStringWithCallStack());
             TracingService.Trace(this.GetContextInfo());
         }
