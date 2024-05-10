@@ -28,7 +28,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnSet">Columns to retrieve.</param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static Task<Entity> GetEntityOrDefaultAsync(this IOrganizationServiceAsync2 service, string logicalName, Guid id, ColumnSet columnSet = null, CancellationToken token = default)
+        public static Task<Entity?> GetEntityOrDefaultAsync(this IOrganizationServiceAsync2 service, string logicalName, Guid id, ColumnSet columnSet = null, CancellationToken token = default)
         {
             var idName = EntityHelper.GetIdAttributeName(logicalName);
             return columnSet == null
@@ -46,7 +46,7 @@ namespace Source.DLaB.Xrm
         /// type are the column names to add.</param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static Task<T> GetEntityOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, Guid id, Expression<Func<T, object>> anonymousTypeInitializer = null, CancellationToken token = default) where T : Entity
+        public static Task<T?> GetEntityOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, Guid id, Expression<Func<T, object>> anonymousTypeInitializer = null, CancellationToken token = default) where T : Entity
         {
             var idName = EntityHelper.GetIdAttributeName<T>();
             return anonymousTypeInitializer == null 

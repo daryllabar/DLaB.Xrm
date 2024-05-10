@@ -388,7 +388,7 @@ namespace Source.DLaB.Xrm
         #region GetFirstOrDefaultIn
 
         /// <summary>
-        /// Retrieves the first active entity (with the given subset of columns only) 
+        /// Retrieves the first entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type.</typeparam>
@@ -404,7 +404,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first active entity (with the given subset of columns only) 
+        /// Retrieves the first entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type.</typeparam>
@@ -420,7 +420,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first active entity (with the given subset of columns only) 
+        /// Retrieves the first entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type.</typeparam>
@@ -439,7 +439,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first active entity (with the given subset of columns only) 
+        /// Retrieves the first entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type.</typeparam>
@@ -456,7 +456,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first active entity (with the given subset of columns only) 
+        /// Retrieves the first entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
@@ -475,7 +475,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first active entity (with the given subset of columns only) 
+        /// Retrieves the first entity (with the given subset of columns only) 
         /// where the values are in the columnName
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>

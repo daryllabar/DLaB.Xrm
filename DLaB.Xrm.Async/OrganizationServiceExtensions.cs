@@ -500,7 +500,7 @@ namespace Source.DLaB.Xrm
         /// <param name="query">The query.</param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<Entity> GetFirstOrDefaultAsync(this IOrganizationServiceAsync2 service, QueryBase query, CancellationToken token = default)
+        public static async Task<Entity?> GetFirstOrDefaultAsync(this IOrganizationServiceAsync2 service, QueryBase query, CancellationToken token = default)
         {
             query.First();
             return (await service.RetrieveMultipleAsync(query, token)).Entities.FirstOrDefault();
@@ -514,7 +514,7 @@ namespace Source.DLaB.Xrm
         /// <param name="qb">The query.</param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<T> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, QueryBase qb, CancellationToken token = default) where T : Entity
+        public static async Task<T?> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, QueryBase qb, CancellationToken token = default) where T : Entity
         {
             qb.First();
             return (await service.GetEntitiesAsync<T>(qb, token)).FirstOrDefault();
@@ -528,7 +528,7 @@ namespace Source.DLaB.Xrm
         /// <param name="qe">The query expression.</param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static Task<T> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, TypedQueryExpression<T> qe, CancellationToken token = default) where T : Entity
+        public static Task<T?> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, TypedQueryExpression<T> qe, CancellationToken token = default) where T : Entity
         {
             return service.GetFirstOrDefaultAsync<T>(qe.Query, token);
         }

@@ -183,7 +183,7 @@ namespace Source.DLaB.Xrm
         #region GetFirstAsync
 
         /// <summary>
-        /// Retrieves the first Active entity where the columnNameAndValue Pairs match
+        /// Retrieves the first entity where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service">open IOrganizationServiceAsync2</param>
         /// <param name="logicalName">LogicalName of the Entity.</param>
@@ -200,7 +200,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first Active entity where the columnNameAndValue Pairs match
+        /// Retrieves the first entity where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service">open IOrganizationServiceAsync2</param>
         /// <param name="logicalName">LogicalName of the Entity.</param>
@@ -214,7 +214,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first Active entity (with the given subset of columns only)
+        /// Retrieves the first entity (with the given subset of columns only)
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service">The service.</param>
@@ -233,7 +233,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first Active entity (with the given subset of columns only)
+        /// Retrieves the first entity (with the given subset of columns only)
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service">The service.</param>
@@ -371,7 +371,7 @@ namespace Source.DLaB.Xrm
         /// <param name="token"></param>
         /// <param name="columnNameAndValuePairs"></param>
         /// <returns></returns>
-        public static async Task<Entity> GetFirstOrDefaultAsync(this IOrganizationServiceAsync2 service, string logicalName,
+        public static async Task<Entity?> GetFirstOrDefaultAsync(this IOrganizationServiceAsync2 service, string logicalName,
                 CancellationToken token, params object[] columnNameAndValuePairs)
         {
             var settings = new LateBoundQuerySettings(logicalName);
@@ -385,7 +385,7 @@ namespace Source.DLaB.Xrm
         /// <param name="logicalName">Logical Name of the Entity:</param>
         /// <param name="columnNameAndValuePairs"></param>
         /// <returns></returns>
-        public static async Task<Entity> GetFirstOrDefaultAsync(this IOrganizationServiceAsync2 service, string logicalName, params object[] columnNameAndValuePairs)
+        public static async Task<Entity?> GetFirstOrDefaultAsync(this IOrganizationServiceAsync2 service, string logicalName, params object[] columnNameAndValuePairs)
         {
             var settings = new LateBoundQuerySettings(logicalName);
             return (await service.RetrieveMultipleAsync(settings.CreateExpression(columnNameAndValuePairs))).Entities.FirstOrDefault();
@@ -403,7 +403,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static async Task<Entity> GetFirstOrDefaultAsync(this IOrganizationServiceAsync2 service, string logicalName, ColumnSet columnSet, CancellationToken token,
+        public static async Task<Entity?> GetFirstOrDefaultAsync(this IOrganizationServiceAsync2 service, string logicalName, ColumnSet columnSet, CancellationToken token,
                 params object[] columnNameAndValuePairs)
         {
             var settings = new LateBoundQuerySettings(logicalName)
@@ -425,7 +425,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static Task<Entity> GetFirstOrDefaultAsync(this IOrganizationServiceAsync2 service, string logicalName, ColumnSet columnSet,
+        public static Task<Entity?> GetFirstOrDefaultAsync(this IOrganizationServiceAsync2 service, string logicalName, ColumnSet columnSet,
                 params object[] columnNameAndValuePairs)
         {
             return service.GetFirstOrDefaultAsync(logicalName, columnSet, default, columnNameAndValuePairs);
@@ -445,7 +445,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static async Task<T> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, CancellationToken token,
+        public static async Task<T?> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, CancellationToken token,
               params object[] columnNameAndValuePairs) where T : Entity
         {
             var settings = new QuerySettings<T> { First = true };
@@ -461,7 +461,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static Task<T> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service,
+        public static Task<T?> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service,
               params object[] columnNameAndValuePairs) where T : Entity
         {
             return service.GetFirstOrDefaultAsync<T>(default(CancellationToken), columnNameAndValuePairs);
@@ -480,7 +480,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static Task<T> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service,
+        public static Task<T?> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service,
                 Expression<Func<T, object>> anonymousTypeInitializer, CancellationToken token, params object[] columnNameAndValuePairs)
             where T : Entity
         {
@@ -500,7 +500,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static Task<T> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service,
+        public static Task<T?> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service,
                 Expression<Func<T, object>> anonymousTypeInitializer, params object[] columnNameAndValuePairs)
             where T : Entity
         {
@@ -519,7 +519,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static async Task<T> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, ColumnSet columnSet,
+        public static async Task<T?> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, ColumnSet columnSet,
                 CancellationToken token, params object[] columnNameAndValuePairs) where T : Entity
         {
             var settings = new QuerySettings<T>
@@ -541,7 +541,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static Task<T> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, ColumnSet columnSet,
+        public static Task<T?> GetFirstOrDefaultAsync<T>(this IOrganizationServiceAsync2 service, ColumnSet columnSet,
                 params object[] columnNameAndValuePairs) where T : Entity
         {
             return service.GetFirstOrDefaultAsync<T>(columnSet, default, columnNameAndValuePairs);

@@ -503,7 +503,7 @@ namespace Source.DLaB.Xrm
         #region GetFirst
 
         /// <summary>
-        /// Retrieves the first Active entity where the columnNameAndValue Pairs match
+        /// Retrieves the first entity where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service">open IOrganizationService</param>
         /// <param name="logicalName">LogicalName of the Entity.</param>
@@ -519,7 +519,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first Active entity (with the given subset of columns only)
+        /// Retrieves the first entity (with the given subset of columns only)
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service">The service.</param>
@@ -547,7 +547,7 @@ namespace Source.DLaB.Xrm
         #region GetFirst<T>
 
         /// <summary>
-        /// Retrieves the first Active entity where the columnNameAndValue Pairs match
+        /// Retrieves the first entity where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
         /// <param name="service">open IOrganizationService</param>
@@ -564,7 +564,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first Active entity (with the given subset of columns only) 
+        /// Retrieves the first entity (with the given subset of columns only) 
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
@@ -583,7 +583,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first Active entity (with the given subset of columns only) 
+        /// Retrieves the first entity (with the given subset of columns only) 
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
@@ -614,7 +614,7 @@ namespace Source.DLaB.Xrm
         #region GetFirstOrDefault
 
         /// <summary>
-        /// Retrieves the first Active entity where the columnNameAndValue Pairs match
+        /// Retrieves the first entity where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service">open IOrganizationService</param>
         /// <param name="logicalName">Logical Name of the Entity:</param>
@@ -627,7 +627,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first Active entity (with the given subset of columns only) 
+        /// Retrieves the first entity (with the given subset of columns only) 
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <param name="service"></param>
@@ -653,7 +653,7 @@ namespace Source.DLaB.Xrm
         #region GetFirstOrDefault<T>
 
         /// <summary>
-        /// Retrieves the first Active entity where the columnNameAndValue Pairs match
+        /// Retrieves the first entity where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
         /// <param name="service">open IOrganizationService</param>
@@ -669,7 +669,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first Active entity (with the given subset of columns only) 
+        /// Retrieves the first entity (with the given subset of columns only) 
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
@@ -689,7 +689,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Retrieves the first Active entity (with the given subset of columns only) 
+        /// Retrieves the first entity (with the given subset of columns only) 
         /// where the columnNameAndValue Pairs match
         /// </summary>
         /// <typeparam name="T">An early bound Entity Type</typeparam>
