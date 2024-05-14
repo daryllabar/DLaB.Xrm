@@ -298,37 +298,37 @@ namespace Source.DLaB.Xrm
         /// <inheritdoc />
         public Task UpdateAsync(Entity entity)
         {
-            return Service.UpdateAsync(entity, default);
+            return UpdateAsync(entity, default);
         }
 
         /// <inheritdoc />
         public Task DeleteAsync(string entityName, Guid id)
         {
-            return  Service.DeleteAsync(entityName, id, default);
+            return DeleteAsync(entityName, id, default);
         }
 
         /// <inheritdoc />
         public Task<OrganizationResponse> ExecuteAsync(OrganizationRequest request)
         {
-            return Service.ExecuteAsync(request, default);
+            return ExecuteAsync(request, default);
         }
 
         /// <inheritdoc />
         public Task AssociateAsync(string entityName, Guid entityId, Relationship relationship, EntityReferenceCollection relatedEntities)
         {
-            return Service.AssociateAsync(entityName, entityId, relationship, relatedEntities, default);
+            return AssociateAsync(entityName, entityId, relationship, relatedEntities, default);
         }
 
         /// <inheritdoc />
         public Task DisassociateAsync(string entityName, Guid entityId, Relationship relationship, EntityReferenceCollection relatedEntities)
         {
-            return Service.DisassociateAsync(entityName, entityId, relationship, relatedEntities, default);
+            return DisassociateAsync(entityName, entityId, relationship, relatedEntities, default);
         }
 
         /// <inheritdoc />
         public Task<EntityCollection> RetrieveMultipleAsync(QueryBase query)
         {
-            return Service.RetrieveMultipleAsync(query, default);
+            return RetrieveMultipleAsync(query, default);
         }
 
         #endregion Implementation of IOrganizationServiceAsync
