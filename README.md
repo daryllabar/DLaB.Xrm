@@ -1,7 +1,7 @@
 # DLaB.Xrm [![Build status](https://ci.appveyor.com/api/projects/status/u69wecl3lk0efkg0?svg=true)](https://ci.appveyor.com/project/daryllabar/dlab-xrm)
 
 # Purpose
-The DLaB.Xrm Library is full of tons of helpful extension methods and classes intended to be used on any XRM project, in any Xrm Plugin/Workflow.  It is designed to be used anywhere you're referencing the Microsoft SDK dlls, so Plugins, Custom Workflow Activities, and external server code.  Ever had a QueryExpression, and wished you get generate SQL from the QueryExpression while debugging?  Now you can:  `queryExpression.GetSqlStatement()`.  Ever wish your plugins had a built in method to prevent recusive lookps?  Just inherit from the `GenericPluginHandlerBase`, they will.
+The DLaB.Xrm Library is full of tons of helpful extension methods and classes intended to be used on any XRM project, in any Xrm Plugin/Workflow.  It is designed to be used anywhere you're referencing the Microsoft SDK dlls, so Plugins, Custom Workflow Activities, and external server code.  Ever had a QueryExpression, and wished you get generate SQL from the QueryExpression while debugging?  Now you can:  `queryExpression.GetSqlStatement()`.  Ever wish your plugins had a built in method to prevent recusive lookps?  Just inherit from the `GenericPluginHandlerBase`, they will.  Been wanting to use a .Net Core Dependency/Injection like framework in your plugins to create cleaner more testable code, yep, that's in here too!
 
 Checkout the [Wiki](../../wiki) for more documentation.
 
