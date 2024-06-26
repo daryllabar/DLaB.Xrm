@@ -11,7 +11,7 @@ namespace Source.DLaB.Xrm
     /// <summary>
     /// Tracing Service guaranteed to not throw an exception
     /// </summary>
-    public class ExtendedTracingService : IMaxLengthTracingService
+    public class ExtendedTracingService : IHistoricalTracingService, IMaxLengthTracingService
     {
         private ITracingService TraceService { get; }
         /// <summary>
@@ -60,6 +60,11 @@ namespace Source.DLaB.Xrm
             {
                 AttemptToTraceTracingException(format, args, ex);
             }
+        }
+
+        public string GetTraceHistory()
+        {
+            return TraceHistory.ToString();
         }
 
         /// <inheritdoc />

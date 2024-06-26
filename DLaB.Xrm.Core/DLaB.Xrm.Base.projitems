@@ -44,6 +44,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\WhereEqualExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\WhereInExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DLaBXrmConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IHistoricalTracingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ioc\IContainerWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ioc\IIocRegister.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ioc\IocExtensions.cs" />
