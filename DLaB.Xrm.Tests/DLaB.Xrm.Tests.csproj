@@ -131,8 +131,8 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NuGet.Frameworks, Version=6.10.0.107, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuGet.Frameworks.6.10.0\lib\netstandard2.0\NuGet.Frameworks.dll</HintPath>
+    <Reference Include="NuGet.Frameworks, Version=6.10.1.5, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuGet.Frameworks.6.10.1\lib\netstandard2.0\NuGet.Frameworks.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -243,8 +243,8 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
-    <Reference Include="XrmUnitTest.09, Version=2.3.0.58, Culture=neutral, PublicKeyToken=9172705c53320911, processorArchitecture=MSIL">
-      <HintPath>..\packages\XrmUnitTest.09.2.3.0.58\lib\net462\XrmUnitTest.09.dll</HintPath>
+    <Reference Include="XrmUnitTest.09, Version=2.3.0.59, Culture=neutral, PublicKeyToken=9172705c53320911, processorArchitecture=MSIL">
+      <HintPath>..\packages\XrmUnitTest.09.2.3.0.59\lib\net462\XrmUnitTest.09.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

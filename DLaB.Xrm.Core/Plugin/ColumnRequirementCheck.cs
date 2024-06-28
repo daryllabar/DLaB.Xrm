@@ -10,11 +10,11 @@ namespace Source.DLaB.Xrm.Plugin
     public enum ColumnRequirementCheck
     {
         /// <summary>
-        /// Determines if the target contains the attribute with a (nullable) value, and the value is different than the value in the pre-image.
+        /// Determines if the target contains the attribute with a (nullable) value, and the value is different from the value in the pre-image.
         /// </summary>
         Changed,
         /// <summary>
-        /// Determines if the target contains the attribute with a null value, and the value is different than the value in the pre-image.
+        /// Determines if the target contains the attribute with a null value, and the value is different from the value in the pre-image.
         /// </summary>
         Cleared,
         /// <summary>
@@ -34,15 +34,23 @@ namespace Source.DLaB.Xrm.Plugin
         /// </summary>
         ContainsValue,
         /// <summary>
+        /// Determines if the entity is missing all the defined attributes from its attribute collection.
+        /// </summary>
+        Missing,
+        /// <summary>
+        /// Determines if the entity is either missing all the defined attributes from its attribute collection, or if they are present, they are null.
+        /// </summary>
+        MissingOrNull,
+        /// <summary>
         /// Used for other/custom validators
         /// </summary>
         Other,
         /// <summary>
-        /// Determines if the target contains the attribute with a (non-null) value, and the value is different than the value in the pre-image.
+        /// Determines if the target contains the attribute with a (non-null) value, and the value is different from the value in the pre-image.
         /// </summary>
         Updated,
         /// <summary>
-        /// Determines if the target contains the attribute with the defined value, and the value is different than the value in the pre-image.
+        /// Determines if the target contains the attribute with the defined value, and the value is different from the value in the pre-image.
         /// </summary>
         UpdatedValue
     }

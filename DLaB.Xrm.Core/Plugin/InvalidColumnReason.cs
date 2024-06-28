@@ -28,6 +28,10 @@ namespace Source.DLaB.Xrm.Plugin
         /// <summary>
         /// The column was not null when it was required to be null.
         /// </summary>
-        NotNull
+        NotNull,
+        /// <summary>
+        /// The column was present when it was expected to be missing.
+        /// </summary>
+        Present
     }
 }

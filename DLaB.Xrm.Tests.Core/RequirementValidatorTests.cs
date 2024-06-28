@@ -94,6 +94,52 @@ namespace DLaB.Xrm.Tests.Core
 
         #endregion Test Contains
 
+        #region Test Missing
+
+        [TestMethod]
+        public void SkipExecution_MissingOrNullPresent_Should_Skip()
+        {
+            EntityTypes.ForEach(TestMissingOrNull);
+        }
+
+        [TestMethod]
+        public void SkipExecution_MissingPresent_Should_Skip()
+        {
+            EntityTypes.ForEach(TestMissing);
+        }
+        
+        [TestMethod]
+        public void SkipExecution_MissingAnyAllPresent_Should_Skip()
+        {
+            EntityTypes.ForEach(TestMissingAny);
+        }
+
+        [TestMethod]
+        public void SkipExecution_MissingOrNullAnyAllPresent_Should_Skip()
+        {
+            EntityTypes.ForEach(TestMissingOrNullAny);
+        }
+
+        //[TestMethod]
+        //public void SkipExecution_DoesNotContainAnyNullable_Should_Skip()
+        //{
+        //    EntityTypes.ForEach(TestMissingAnyNullable);
+        //}
+        //
+        //[TestMethod]
+        //public void SkipExecution_DoesNotContainAnyNull_Should_Skip()
+        //{
+        //    EntityTypes.ForEach(TestMissingAnyNull);
+        //}
+        //
+        //[TestMethod]
+        //public void SkipExecution_DoesNotContainAnyValue_Should_Skip()
+        //{
+        //    EntityTypes.ForEach(TestMissingAnyValue);
+        //}
+
+        #endregion Test Missing
+
         #region Test Updated (Non-Null) / Changed (Nullable) / Cleared (Null) / Updated (Value)
 
         [TestMethod]
@@ -339,9 +385,8 @@ namespace DLaB.Xrm.Tests.Core
             context = GetContext(contextEntity, new Contact { NickName = null });
             Assert.IsTrue(sut.SkipExecution(context));
             Assert.AreEqual($"The {contextEntity} entity type contained a null value for the required column {Contact.Fields.NickName}!", context.FakeTraceService.Traces.Single().Trace);
-            context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
-            Assert.IsFalse(sut.SkipExecution(context));
-            Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
+
+            AssertValid(sut, contextEntity, new Contact { NickName = "NotNull" });
 
             sut = new RequirementValidator().Contains<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
             context = GetContext(contextEntity, new Contact());
@@ -357,9 +402,7 @@ namespace DLaB.Xrm.Tests.Core
             Assert.IsTrue(sut.SkipExecution(context));
             Assert.AreEqual($"The {contextEntity} entity type contained a null value for the required column {Contact.Fields.AssistantName}!", context.FakeTraceService.Traces.Single().Trace);
 
-            context = GetContext(contextEntity, new Contact { NickName = "NotNull", AssistantName = "NotNull"});
-            Assert.IsFalse(sut.SkipExecution(context));
-            Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
+            AssertValid(sut, contextEntity, new Contact { NickName = "NotNull", AssistantName = "NotNull" });
         }
 
         private static void TestContainsNullable(ContextEntity contextEntity)
@@ -369,19 +412,16 @@ namespace DLaB.Xrm.Tests.Core
             if (contextEntity == ContextEntity.PreImage || contextEntity == ContextEntity.CoalesceTargetPreImage)
             {
                 // Contains Null For PreImages Should Allow Not Contains #50
-                Assert.IsFalse(sut.SkipExecution(context));
-                Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
+                AssertValid(sut, contextEntity, new Contact());
             }
             else
             {
                 Assert.IsTrue(sut.SkipExecution(context));
                 Assert.AreEqual($"The {contextEntity} entity type did not contain the required column {Contact.Fields.NickName}!", context.FakeTraceService.Traces.Single().Trace);
             }
-            context = GetContext(contextEntity, new Contact { NickName = null });
-            Assert.IsFalse(sut.SkipExecution(context));
-            Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
-            context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
-            AssertPassedValidation(sut, context);
+
+            AssertValid(sut, contextEntity, new Contact { NickName = null });
+            AssertValid(sut, contextEntity, new Contact { NickName = "NotNull" });
         }
 
         private static void TestContainsNull(ContextEntity contextEntity)
@@ -391,17 +431,15 @@ namespace DLaB.Xrm.Tests.Core
             if (contextEntity == ContextEntity.PreImage || contextEntity == ContextEntity.CoalesceTargetPreImage)
             {
                 // Contains Null For PreImages Should Allow Not Contains #50
-                Assert.IsFalse(sut.SkipExecution(context));
-                Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
+                AssertValid(sut, contextEntity, new Contact());
             }
             else
             {
                 Assert.IsTrue(sut.SkipExecution(context));
                 Assert.AreEqual($"The {contextEntity} entity type did not contain the required to be null column {Contact.Fields.NickName}!", context.FakeTraceService.Traces.Single().Trace);
             }
-            context = GetContext(contextEntity, new Contact { NickName = null });
-            Assert.IsFalse(sut.SkipExecution(context));
-            Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
+
+            AssertValid(sut, contextEntity, new Contact { NickName = null });
             context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
             Assert.IsTrue(sut.SkipExecution(context));
             Assert.AreEqual($"The {contextEntity} entity type contained a non-null value for the required to be null column {Contact.Fields.NickName}!", context.FakeTraceService.Traces.Single().Trace);
@@ -416,20 +454,17 @@ namespace DLaB.Xrm.Tests.Core
             context = GetContext(contextEntity, new Contact { NickName = null });
             Assert.IsTrue(sut.SkipExecution(context));
             Assert.AreEqual($"The {contextEntity} entity type was required to contain a value of NotNull for column nickname but contained the value null!", context.FakeTraceService.Traces.Single().Trace);
-            context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
             if (contextEntity == ContextEntity.PreImage || contextEntity == ContextEntity.CoalesceTargetPreImage)
             {
-                Assert.IsFalse(sut.SkipExecution(context));
-                Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
+                AssertValid(sut, contextEntity, new Contact { NickName = "NotNull" });
             }
             else
             {
+                context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
                 Assert.IsTrue(sut.SkipExecution(context));
                 Assert.AreEqual($"The {contextEntity} entity type did not contain a value for column managername which was required to be null!", context.FakeTraceService.Traces.Single().Trace);
             }
-            context = GetContext(contextEntity, new Contact { NickName = "NotNull", ManagerName = null });
-            Assert.IsFalse(sut.SkipExecution(context));
-            Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
+            AssertValid(sut, contextEntity, new Contact { NickName = "NotNull", ManagerName = null });
         }
 
         private static void TestContainsAny(ContextEntity contextEntity)
@@ -441,41 +476,32 @@ namespace DLaB.Xrm.Tests.Core
             context = GetContext(contextEntity, new Contact { NickName = null });
             Assert.IsTrue(sut.SkipExecution(context));
             Assert.AreEqual($"The {contextEntity} entity type did not contain a non-null value for at least one of the following columns: {Contact.Fields.NickName}, {Contact.Fields.AssistantName}!", context.FakeTraceService.Traces.Single().Trace);
-            context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
-            AssertPassedValidation(sut, context);
-            context = GetContext(contextEntity, new Contact { AssistantName = "NotNull" });
-            AssertPassedValidation(sut, context);
-            context = GetContext(contextEntity, new Contact { NickName = "NotNull", AssistantName = "NotNull" });
-            AssertPassedValidation(sut, context);
+            AssertValid(sut, contextEntity, new Contact { NickName = "NotNull" });
+            AssertValid(sut, contextEntity, new Contact { AssistantName = "NotNull" });
+            AssertValid(sut, contextEntity, new Contact { NickName = "NotNull", AssistantName = "NotNull" });
         }
 
         private static void TestContainsAnyNullable(ContextEntity contextEntity)
         {
             var sut = new RequirementValidator().ContainsAnyNullable<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
-            var context = GetContext(contextEntity, new Contact());
             if (contextEntity == ContextEntity.PreImage || contextEntity == ContextEntity.CoalesceTargetPreImage)
             {
                 // Contains Null For PreImages Should Allow Not Contains #50
-                Assert.IsFalse(sut.SkipExecution(context));
-                Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
-                context = GetContext(contextEntity, new Contact { NickName = null });
-                Assert.IsFalse(sut.SkipExecution(context));
-                Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
-                context = GetContext(contextEntity, new Contact { AssistantName = null });
-                Assert.IsFalse(sut.SkipExecution(context));
-                Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
+                AssertValid(sut, contextEntity, new Contact());
+                AssertValid(sut, contextEntity, new Contact { NickName = null });
+                AssertValid(sut, contextEntity, new Contact { AssistantName = null });
             }
             else
             {
+                var context = GetContext(contextEntity, new Contact());
                 Assert.IsTrue(sut.SkipExecution(context));
                 Assert.AreEqual($"The {contextEntity} entity type did not contain at least one of the following columns: {Contact.Fields.NickName}, {Contact.Fields.AssistantName}!", context.FakeTraceService.Traces.Single().Trace);
-                context = GetContext(contextEntity, new Contact { NickName = null });
-                AssertPassedValidation(sut, context);
-                context = GetContext(contextEntity, new Contact { AssistantName = null });
-                AssertPassedValidation(sut, context);
+
+                AssertValid(sut, contextEntity, new Contact { NickName = null });
+                AssertValid(sut, contextEntity, new Contact { AssistantName = null });
             }
-            context = GetContext(contextEntity, new Contact { NickName = null, AssistantName = null });
-            AssertPassedValidation(sut, context);
+
+            AssertValid(sut, contextEntity, new Contact { NickName = null, AssistantName = null });
         }
 
         private static void TestContainsAnyNull(ContextEntity contextEntity)
@@ -486,14 +512,9 @@ namespace DLaB.Xrm.Tests.Core
             if (contextEntity == ContextEntity.PreImage || contextEntity == ContextEntity.CoalesceTargetPreImage)
             {
                 // Contains Null For PreImages Should Allow Not Contains #50
-                Assert.IsFalse(sut.SkipExecution(context));
-                Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
-                context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
-                Assert.IsFalse(sut.SkipExecution(context));
-                Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
-                context = GetContext(contextEntity, new Contact { AssistantName = "NotNull" });
-                Assert.IsFalse(sut.SkipExecution(context));
-                Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
+                AssertValid(sut, contextEntity, new Contact());
+                AssertValid(sut, contextEntity, new Contact { NickName = "NotNull" });
+                AssertValid(sut, contextEntity, new Contact { AssistantName = "NotNull" });
             }
             else
             {
@@ -506,12 +527,10 @@ namespace DLaB.Xrm.Tests.Core
                 Assert.IsTrue(sut.SkipExecution(context));
                 Assert.AreEqual(expectedSkipMessage, context.FakeTraceService.Traces.Single().Trace);
             }
-            context = GetContext(contextEntity, new Contact { NickName = null });
-            AssertPassedValidation(sut, context);
-            context = GetContext(contextEntity, new Contact { AssistantName = null });
-            AssertPassedValidation(sut, context);
-            context = GetContext(contextEntity, new Contact { NickName = null, AssistantName = null });
-            AssertPassedValidation(sut, context);
+
+            AssertValid(sut, contextEntity, new Contact { NickName = null });
+            AssertValid(sut, contextEntity, new Contact { AssistantName = null });
+            AssertValid(sut, contextEntity, new Contact { NickName = null, AssistantName = null });
             context = GetContext(contextEntity, new Contact { NickName = "NotNull", AssistantName = "NotNull" });
             Assert.IsTrue(sut.SkipExecution(context));
             Assert.AreEqual(expectedSkipMessage, context.FakeTraceService.Traces.Single().Trace);
@@ -534,8 +553,7 @@ namespace DLaB.Xrm.Tests.Core
                 // Contains Null For PreImages Should Allow Not Contains #50
                 foreach (var contact in missingManagerNameContacts)
                 {
-                    context = GetContext(contextEntity, contact);
-                    AssertPassedValidation(sut, context);
+                    AssertValid(sut, contextEntity, contact);
                 }
 
                 foreach (var contact in missingManagerNameContacts)
@@ -555,12 +573,95 @@ namespace DLaB.Xrm.Tests.Core
                     Assert.AreEqual(expectedSkipMessage, context.FakeTraceService.Traces.Single().Trace);
                 }
             }
+
+            AssertValid(sut, contextEntity, new Contact { NickName = "NotNull" });
+            AssertValid(sut, contextEntity, new Contact { AssistantName = "NotNull" });
+            AssertValid(sut, contextEntity, new Contact { NickName = "NotNull", AssistantName = "NotNull" });
+        }
+
+        private static void TestMissing(ContextEntity contextEntity)
+        {
+            var sut = new RequirementValidator().Missing<Contact>(contextEntity, c => new { c.NickName });
+            var context = GetContext(contextEntity, new Contact { NickName = null });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contains column {Contact.Fields.NickName} that was expected to be missing!", context.FakeTraceService.Traces.Single().Trace);
             context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
-            AssertPassedValidation(sut, context);
-            context = GetContext(contextEntity, new Contact { AssistantName = "NotNull" });
-            AssertPassedValidation(sut, context);
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contains column {Contact.Fields.NickName} that was expected to be missing!", context.FakeTraceService.Traces.Single().Trace);
+            
+            AssertValid(sut, contextEntity, new Contact());
+
+            sut = new RequirementValidator().Missing<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
             context = GetContext(contextEntity, new Contact { NickName = "NotNull", AssistantName = "NotNull" });
-            AssertPassedValidation(sut, context);
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contains columns {Contact.Fields.NickName}, {Contact.Fields.AssistantName} that were expected to be missing!", context.FakeTraceService.Traces.Single().Trace);
+            context = GetContext(contextEntity, new Contact { NickName = null, AssistantName = null });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contains columns {Contact.Fields.NickName}, {Contact.Fields.AssistantName} that were expected to be missing!", context.FakeTraceService.Traces.Single().Trace);
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contains column {Contact.Fields.NickName} that was expected to be missing!", context.FakeTraceService.Traces.Single().Trace);
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull", AssistantName = null });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contains columns {Contact.Fields.NickName}, {Contact.Fields.AssistantName} that were expected to be missing!", context.FakeTraceService.Traces.Single().Trace);
+
+            AssertValid(sut, contextEntity, new Contact());
+        }
+
+        private static void TestMissingAny(ContextEntity contextEntity)
+        {
+            var sut = new RequirementValidator().MissingAny<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
+            var context = GetContext(contextEntity, new Contact { NickName = "NotNull", AssistantName = "NotNull" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contained all columns ({Contact.Fields.NickName}, {Contact.Fields.AssistantName}) when at least one was expected to be missing!", context.FakeTraceService.Traces.Single().Trace);
+            context = GetContext(contextEntity, new Contact { NickName = null, AssistantName = null });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contained all columns ({Contact.Fields.NickName}, {Contact.Fields.AssistantName}) when at least one was expected to be missing!", context.FakeTraceService.Traces.Single().Trace);
+
+            AssertValid(sut, contextEntity, new Contact());
+            AssertValid(sut, contextEntity, new Contact { NickName = null });
+            AssertValid(sut, contextEntity, new Contact { NickName = "NotNull" });
+            AssertValid(sut, contextEntity, new Contact { AssistantName = null });
+            AssertValid(sut, contextEntity, new Contact { AssistantName = "NotNull" });
+        }
+
+        private static void TestMissingOrNullAny(ContextEntity contextEntity)
+        {
+            var sut = new RequirementValidator().MissingOrNullAny<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
+            var context = GetContext(contextEntity, new Contact { NickName = "NotNull", AssistantName = "NotNull" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contained all columns ({Contact.Fields.NickName}, {Contact.Fields.AssistantName}) when at least one was expected to be missing or null!", context.FakeTraceService.Traces.Single().Trace);
+
+            AssertValid(sut, contextEntity, new Contact());
+            AssertValid(sut, contextEntity, new Contact { NickName = null });
+            AssertValid(sut, contextEntity, new Contact { NickName = "NotNull" });
+            AssertValid(sut, contextEntity, new Contact { AssistantName = null });
+            AssertValid(sut, contextEntity, new Contact { AssistantName = "NotNull" });
+            AssertValid(sut, contextEntity, new Contact { NickName = null, AssistantName = null });
+        }
+        private static void TestMissingOrNull(ContextEntity contextEntity)
+        {
+            var sut = new RequirementValidator().MissingOrNull<Contact>(contextEntity, c => new { c.NickName });
+            var context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contains column {Contact.Fields.NickName} that was expected to be missing or null!", context.FakeTraceService.Traces.Single().Trace);
+            
+            AssertValid(sut, contextEntity, new Contact { NickName = null });
+            AssertValid(sut, contextEntity, new Contact());
+
+            sut = new RequirementValidator().MissingOrNull<Contact>(contextEntity, c => new { c.NickName, c.AssistantName });
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull", AssistantName = "NotNull" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contains columns {Contact.Fields.NickName}, {Contact.Fields.AssistantName} that were expected to be missing or null!", context.FakeTraceService.Traces.Single().Trace);
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contains column {Contact.Fields.NickName} that was expected to be missing or null!", context.FakeTraceService.Traces.Single().Trace);
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull", AssistantName = null });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contains column {Contact.Fields.NickName} that was expected to be missing or null!", context.FakeTraceService.Traces.Single().Trace);
+
+            AssertValid(sut, contextEntity, new Contact { NickName = null, AssistantName = null });
+            AssertValid(sut, contextEntity, new Contact()); 
         }
 
         private static void MissingPreImage(ContextEntity contextEntity, RequirementValidator sut)
@@ -581,12 +682,12 @@ namespace DLaB.Xrm.Tests.Core
             sut.SkipExecution(GetContext(contextEntity, new Contact()));
         }
 
-        private static void AssertPassedValidation(RequirementValidator sut, FakeContext context)
+        private static void AssertValid(RequirementValidator sut, ContextEntity contextEntity, Contact root)
         {
+            var context = GetContext(contextEntity, root);
             Assert.IsFalse(sut.SkipExecution(context));
             Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
         }
-
 
         private static FakeContext GetContext(ContextEntity contextEntity, Contact root)
         {

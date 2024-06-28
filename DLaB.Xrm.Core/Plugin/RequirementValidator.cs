@@ -53,7 +53,7 @@ namespace Source.DLaB.Xrm.Plugin
         #region Non-null
 
         /// <summary>
-        /// Requires all columns are in the attributes collection with a non-null value
+        /// Requires all columns are in the Attributes collection with a non-null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columnNames">The column names</param>
@@ -65,7 +65,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires all columns are in the attributes collection with a non-null value
+        /// Requires all columns are in the Attributes collection with a non-null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columns">The column names</param>
@@ -77,7 +77,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires all columns are in the attributes collection with a non-null value
+        /// Requires all columns are in the Attributes collection with a non-null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="anonymousTypeInitializer">The type initializer</param>
@@ -88,7 +88,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires at least one column is in the attributes collection with a non-null value
+        /// Requires at least one column is in the Attributes collection with a non-null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columnNames">The column names</param>
@@ -100,7 +100,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires at least one column is in the attributes collection with a non-null value
+        /// Requires at least one column is in the Attributes collection with a non-null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columns">The column names</param>
@@ -112,7 +112,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires at least one column is in the attributes collection with a non-null value
+        /// Requires at least one column is in the Attributes collection with a non-null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="anonymousTypeInitializer">The type initializer</param>
@@ -127,7 +127,7 @@ namespace Source.DLaB.Xrm.Plugin
         #region Nullable
 
         /// <summary>
-        /// Requires all columns are in the attributes collection (Allows nulls)
+        /// Requires all columns are in the Attributes collection (Allows nulls)
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columnNames">The column names</param>
@@ -139,7 +139,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires all columns are in the attributes collection (Allows nulls)
+        /// Requires all columns are in the Attributes collection (Allows nulls)
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columns">The column names</param>
@@ -151,7 +151,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires all columns are in the attributes collection (Allows nulls)
+        /// Requires all columns are in the Attributes collection (Allows nulls)
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="anonymousTypeInitializer">The type initializer</param>
@@ -162,7 +162,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires at least one column is in the attributes collection (Allows nulls)
+        /// Requires at least one column is in the Attributes collection (Allows nulls)
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columnNames">The column names</param>
@@ -174,7 +174,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires at least one column is in the attributes collection (Allows nulls)
+        /// Requires at least one column is in the Attributes collection (Allows nulls)
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columns">The column names</param>
@@ -186,7 +186,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires at least one column is in the attributes collection (Allows nulls)
+        /// Requires at least one column is in the Attributes collection (Allows nulls)
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="anonymousTypeInitializer">The type initializer</param>
@@ -201,7 +201,7 @@ namespace Source.DLaB.Xrm.Plugin
         #region Null
 
         /// <summary>
-        /// Requires all columns are in the attributes collection with a null value
+        /// Requires all columns are in the Attributes collection with a null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columnNames">The column names</param>
@@ -213,7 +213,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires all columns are in the attributes collection with a null value
+        /// Requires all columns are in the Attributes collection with a null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columns">The column names</param>
@@ -225,7 +225,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires all columns are in the attributes collection with a null value
+        /// Requires all columns are in the Attributes collection with a null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="anonymousTypeInitializer">The type initializer</param>
@@ -236,7 +236,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires at least one column is in the attributes collection with a null value
+        /// Requires at least one column is in the Attributes collection with a null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columnNames">The column names</param>
@@ -248,7 +248,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires at least one column is in the attributes collection with a null value
+        /// Requires at least one column is in the Attributes collection with a null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="columns">The column names</param>
@@ -260,7 +260,7 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Requires at least one column is in the attributes collection with a null value
+        /// Requires at least one column is in the Attributes collection with a null value
         /// </summary>
         /// <param name="entityType">The entity type</param>
         /// <param name="anonymousTypeInitializer">The type initializer</param>
@@ -301,6 +301,158 @@ namespace Source.DLaB.Xrm.Plugin
         #endregion Value
 
         #endregion Contains
+
+        #region Missing
+
+        #region Non-null
+
+        /// <summary>
+        /// Requires all columns are not present in the Attributes collection
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="columnNames">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator Missing(ContextEntity entityType, params string[] columnNames)
+        {
+            Get(entityType).MissingColumns.UnionWith(columnNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires all columns are not present in the Attributes collection
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="columns">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator Missing(ContextEntity entityType, ColumnSet columns)
+        {
+            Get(entityType).MissingColumns.UnionWith(columns.Columns);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires all columns are not present in the Attributes collection
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="anonymousTypeInitializer">The type initializer</param>
+        /// <returns></returns>
+        public RequirementValidator Missing<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        {
+            return Missing(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
+        }
+
+        /// <summary>
+        /// Requires at least one column is not present in the Attributes collection
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="columnNames">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator MissingAny(ContextEntity entityType, params string[] columnNames)
+        {
+            Get(entityType).MissingOrColumns.Add(new List<string>(columnNames));
+            return this;
+        }
+
+        /// <summary>
+        /// Requires at least one column is not present in the Attributes collection
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="columns">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator MissingAny(ContextEntity entityType, ColumnSet columns)
+        {
+            Get(entityType).MissingOrColumns.Add(columns.Columns.ToList());
+            return this;
+        }
+
+        /// <summary>
+        /// Requires at least one column is not present in the Attributes collection
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="anonymousTypeInitializer">The type initializer</param>
+        /// <returns></returns>
+        public RequirementValidator MissingAny<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        {
+            return MissingAny(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
+        }
+
+        #endregion Non-null
+
+        #region Nullable
+
+        /// <summary>
+        /// Requires all columns are not present in the Attributes collection or if they are present, they are null
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="columnNames">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator MissingOrNull(ContextEntity entityType, params string[] columnNames)
+        {
+            Get(entityType).MissingColumnsAllowNulls.UnionWith(columnNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires all columns are not present in the Attributes collection or if they are present, they are null
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="columns">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator MissingOrNull(ContextEntity entityType, ColumnSet columns)
+        {
+            Get(entityType).MissingColumnsAllowNulls.UnionWith(columns.Columns);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires all columns are not present in the Attributes collection or if they are present, they are null
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="anonymousTypeInitializer">The type initializer</param>
+        /// <returns></returns>
+        public RequirementValidator MissingOrNull<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        {
+            return MissingOrNull(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
+        }
+
+        /// <summary>
+        /// Requires at least one column is not present in the Attributes collection or if it is present, it is null
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="columnNames">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator MissingOrNullAny(ContextEntity entityType, params string[] columnNames)
+        {
+            Get(entityType).MissingOrColumnsAllowNulls.Add(new List<string>(columnNames));
+            return this;
+        }
+
+        /// <summary>
+        /// Requires at least one column is not present in the Attributes collection or if it is present, it is null
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="columns">The column names</param>
+        /// <returns></returns>
+        public RequirementValidator MissingOrNullAny(ContextEntity entityType, ColumnSet columns)
+        {
+            Get(entityType).MissingOrColumnsAllowNulls.Add(columns.Columns.ToList());
+            return this;
+        }
+
+        /// <summary>
+        /// Requires at least one column is not present in the Attributes collection or if it is present, it is null
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="anonymousTypeInitializer">The type initializer</param>
+        /// <returns></returns>
+        public RequirementValidator MissingOrNullAny<T>(ContextEntity entityType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
+        {
+            return MissingOrNullAny(entityType, anonymousTypeInitializer.GetAttributeNamesArray());
+        }
+
+        #endregion Nullable
+
+        #endregion Missing
 
         #region Updated (Non-Null) / Changed (Nullable) / Cleared (Null) / Updated (value)
 
@@ -552,6 +704,12 @@ namespace Source.DLaB.Xrm.Plugin
         {
             private ContextEntity EntityType { get; }
 
+            public HashSet<string> MissingColumns { get; } = new HashSet<string>();
+            public List<List<string>> MissingOrColumns { get; } = new List<List<string>>();
+            
+            public HashSet<string> MissingColumnsAllowNulls { get; } = new HashSet<string>();
+            public List<List<string>> MissingOrColumnsAllowNulls { get; } = new List<List<string>>();
+
             public HashSet<string> RequiredColumns { get; } = new HashSet<string>();
             public List<List<string>> RequiredOrColumns { get; } = new List<List<string>>();
 
@@ -598,6 +756,8 @@ namespace Source.DLaB.Xrm.Plugin
 
                 return SkipExecution(context, entity, RequiredColumns, RequiredOrColumns, checkNotNull: true)
                        || SkipExecution(context, entity, RequiredColumnsAllowNulls, RequiredOrColumnsAllowNulls, checkNotNull: false)
+                       || SkipMissing(context, entity, MissingColumns, MissingOrColumns, allowNull: false)
+                       || SkipMissing(context, entity, MissingColumnsAllowNulls, MissingOrColumnsAllowNulls, allowNull: true)
                        || SkipNonNullExecution(context, entity, RequiredNullColumns, RequiredNullOrColumns)
                        || SkipValueExecution(context, entity, ContainedValues.GetValues(service), ContainedOrValues.GetValues())
                        || SkipExecutionForUpdate(context, entity, preImage, UpdatedColumns, UpdatedOrColumns, checkNotNull: true)
@@ -663,26 +823,96 @@ namespace Source.DLaB.Xrm.Plugin
                         }
                     }
 
-                    if (!requirementMet)
+                    if (requirementMet)
                     {
-                        Reason = new InvalidRequirementReason
-                        {
-                            Columns = set,
-                            ColumnReason = columnReason,
-                            ContextEntity = EntityType,
-                            IsAny = true,
-                            RequirementType = type
-                        };
-                        if (checkNotNull)
-                        {
-                            context.Trace("The {0} entity type did not contain a non-null value for at least one of the following columns: {1}!", EntityType, string.Join(", ", set));
-                        }
-                        else
-                        {
-                            context.Trace("The {0} entity type did not contain at least one of the following columns: {1}!", EntityType, string.Join(", ", set));
-                        }
-                        return true;
+                        continue;
                     }
+
+                    Reason = new InvalidRequirementReason
+                    {
+                        Columns = set,
+                        ColumnReason = columnReason,
+                        ContextEntity = EntityType,
+                        IsAny = true,
+                        RequirementType = type
+                    };
+                    if (checkNotNull)
+                    {
+                        context.Trace("The {0} entity type did not contain a non-null value for at least one of the following columns: {1}!", EntityType, string.Join(", ", set));
+                    }
+                    else
+                    {
+                        context.Trace("The {0} entity type did not contain at least one of the following columns: {1}!", EntityType, string.Join(", ", set));
+                    }
+                    return true;
+                }
+
+                return false;
+            }
+
+            private bool SkipMissing(IExtendedPluginContext context, Entity entity, HashSet<string> allColumns, List<List<string>> atLeastOneColumns, bool allowNull)
+            {
+                var type = allowNull
+                    ? ColumnRequirementCheck.Missing
+                    : ColumnRequirementCheck.MissingOrNull;
+                var presentColumns = new List<string>();
+                foreach (var column in allColumns)
+                {
+                    if (entity.Contains(column))
+                    {
+                        if (allowNull && entity[column] == null)
+                        {
+                            continue;
+                        }
+                        presentColumns.Add(column);
+                    }
+                }
+
+                if (presentColumns.Count > 0)
+                {
+                    Reason = new InvalidRequirementReason
+                    {
+                        Columns = presentColumns,
+                        ColumnReason = InvalidColumnReason.Present,
+                        ContextEntity = EntityType,
+                        IsAny = false,
+                        RequirementType = type
+                    };
+
+                    var format = presentColumns.Count > 1
+                        ? "The {0} entity type contains columns {1} that were expected to be missing{2}!"
+                        : "The {0} entity type contains column {1} that was expected to be missing{2}!";
+                    context.Trace(format, EntityType, string.Join(", ", presentColumns), allowNull ? " or null" : string.Empty);
+                    return true;
+                }
+
+                foreach (var set in atLeastOneColumns)
+                {
+                    var requirementMet = false;
+                    foreach (var column in set)
+                    {
+                        if (!entity.Contains(column) || (allowNull && entity[column] == null))
+                        {
+                            requirementMet = true;
+                        }
+                    }
+
+                    if (requirementMet)
+                    {
+                        continue;
+                    }
+
+                    Reason = new InvalidRequirementReason
+                    {
+                        Columns = set,
+                        ColumnReason = InvalidColumnReason.Present,
+                        ContextEntity = EntityType,
+                        IsAny = true,
+                        RequirementType = type
+                    };
+
+                    context.Trace("The {0} entity type contained all columns ({1}) when at least one was expected to be missing{2}!", EntityType, string.Join(", ", set), allowNull ? " or null" : string.Empty);
+                    return true;
                 }
 
                 return false;
@@ -739,19 +969,21 @@ namespace Source.DLaB.Xrm.Plugin
                         }
                     }
 
-                    if (!requirementMet)
+                    if (requirementMet)
                     {
-                        Reason = new InvalidRequirementReason
-                        {
-                            Columns = set,
-                            ColumnReason = InvalidColumnReason.NotNull,
-                            ContextEntity = EntityType,
-                            IsAny = true,
-                            RequirementType = ColumnRequirementCheck.ContainsNull
-                        };
-                        context.Trace("The {0} entity type did not contain a null value for at least one of the following columns: {1}!", EntityType, string.Join(", ", set));
-                        return true;
+                        continue;
                     }
+
+                    Reason = new InvalidRequirementReason
+                    {
+                        Columns = set,
+                        ColumnReason = InvalidColumnReason.NotNull,
+                        ContextEntity = EntityType,
+                        IsAny = true,
+                        RequirementType = ColumnRequirementCheck.ContainsNull
+                    };
+                    context.Trace("The {0} entity type did not contain a null value for at least one of the following columns: {1}!", EntityType, string.Join(", ", set));
+                    return true;
                 }
 
                 return false;
@@ -931,22 +1163,24 @@ namespace Source.DLaB.Xrm.Plugin
                         }
                     }
 
-                    if (!requirementMet)
+                    if (requirementMet)
                     {
-                        Reason = new InvalidRequirementReason
-                        {
-                            Columns = set,
-                            ColumnReason = columnReason,
-                            ContextEntity = EntityType,
-                            IsAny = true,
-                            RequirementType = type
-                        };
-                        context.Trace(
-                            checkNotNull
-                                ? "The target did not update to a non-null value for at least one of the following columns: {0}!"
-                                : "The target did not update at least one of the following columns: {0}!", string.Join(", ", set));
-                        return true;
+                        continue;
                     }
+
+                    Reason = new InvalidRequirementReason
+                    {
+                        Columns = set,
+                        ColumnReason = columnReason,
+                        ContextEntity = EntityType,
+                        IsAny = true,
+                        RequirementType = type
+                    };
+                    context.Trace(
+                        checkNotNull
+                            ? "The target did not update to a non-null value for at least one of the following columns: {0}!"
+                            : "The target did not update at least one of the following columns: {0}!", string.Join(", ", set));
+                    return true;
                 }
 
                 return false;
@@ -1011,20 +1245,22 @@ namespace Source.DLaB.Xrm.Plugin
                             break;
                         }
                     }
-                
-                    if (!requirementMet)
+
+                    if (requirementMet)
                     {
-                        Reason = new InvalidRequirementReason
-                        {
-                            Columns = set,
-                            ColumnReason = InvalidColumnReason.UnchangedValue,
-                            ContextEntity = EntityType,
-                            IsAny = true,
-                            RequirementType = ColumnRequirementCheck.Cleared
-                        };
-                        context.Trace("The target did not update at least one of the following columns to null: {0}!", string.Join(", ", set));
-                        return true;
+                        continue;
                     }
+
+                    Reason = new InvalidRequirementReason
+                    {
+                        Columns = set,
+                        ColumnReason = InvalidColumnReason.UnchangedValue,
+                        ContextEntity = EntityType,
+                        IsAny = true,
+                        RequirementType = ColumnRequirementCheck.Cleared
+                    };
+                    context.Trace("The target did not update at least one of the following columns to null: {0}!", string.Join(", ", set));
+                    return true;   
                 }
 
                 return false;
