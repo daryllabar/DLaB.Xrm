@@ -144,7 +144,8 @@ namespace Source.DLaB.Xrm.Plugin
 
         /// <summary>
         /// Registers the services for the IocContainer for the plugin.
-        /// If a plugin requires it's own specific registrations, this should be overridden and more than likely, base.RegisterServices called first before stepping on the registrations with the plugin specific ones.
+        /// Searches for the PluginServicesRegistrationRecorderAttribute in the plugin assembly, and if not found, defaults to container.RegisterDataversePluginDefaults(UnsecureConfig, SecureConfig, this)
+        /// If a plugin requires its own specific registrations, this should be overridden and more than likely, base.RegisterServices called first before stepping on the registrations with the plugin specific ones.
         /// This is called only once per plugin instance.
         /// This must be overriden if T is not IExtendedPluginContext
         /// </summary>
@@ -157,7 +158,21 @@ namespace Source.DLaB.Xrm.Plugin
                 throw new ArgumentNullException(nameof(container));
             }
 
-            return container.RegisterDataversePluginDefaults(UnsecureConfig, SecureConfig, this);
+            var attribute = GetType().Assembly.GetCustomAttributes(typeof(PluginServicesRegistrationRecorderAttribute), false)
+                .OfType<PluginServicesRegistrationRecorderAttribute>().FirstOrDefault();
+            
+            if (attribute == null)
+            {
+                return container.RegisterDataversePluginDefaults(UnsecureConfig, SecureConfig, this);
+            }
+
+            if (!typeof(IPluginServicesRegistrationRecorder).IsAssignableFrom(attribute.Recorder))
+            {
+                throw new InvalidOperationException("The type in attribute.Recorder must implement IPluginServicesRegistrationRecorder.");
+            }
+
+            var recorder = (IPluginServicesRegistrationRecorder)Activator.CreateInstance(attribute.Recorder);
+            return recorder.RegisterPluginServices(container, this, UnsecureConfig, SecureConfig);
         }
 
         #region Execute
