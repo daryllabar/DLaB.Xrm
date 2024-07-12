@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 #endif
 using System.Linq;
+using System.Reflection;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Extensions;
 
@@ -655,8 +656,32 @@ namespace Source.DLaB.Xrm.Plugin
             var factory = serviceProvider.Get<IOrganizationServiceFactory>();
             var tracingService = serviceProvider.Get<ITracingService>();
             settings = settings ?? serviceProvider.Get<ExtendedOrganizationServiceSettings>();
+            if (settings?.ProxyTypesAssembly != null)
+            {
+                serviceProvider.SetProxyTypesAssembly(settings.ProxyTypesAssembly);
+            }
 
             return new ExtendedOrganizationService(factory.CreateOrganizationService(userId), tracingService, settings);
+        }
+
+        /// <summary>
+        /// Sets the assembly containing the proxy types for the organization service.  Initially checks for an IProxyTypesAssemblyProvider
+        /// and falls back to casting the IOrganizationServiceFactory from the service provider.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="proxyTypesAssembly">The assembly containing the proxy types.</param>
+        /// <returns>True if the proxy types assembly was set successfully; otherwise, false.</returns>
+        public static bool SetProxyTypesAssembly(this IServiceProvider serviceProvider, Assembly proxyTypesAssembly)
+        {
+            var factory = serviceProvider.Get<IOrganizationServiceFactory>();
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            var proxyProvider = serviceProvider.Get<IProxyTypesAssemblyProvider>() ?? factory as IProxyTypesAssemblyProvider;
+            if (proxyProvider != null)
+            {
+                proxyProvider.ProxyTypesAssembly = proxyTypesAssembly;
+            }
+
+            return proxyProvider != null;
         }
 
         #endregion IServiceProvider

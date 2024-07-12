@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 namespace DLaB.Xrm
@@ -29,6 +30,11 @@ namespace Source.DLaB.Xrm
         /// All Requests made with IOrganizationServices will be timed.
         /// </summary>
         public bool TimeRequests { get; set; }
+
+        /// <summary>
+        /// Assembly Type used to set the IProxyTypesAssemblyProvider to
+        /// </summary>
+        public Assembly ProxyTypesAssembly { get; set; }
 
         /// <summary>
         /// The format of the message to use when logging the start of a request.  Must include "{0}" for the name of the request.
