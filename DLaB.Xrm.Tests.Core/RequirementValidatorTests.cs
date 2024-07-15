@@ -1,7 +1,4 @@
-﻿#if NET
-using DataverseUnitTest;
-#endif
-using DLaB.Xrm.Entities;
+﻿using DLaB.Xrm.Entities;
 using DLaB.Xrm.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
@@ -453,7 +450,7 @@ namespace DLaB.Xrm.Tests.Core
             Assert.AreEqual($"The {contextEntity} entity type did not contain a value for column {Contact.Fields.NickName} which was required to be \"NotNull\"!", context.FakeTraceService.Traces.Single().Trace);
             context = GetContext(contextEntity, new Contact { NickName = null });
             Assert.IsTrue(sut.SkipExecution(context));
-            Assert.AreEqual($"The {contextEntity} entity type was required to contain a value of NotNull for column nickname but contained the value null!", context.FakeTraceService.Traces.Single().Trace);
+            Assert.AreEqual($"The {contextEntity} entity type was required to contain a value of \"NotNull\" for column nickname but contained the value null!", context.FakeTraceService.Traces.Single().Trace);
             if (contextEntity == ContextEntity.PreImage || contextEntity == ContextEntity.CoalesceTargetPreImage)
             {
                 AssertValid(sut, contextEntity, new Contact { NickName = "NotNull" });
