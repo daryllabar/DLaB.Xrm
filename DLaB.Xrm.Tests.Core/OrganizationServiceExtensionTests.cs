@@ -10,7 +10,6 @@ using DLaB.Xrm.Test.Core.Builders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using Source.DLaB.Xrm;
 using OrganizationServiceBuilder = DLaB.Xrm.Test.Core.Builders.OrganizationServiceBuilder;
 
 namespace DLaB.Xrm.Tests.Core

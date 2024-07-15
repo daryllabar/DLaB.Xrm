@@ -102,9 +102,9 @@ namespace Source.DLaB.Xrm.Plugin
         /// <inheritdoc />
         public IsolationMode IsolationMode => (IsolationMode) PluginExecutionContext.IsolationMode;
         /// <inheritdoc />
-        public bool IsAsync => Mode == 1;
+        public bool IsAsync => Mode == RegisteredEvent.ContextMode.Async;
         /// <inheritdoc />
-        public bool IsSync => Mode == 0;
+        public bool IsSync => Mode == RegisteredEvent.ContextMode.Sync;
         /// <inheritdoc />
         public IServiceProvider ServiceProvider { get; }
         /// <inheritdoc />
@@ -223,7 +223,7 @@ namespace Source.DLaB.Xrm.Plugin
             }
         }
 
-#endregion PropertyInitializers
+        #endregion PropertyInitializers
 
         #region Exception Logging
 

@@ -15,6 +15,22 @@ namespace Source.DLaB.Xrm.Plugin
     public class RegisteredEvent
     {
         /// <summary>
+        /// Defines the context mode for plugin execution.
+        /// </summary>
+        public static class ContextMode
+        {
+            /// <summary>
+            /// Represents the synchronous execution mode.
+            /// </summary>
+            public const int Sync = 0;
+
+            /// <summary>
+            /// Represents the asynchronous execution mode.
+            /// </summary>
+            public const int Async = 1;
+        }
+
+        /// <summary>
         /// Defines an Any Message Type
         /// </summary>
         public static MessageType Any = new MessageType("Any");
@@ -22,6 +38,24 @@ namespace Source.DLaB.Xrm.Plugin
         /// Gets or sets the Assert Validators
         /// </summary>
         public List<AssertValidator> AssertValidators { get; set; } = new List<AssertValidator>();
+        /// <summary>Gets or sets the mode of the processing.</summary>
+        public int? Mode { get; set; }
+        /// <summary>
+        /// Gets or sets if the execution context is asynchronous (Mode = 1) or Null
+        /// </summary>
+        public bool IsAsync
+        {
+            get => Mode == ContextMode.Async || Mode == null;
+            set => Mode = value ? ContextMode.Async : ContextMode.Sync;
+        }
+        /// <summary>
+        /// Gets or sets if the execution context is synchronous (Mode = 0) or Null
+        /// </summary>
+        public bool IsSync
+        {
+            get => Mode == ContextMode.Sync || Mode == null;
+            set => Mode = value ? ContextMode.Sync : ContextMode.Async;
+        }
         /// <summary>
         /// Gets or sets the pipeline stage.
         /// </summary>
@@ -99,7 +133,6 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="execute"></param>
         public RegisteredEvent(PipelineStage stage, MessageType message, Action<IExtendedPluginContext> execute) : this(stage, message, execute, null) { }
 
-
         /// <summary>
         /// Runs against the specified entity
         /// </summary>
@@ -116,7 +149,24 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance, formatted with the given tab to allow for nexting
+        /// Also includes the mode.
+        /// </summary>
+        /// <param name="stage"></param>
+        /// <param name="message"></param>
+        /// <param name="execute"></param>
+        /// <param name="entityLogicalName"></param>
+        /// <param name="mode"></param>
+        public RegisteredEvent(PipelineStage stage, MessageType message, Action<IExtendedPluginContext> execute, string entityLogicalName, int? mode)
+        {
+            Stage = stage;
+            EntityLogicalName = entityLogicalName;
+            Execute = execute;
+            Message = message;
+            Mode = mode;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance, formatted with the given tab to allow for nesting
         /// </summary>
         /// <param name="tab">The tab.</param>
         /// <returns>
@@ -125,11 +175,20 @@ namespace Source.DLaB.Xrm.Plugin
         public virtual string ToString(string tab)
         {
             tab = tab ?? string.Empty;
-            return string.Join(Environment.NewLine + tab,
+            var lines = new List<string>
+            {
                 tab + "Stage: " + Stage,
                 "Message: " + Message,
                 "Message Name: " + MessageName,
-                "Entity Logical Name: " + EntityLogicalName, "Execute: " + (Execute?.Method.Name ?? "Null"));
+                "Entity Logical Name: " + EntityLogicalName,
+                "Execute: " + (Execute?.Method.Name ?? "Null")
+            };
+
+            if (Mode != null)
+            {
+                lines.Add("Mode: " + (IsSync ? "Synchronous" : "Asynchronous") + $"({Mode})");
+            }
+            return string.Join(Environment.NewLine + tab, lines);
         }
 
         /// <summary>

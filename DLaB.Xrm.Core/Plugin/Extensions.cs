@@ -253,7 +253,8 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public static bool CalledFrom(this IPluginExecutionContext context, RegisteredEvent @event)
         {
-            return context.GetContexts().Any(c => c.MessageName == @event.MessageName && c.PrimaryEntityName == @event.EntityLogicalName && c.Stage == (int)@event.Stage);
+            var events = new RegisteredEvent[] { @event };
+            return context.GetContexts().Any(c => c.GetEvent(events) != null);
         }
 
         /// <summary>
@@ -351,8 +352,10 @@ namespace Source.DLaB.Xrm.Plugin
                     e =>
                         (int) e.Stage == context.Stage
                         && (e.MessageName == context.MessageName || e.Message == RegisteredEvent.Any)
-                        && (string.IsNullOrWhiteSpace(e.EntityLogicalName) || e.EntityLogicalName == context.PrimaryEntityName))
+                        && (string.IsNullOrWhiteSpace(e.EntityLogicalName) || e.EntityLogicalName == context.PrimaryEntityName)
+                        && (e.Mode == null || e.Mode == context.Mode))
                 .OrderBy(e => e.MessageName == RegisteredEvent.Any) // Favor the specific message match first
+                .ThenBy(e => e.Mode == null) // Favor the specific mode match second
                 .FirstOrDefault();
         }
 
@@ -605,7 +608,7 @@ namespace Source.DLaB.Xrm.Plugin
         #region HasPluginExecutionBeenPrevented
 
         /// <summary>
-        /// Determines whether a shared variable exists that specifies that the plugin or the plugin and specifc message type should be prevented from executing.
+        /// Determines whether a shared variable exists that specifies that the plugin or the plugin and specific message type should be prevented from executing.
         /// This is used in conjunction with PreventPluginExecution
         /// </summary>
         /// <typeparam name="T">The type of the plugin.</typeparam>

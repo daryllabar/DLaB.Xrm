@@ -1023,7 +1023,7 @@ namespace Source.DLaB.Xrm.Plugin
                             IsAny = false,
                             RequirementType = ColumnRequirementCheck.ContainsValue
                         };
-                        context.Trace("The {0} entity type was required to contain a value of {1} for column {2} but contained the value {3}!", EntityType, att.Value, att.Key, entity[att.Key].ObjectToStringDebug());
+                        context.Trace("The {0} entity type was required to contain a value of {1} for column {2} but contained the value {3}!", EntityType, att.Value.ObjectToStringDebug(), att.Key, entity[att.Key].ObjectToStringDebug());
                         return true;
                     }
                 }

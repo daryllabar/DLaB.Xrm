@@ -42,12 +42,12 @@ namespace Source.DLaB.Xrm.Workflow
         /// <summary>
         /// Returns true if the execution context is asynchronous (Mode = 1)
         /// </summary>
-        public bool IsAsync => Mode == 1;
+        public bool IsAsync => Mode == RegisteredEvent.ContextMode.Async;
 
         /// <summary>
         /// Returns true if the execution context is synchronous (Mode = 0)
         /// </summary>
-        public bool IsSync => Mode == 0;
+        public bool IsSync => Mode == RegisteredEvent.ContextMode.Sync;
 
         private IServiceProvider ServiceProvider { get; }
 

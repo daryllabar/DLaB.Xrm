@@ -41,6 +41,10 @@ namespace Source.DLaB.Xrm.Plugin
         /// </value>
         protected string ExecuteMethodName { get; set; }
         /// <summary>
+        /// The Previous Builder if any.  This is set via the And() method
+        /// </summary>
+        protected RegisteredEventBuilder PreviousBuilder { get; set; }
+        /// <summary>
         /// Gets or sets the message types.
         /// </summary>
         /// <value>
@@ -48,9 +52,12 @@ namespace Source.DLaB.Xrm.Plugin
         /// </value>
         protected List<MessageType> MessageTypes { get; set; }
         /// <summary>
-        /// The Previous Builder if any.  This is set via the And() method
+        /// Gets or sets the mode.
         /// </summary>
-        protected RegisteredEventBuilder PreviousBuilder { get; set; }
+        /// <value>
+        /// The mode.
+        /// </value>
+        protected int? Mode { get; set; }
         /// <summary>
         /// Gets or sets the requirement validator.
         /// </summary>
@@ -183,6 +190,17 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         #endregion ForEntities
+
+        public RegisteredEventBuilder ForSyncOnly()
+        {
+            Mode = RegisteredEvent.ContextMode.Sync;
+            return this;
+        }
+        public RegisteredEventBuilder ForAsyncOnly()
+        {
+            Mode = RegisteredEvent.ContextMode.Async;
+            return this;
+        }
 
         /// <summary>
         /// Defines the custom Action to be performed rather than the standard ExecuteInternal.
@@ -325,7 +343,7 @@ namespace Source.DLaB.Xrm.Plugin
                 {
                     events.AddRange(
                         EntityLogicalNames.Select(
-                            logicalName => new RegisteredEvent(Stage, messageType, Execute, logicalName)
+                            logicalName => new RegisteredEvent(Stage, messageType, Execute, logicalName, Mode)
                             {
                                 AssertValidators = AssertValidators,
                                 ExecuteMethodName = ExecuteMethodName,
@@ -335,7 +353,7 @@ namespace Source.DLaB.Xrm.Plugin
                 else
                 {
                     events.Add(
-                        new RegisteredEvent(Stage, messageType, Execute)
+                        new RegisteredEvent(Stage, messageType, Execute, null, Mode)
                         {
                             AssertValidators = AssertValidators,
                             ExecuteMethodName = ExecuteMethodName,
