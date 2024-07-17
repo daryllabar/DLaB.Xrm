@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DLaB.Xrm.Source</id>
-    <version>4.1.0.13</version>
+    <version>4.1.0.14</version>
     <authors>Daryl LaBar</authors>
     <owners>Daryl LaBar</owners>
     <license type="expression">MIT</license>
@@ -33,32 +33,32 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\DLaB.Xrm.Core\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.13" />
-    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.13\Comparers" />
-    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.13\Exceptions" />
-    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.13\Extensions" />
-    <file src="..\DLaB.Xrm.Core\Ioc\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.13\Ioc" />
-    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.13\Plugin" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.13\Sandbox" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.13\Serialization" />
+    <file src="..\DLaB.Xrm.Core\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.14" />
+    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.14\Comparers" />
+    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.14\Exceptions" />
+    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.14\Extensions" />
+    <file src="..\DLaB.Xrm.Core\Ioc\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.14\Ioc" />
+    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.14\Plugin" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.14\Sandbox" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.14\Serialization" />
 
-    <file src="..\DLaB.Xrm.Core\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.13" />
-    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.13\Comparers" />
-    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.13\Exceptions" />
-    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.13\Extensions" />
-    <file src="..\DLaB.Xrm.Core\Ioc\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.13\Ioc" />
-    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.13\Plugin" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.13\Sandbox" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.13\Serialization" />
+    <file src="..\DLaB.Xrm.Core\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.14" />
+    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.14\Comparers" />
+    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.14\Exceptions" />
+    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.14\Extensions" />
+    <file src="..\DLaB.Xrm.Core\Ioc\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.14\Ioc" />
+    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.14\Plugin" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.14\Sandbox" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.14\Serialization" />
 
-    <file src="..\DLaB.Xrm.Core\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.13" />
-    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.13\Comparers" />
-    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.13\Exceptions" />
-    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.13\Extensions" />
-    <file src="..\DLaB.Xrm.Core\Ioc\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.13\Ioc" />
-    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.13\Plugin" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.13\Sandbox" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.13\Serialization" />
+    <file src="..\DLaB.Xrm.Core\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.14" />
+    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.14\Comparers" />
+    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.14\Exceptions" />
+    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.14\Extensions" />
+    <file src="..\DLaB.Xrm.Core\Ioc\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.14\Ioc" />
+    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.14\Plugin" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.14\Sandbox" />
+    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.14\Serialization" />
 		
     <file src="..\Icon.64x64.png" target="images\" />
   </files>
