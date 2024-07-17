@@ -186,7 +186,7 @@ namespace Source.DLaB.Xrm
         /// <param name="updater">The IMinimumUpdater to use.</param>
         /// <param name="token"></param>
         public static async Task CreateOrMinimumUpdateAsync<TEntity>(this IOrganizationServiceAsync2 service, TEntity entity,
-            IMinimumUpdater<TEntity> updater = null, CancellationToken token = default) where TEntity: Entity
+            IMinimumUpdater<TEntity> updater = null, CancellationToken token = default) where TEntity : Entity
         {
             if (entity.Id == Guid.Empty)
             {
@@ -242,7 +242,7 @@ namespace Source.DLaB.Xrm
         private static Task<TEntity> GetCurrentValueAsync<TEntity>(IOrganizationServiceAsync2 service, TEntity entity,
                 IMinimumUpdater<TEntity> updater, CancellationToken token) where TEntity : Entity
         {
-            if(updater != null)
+            if (updater != null)
             {
                 return Task.FromResult(updater.GetCurrentValue(entity));
             }
@@ -274,6 +274,15 @@ namespace Source.DLaB.Xrm
         }
 
         #endregion CreateWithSuppressDuplicateDetectionAsync
+
+        /// <summary>Perform an action in an organization specified by the request.</summary>
+        /// <param name="service">Organization Service proxy for connecting to the relevant CRM instance.</param>
+        /// <param name="request">Refer to SDK documentation for list of messages that can be used.</param>
+        /// <returns>Results from processing the request.</returns>
+        public static async Task<TResponse> ExecuteAsync<TResponse>(this IOrganizationServiceAsync2 service, OrganizationRequest request) where TResponse: OrganizationResponse
+        {
+            return (TResponse)await service.ExecuteAsync(request);
+        }
 
         /// <summary>
         /// Executes a batch of requests against the CRM Web Service using the ExecuteMultipleRequest command.
