@@ -18,10 +18,10 @@
     </contentFiles>
     <dependencies>
       <group targetFramework="net">
-        <dependency id="DLaB.Common.Source" version="1.4.0.8" include="all" />
+        <dependency id="DLaB.Common.Source" version="1.4.*" include="all" />
       </group>
       <group targetFramework="netcoreapp">
-        <dependency id="DLaB.Common.Source" version="1.4.0.8" include="all" />
+        <dependency id="DLaB.Common.Source" version="1.4.*" include="all" />
         <dependency id="System.Configuration.ConfigurationManager" version="8.0.0" />
       </group>
     </dependencies>

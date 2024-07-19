@@ -18,10 +18,10 @@
     </contentFiles>
     <dependencies>
       <group targetFramework="net">
-        <dependency id="DLaB.Xrm.Source" version="3.4.0.15" />
+        <dependency id="DLaB.Xrm.Source" version="3.4.*" />
       </group>
       <group targetFramework="netcoreapp">
-        <dependency id="System.Configuration.ConfigurationManager" version="5.0.0.0" />
+        <dependency id="System.Configuration.ConfigurationManager" version="*" />
       </group>
     </dependencies>
   </metadata>
