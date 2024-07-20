@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using Microsoft.Xrm.Sdk.Query;
 #if DLAB_UNROOT_COMMON_NAMESPACE
@@ -29,9 +30,9 @@ namespace Source.DLaB.Xrm.Comparers
         /// <param name="order1">The order1.</param>
         /// <param name="order2">The order2.</param>
         /// <returns></returns>
-        public bool Equals(OrderExpression order1, OrderExpression order2)
+        public bool Equals(OrderExpression? order1, OrderExpression? order2)
         {
-            return Comparer.Equals(order1, order2);
+            return Comparer.Equals(order1!, order2!);
         }
 
         /// <summary>

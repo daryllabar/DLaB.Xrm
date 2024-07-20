@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿#nullable enable
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Extensions;
 using System;
 
@@ -25,7 +26,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="secureConfig">The secure configuration string.</param>
         /// <param name="plugin">The registered events plugin used to build the Extended Plugin Context.</param>
         /// <returns>The IoC container.</returns>
-        public static IIocContainer RegisterDataversePluginDefaults(this IIocContainer container, string unsecureConfig = null, string secureConfig = null, IRegisteredEventsPlugin plugin = null)
+        public static IIocContainer RegisterDataversePluginDefaults(this IIocContainer container, string? unsecureConfig = null, string? secureConfig = null, IRegisteredEventsPlugin? plugin = null)
         {
             return container.RegisterDataversePluginDefaults(new ConfigWrapper(unsecureConfig, secureConfig)
             {
@@ -42,7 +43,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="configWrapper">The configuration wrapper.</param>
         /// <param name="plugin">The registered events plugin used to build the Extended Plugin Context.</param>
         /// <returns>The IoC container.</returns>
-        public static IIocContainer RegisterDataversePluginDefaults(this IIocContainer container, ConfigWrapper configWrapper, IRegisteredEventsPlugin plugin = null)
+        public static IIocContainer RegisterDataversePluginDefaults(this IIocContainer container, ConfigWrapper configWrapper, IRegisteredEventsPlugin? plugin = null)
         {
             // Conditionally register the IRegistered Events Plugin
             if (plugin != null)

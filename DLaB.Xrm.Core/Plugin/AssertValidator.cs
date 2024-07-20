@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using Microsoft.Xrm.Sdk;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
@@ -19,11 +20,11 @@ namespace Source.DLaB.Xrm.Plugin
         /// <summary>
         /// The Exception
         /// </summary>
-        public Exception ExceptionToThrow { get; set; }
+        public Exception? ExceptionToThrow { get; set; }
         /// <summary>
         /// The Exception Factory
         /// </summary>
-        public Func<InvalidRequirementReason, IExtendedPluginContext, Exception> ExceptionFactory { get; set; }
+        public Func<InvalidRequirementReason, IExtendedPluginContext, Exception>? ExceptionFactory { get; set; }
 
         /// <summary>
         /// Constructor
@@ -33,7 +34,7 @@ namespace Source.DLaB.Xrm.Plugin
         public AssertValidator(IRequirementValidator validator, Exception exceptionToThrow)
         {
             ExceptionFactory = null;
-            ExceptionToThrow = exceptionToThrow ?? throw new ArgumentNullException(nameof(exceptionToThrow)); ;
+            ExceptionToThrow = exceptionToThrow ?? throw new ArgumentNullException(nameof(exceptionToThrow));
             Validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 

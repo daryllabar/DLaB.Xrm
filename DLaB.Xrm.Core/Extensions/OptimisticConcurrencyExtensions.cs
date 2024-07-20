@@ -1,3 +1,4 @@
+#nullable enable
 #if !PRE_KEYATTRIBUTE
 using System;
 using System.Diagnostics;
@@ -30,7 +31,7 @@ namespace Source.DLaB.Xrm
         /// <param name="reconcileEntity">Function that accepts the latest version of the entity from the server as a property, and returns what the updated version should now be.</param>
         /// <param name="retrieveEntity">Function used to get the entity if the RowVersion doesn't match.  Defaults to getting the entity with all columns returned.</param>
         /// <exception cref="Exception">No row version is set!  Unable to preform OptimisticUpdate</exception>
-        public static T OptimisticUpdate<T>(this IOrganizationService service, T entity, Func<T, T> reconcileEntity, Func<IOrganizationService, T> retrieveEntity = null) where T: Entity
+        public static T? OptimisticUpdate<T>(this IOrganizationService service, T entity, Func<T, T> reconcileEntity, Func<IOrganizationService, T>? retrieveEntity = null) where T: Entity
         {
             if (string.IsNullOrWhiteSpace(entity.RowVersion))
             {
@@ -43,14 +44,14 @@ namespace Source.DLaB.Xrm
                 Target = entity
             };
 
-            entity = null;
+            T? result = null;
 
             while (true)
             {
                 try
                 {
                     service.Execute(request);
-                    return entity;
+                    return result;
                 }
                 catch (FaultException<OrganizationServiceFault> ex) 
                 {
@@ -58,15 +59,15 @@ namespace Source.DLaB.Xrm
                     {
                         throw;
                     }
-                    entity = retrieveEntity == null ? service.GetEntity<T>(request.Target.Id) : retrieveEntity(service);
-                    request.Target = reconcileEntity(entity);
+                    result = retrieveEntity == null ? service.GetEntity<T>(request.Target.Id) : retrieveEntity(service);
+                    request.Target = reconcileEntity(result);
                     if (request.Target == null)
                     {
                         // Reconciling code must have given up on reconciling
                         return null;
                     }
-                    request.Target.RowVersion = entity.RowVersion;
-                    if (string.IsNullOrWhiteSpace(entity.RowVersion))
+                    request.Target.RowVersion = result.RowVersion;
+                    if (string.IsNullOrWhiteSpace(result.RowVersion))
                     {
                         throw new Exception("No row version is set!  Unable to preform OptimisticUpdate");
                     }

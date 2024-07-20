@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using Microsoft.Xrm.Sdk.Query;
 #if DLAB_UNROOT_COMMON_NAMESPACE
@@ -23,7 +24,7 @@ namespace Source.DLaB.Xrm.Comparers
         /// <param name="cs1">The CS1.</param>
         /// <param name="cs2">The CS2.</param>
         /// <returns></returns>
-        public bool Equals(ColumnSet cs1, ColumnSet cs2)
+        public bool Equals(ColumnSet? cs1, ColumnSet? cs2)
         {
             if (cs1 == cs2) { return true; }
             if (cs1 == null || cs2 == null) { return false; }

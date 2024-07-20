@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -18,8 +19,8 @@ namespace Source.DLaB.Xrm
     {
         #region Properties
 
-        private string _timeStartMessageFormat;
-        private string _timeEndMessageFormat;
+        private string _timeStartMessageFormat = string.Empty;
+        private string _timeEndMessageFormat = string.Empty;
 
         /// <summary>
         /// All Fetch Xml or QueryExpressions (SQL Equivalent) made with IOrganizationServices executed will be traced
@@ -34,7 +35,7 @@ namespace Source.DLaB.Xrm
         /// <summary>
         /// Assembly Type used to set the IProxyTypesAssemblyProvider to
         /// </summary>
-        public Assembly ProxyTypesAssembly { get; set; }
+        public Assembly? ProxyTypesAssembly { get; set; }
 
         /// <summary>
         /// The format of the message to use when logging the start of a request.  Must include "{0}" for the name of the request.

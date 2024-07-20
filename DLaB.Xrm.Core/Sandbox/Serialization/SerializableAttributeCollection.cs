@@ -43,9 +43,10 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// </returns>
         public static explicit operator AttributeCollection(SerializableAttributeCollection collection)
         {
-            if (collection == null)
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            if (collection is null)
             {
-                return null;
+                return null!;
             }
             var xrmCollection = new AttributeCollection();
             xrmCollection.AddRange(collection.Select(v => (KeyValuePair<string, object>) v));

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Runtime.Caching;
 #if DLAB_UNROOT_COMMON_NAMESPACE
 using DLaB.Common;
@@ -28,7 +29,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="logicalName">Logical Name of the Entity</param>
         /// <returns></returns>
-        string GetIrregularIdAttributeName(string logicalName);
+        string? GetIrregularIdAttributeName(string logicalName);
 
         /// <summary>
         /// Defines the primaryFieldInfo for any entities that don't follow the standard conventions.
@@ -36,7 +37,7 @@ namespace Source.DLaB.Xrm
         /// <param name="logicalName">Logical Name of the Entity</param>
         /// <param name="defaultInfo">Default Primary Field Info</param>
         /// <returns></returns>
-        PrimaryFieldInfo GetIrregularPrimaryFieldInfo(string logicalName, PrimaryFieldInfo defaultInfo = null);
+        PrimaryFieldInfo? GetIrregularPrimaryFieldInfo(string logicalName, PrimaryFieldInfo? defaultInfo = null);
     }
 
     /// <summary>
@@ -61,7 +62,7 @@ namespace Source.DLaB.Xrm
         private static bool _searchedForConfig;
 
         // ReSharper disable once InconsistentNaming
-        private static IDLaBXrmConfig _dLaBConfig;
+        private static IDLaBXrmConfig? _dLaBConfig;
         private static readonly Lazy<IEntityHelperConfig> LazyEntityHelperConfig = new Lazy<IEntityHelperConfig>(CreateConfigInstance<IEntityHelperConfig>);
         private static readonly Lazy<ICacheConfig> LazyCacheConfig = new Lazy<ICacheConfig>(CreateConfigInstance<ICacheConfig>);
         /// <summary>
@@ -88,7 +89,7 @@ namespace Source.DLaB.Xrm
                 return (T)(object)new DefaultConfig();
             }
 
-            return (T)Activator.CreateInstance(configType, false);
+            return (T)Activator.CreateInstance(configType, false)!;
         }
 
         // ReSharper disable once InconsistentNaming
@@ -104,7 +105,7 @@ namespace Source.DLaB.Xrm
                 var dLaBConfig = typeof(IDLaBXrmConfig).GetFirstImplementation();
                 if (dLaBConfig != null)
                 {
-                    _dLaBConfig = (IDLaBXrmConfig) Activator.CreateInstance(dLaBConfig, false);
+                    _dLaBConfig = (IDLaBXrmConfig) Activator.CreateInstance(dLaBConfig, false)!;
                 }
                 _searchedForConfig = true;
             }
@@ -114,12 +115,12 @@ namespace Source.DLaB.Xrm
         {
             private static readonly MemoryCache Cache = new MemoryCache(typeof(DefaultConfig).FullName ?? "DLaB.Xrm.DefaultMemoryCache");
 
-            public string GetIrregularIdAttributeName(string logicalName)
+            public string? GetIrregularIdAttributeName(string logicalName)
             {
                 return null;
             }
 
-            public PrimaryFieldInfo GetIrregularPrimaryFieldInfo(string logicalName, PrimaryFieldInfo defaultInfo = null)
+            public PrimaryFieldInfo? GetIrregularPrimaryFieldInfo(string logicalName, PrimaryFieldInfo? defaultInfo = null)
             {
                 return null;
             }

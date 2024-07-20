@@ -43,9 +43,10 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// </returns>
         public static explicit operator KeyAttributeCollection(SerializableKeyAttributeCollection collection)
         {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (collection == null)
             {
-                return null;
+                return null!;
             }
             var xrmCollection = new KeyAttributeCollection();
             xrmCollection.AddRange(collection.Select(v => (KeyValuePair<string, object>)v));

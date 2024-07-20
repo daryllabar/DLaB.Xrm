@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,23 +28,23 @@ namespace Source.DLaB.Xrm.Plugin
         /// </value>
         protected List<string> EntityLogicalNames { get; set; }
         /// <summary>
-        /// Gets or sets the execute.
+        /// Gets or sets the execute action.
         /// </summary>
         /// <value>
         /// The execute.
         /// </value>
-        protected Action<IExtendedPluginContext> Execute { get; set; }
+        protected Action<IExtendedPluginContext>? Execute { get; set; }
         /// <summary>
         /// Gets or sets the name of the Execute method for logging purposes.
         /// </summary>
         /// <value>
         /// The name of the execute method.
         /// </value>
-        protected string ExecuteMethodName { get; set; }
+        protected string? ExecuteMethodName { get; set; }
         /// <summary>
         /// The Previous Builder if any.  This is set via the And() method
         /// </summary>
-        protected RegisteredEventBuilder PreviousBuilder { get; set; }
+        protected RegisteredEventBuilder? PreviousBuilder { get; set; }
         /// <summary>
         /// Gets or sets the message types.
         /// </summary>
@@ -61,7 +62,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <summary>
         /// Gets or sets the requirement validator.
         /// </summary>
-        protected IRequirementValidator RequirementValidator { get; set; }
+        protected IRequirementValidator? RequirementValidator { get; set; }
         /// <summary>
         /// Gets or sets the stage.
         /// </summary>
@@ -355,7 +356,7 @@ namespace Source.DLaB.Xrm.Plugin
                             logicalName => new RegisteredEvent(Stage, messageType, Execute, logicalName, Mode)
                             {
                                 AssertValidators = AssertValidators,
-                                ExecuteMethodName = ExecuteMethodName,
+                                ExecuteMethodName = ExecuteMethodName!,
                                 RequirementValidator = RequirementValidator
                             }));
                 }
@@ -365,7 +366,7 @@ namespace Source.DLaB.Xrm.Plugin
                         new RegisteredEvent(Stage, messageType, Execute, null, Mode)
                         {
                             AssertValidators = AssertValidators,
-                            ExecuteMethodName = ExecuteMethodName,
+                            ExecuteMethodName = ExecuteMethodName!,
                             RequirementValidator = RequirementValidator
                         });
                 }

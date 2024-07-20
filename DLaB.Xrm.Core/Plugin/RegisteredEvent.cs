@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,23 +84,23 @@ namespace Source.DLaB.Xrm.Plugin
         /// <value>
         /// The Requirement Validator.
         /// </value>
-        public IRequirementValidator RequirementValidator { get; set; }
+        public IRequirementValidator? RequirementValidator { get; set; }
         /// <summary>
         /// The logical entity name of the entity the plugin is executing for.
         /// </summary>
         /// <value>
         /// The name of the entity logical.
         /// </value>
-        public string EntityLogicalName { get; set; }
+        public string? EntityLogicalName { get; set; }
         /// <summary>
-        /// Gets or sets the execute.
+        /// Gets or sets the execute function.
         /// </summary>
         /// <value>
         /// The execute.
         /// </value>
-        public Action<IExtendedPluginContext> Execute { get; set; }
+        public Action<IExtendedPluginContext>? Execute { get; set; }
 
-        private string _executeMethodName;
+        private string? _executeMethodName;
         /// <summary>
         /// Gets or sets the Execute's Method Name for logging purposes.
         /// </summary>
@@ -107,8 +108,9 @@ namespace Source.DLaB.Xrm.Plugin
         /// The execute.
         /// </value>
         public string ExecuteMethodName {
-            get { return _executeMethodName ?? Execute?.Method.Name ?? "Execute"; }
-            set { _executeMethodName = value; } }
+            get => _executeMethodName ?? Execute?.Method.Name ?? "Execute";
+            set => _executeMethodName = value;
+        }
 
         /// <summary>
         /// Defaults the execute method to be InternalExecute and run against all entities.
@@ -131,7 +133,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="stage"></param>
         /// <param name="message"></param>
         /// <param name="execute"></param>
-        public RegisteredEvent(PipelineStage stage, MessageType message, Action<IExtendedPluginContext> execute) : this(stage, message, execute, null) { }
+        public RegisteredEvent(PipelineStage stage, MessageType message, Action<IExtendedPluginContext>? execute) : this(stage, message, execute, null) { }
 
         /// <summary>
         /// Runs against the specified entity
@@ -140,7 +142,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="message"></param>
         /// <param name="execute"></param>
         /// <param name="entityLogicalName"></param>
-        public RegisteredEvent(PipelineStage stage, MessageType message, Action<IExtendedPluginContext> execute, string entityLogicalName)
+        public RegisteredEvent(PipelineStage stage, MessageType message, Action<IExtendedPluginContext>? execute, string? entityLogicalName)
         {
             Stage = stage;
             EntityLogicalName = entityLogicalName;
@@ -156,7 +158,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="execute"></param>
         /// <param name="entityLogicalName"></param>
         /// <param name="mode"></param>
-        public RegisteredEvent(PipelineStage stage, MessageType message, Action<IExtendedPluginContext> execute, string entityLogicalName, int? mode)
+        public RegisteredEvent(PipelineStage stage, MessageType message, Action<IExtendedPluginContext>? execute, string? entityLogicalName, int? mode)
         {
             Stage = stage;
             EntityLogicalName = entityLogicalName;
@@ -172,7 +174,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns>
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
-        public virtual string ToString(string tab)
+        public virtual string ToString(string? tab)
         {
             tab = tab ?? string.Empty;
             var lines = new List<string>
@@ -220,7 +222,7 @@ namespace Source.DLaB.Xrm.Plugin
 
             if (invalidRequirement.ExceptionToThrow == null)
             {
-                throw invalidRequirement.ExceptionFactory(invalidRequirement.Validator.Reason, context);
+                throw invalidRequirement.ExceptionFactory!(invalidRequirement.Validator.Reason!, context);
             }
             else
             {

@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
@@ -18,7 +19,7 @@ namespace Source.DLaB.Xrm
         /// <value>
         /// The name of the attribute.
         /// </value>
-        public string AttributeName { get; set; }
+        public string? AttributeName { get; set; }
         /// <summary>
         /// Gets or sets the maximum length.
         /// </summary>

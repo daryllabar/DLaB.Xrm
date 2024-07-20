@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
@@ -27,7 +28,7 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static QueryExpression Create(string logicalName, params object[] columnNameAndValuePairs)
         {
-            return Create(new LateBoundQuerySettings(logicalName), columnNameAndValuePairs);
+            return Create(new LateBoundQuerySettings(logicalName), columnNameAndValuePairs)!;
         }
 
         /// <summary>
@@ -38,9 +39,9 @@ namespace Source.DLaB.Xrm
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
-        public static QueryExpression Create(string logicalName, ColumnSet columnSet, params object[] columnNameAndValuePairs)
+        public static QueryExpression Create(string logicalName, ColumnSet? columnSet, params object[] columnNameAndValuePairs)
         {
-            return Create(new LateBoundQuerySettings(logicalName) { Columns = columnSet }, columnNameAndValuePairs);
+            return Create(new LateBoundQuerySettings(logicalName) { Columns = columnSet }, columnNameAndValuePairs)!;
         }
 
         /// <summary>
@@ -48,27 +49,27 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="logicalName"></param>
         /// <param name="columnSet">Columns to retrieve.</param>
-        /// <param name="first">Used to specificy that only one entity should be returned.</param>
+        /// <param name="first">Used to specify that only one entity should be returned.</param>
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
-        public static QueryExpression Create(string logicalName, ColumnSet columnSet, bool first,
+        public static QueryExpression Create(string logicalName, ColumnSet? columnSet, bool first,
                 params object[] columnNameAndValuePairs)
         {
-            return Create(new LateBoundQuerySettings(logicalName) { Columns = columnSet, First = first }, columnNameAndValuePairs);
+            return Create(new LateBoundQuerySettings(logicalName) { Columns = columnSet, First = first }, columnNameAndValuePairs)!;
         }
 
         /// <summary>
         /// Returns a Query Expression for the given inputs
         /// </summary>
         /// <param name="columnSet">Columns to retrieve.</param>
-        /// <param name="first">Used to specificy that only one entity should be returned.</param>
+        /// <param name="first">Used to specify that only one entity should be returned.</param>
         /// <param name="logicalName"></param>
         /// <param name="activeOnly">Specifies if only Active Records should be returned.</param>
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
-        public static QueryExpression Create(string logicalName, bool activeOnly, ColumnSet columnSet, bool first,
+        public static QueryExpression Create(string logicalName, bool activeOnly, ColumnSet? columnSet, bool first,
                 params object[] columnNameAndValuePairs)
         {
             var qe = Create(new LateBoundQuerySettings(logicalName)
@@ -105,7 +106,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
-        public static TypedQueryExpression<T> Create<T>(ColumnSet columnSet, params object[] columnNameAndValuePairs) where T : Entity
+        public static TypedQueryExpression<T> Create<T>(ColumnSet? columnSet, params object[] columnNameAndValuePairs) where T : Entity
         {
             return Create(new QuerySettings<T> { Columns = columnSet }, columnNameAndValuePairs);
         }
@@ -136,7 +137,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
-        public static TypedQueryExpression<T> Create<T>(ColumnSet columnSet, bool first,
+        public static TypedQueryExpression<T> Create<T>(ColumnSet? columnSet, bool first,
                 params object[] columnNameAndValuePairs) where T : Entity
         {
             return Create(new QuerySettings<T> { Columns = columnSet, First = first }, columnNameAndValuePairs);
@@ -268,7 +269,7 @@ namespace Source.DLaB.Xrm
         /// <param name="values">The list of values to search for being in the column name.</param>
         public static QueryExpression CreateIn(string logicalName, string columnName, IEnumerable values)
         {
-            return CreateIn(new LateBoundQuerySettings(logicalName), columnName, values);
+            return CreateIn(new LateBoundQuerySettings(logicalName), columnName, values)!;
         }
 
         /// <summary>
@@ -279,7 +280,7 @@ namespace Source.DLaB.Xrm
         /// <param name="values">The list of values to search for being in the column name.</param>
         public static QueryExpression CreateIn(string logicalName, string columnName, params object[] values)
         {
-            return CreateIn(new LateBoundQuerySettings(logicalName), columnName, values);
+            return CreateIn(new LateBoundQuerySettings(logicalName), columnName, values)!;
         }
 
         /// <summary>
@@ -291,7 +292,7 @@ namespace Source.DLaB.Xrm
         /// <param name="values">The list of values to search for being in the column name.</param>
         public static QueryExpression CreateIn(string logicalName, ColumnSet columnSet, string columnName, IEnumerable values)
         {
-            return CreateIn(new LateBoundQuerySettings(logicalName) { Columns = columnSet }, columnName, values);
+            return CreateIn(new LateBoundQuerySettings(logicalName) { Columns = columnSet }, columnName, values)!;
         }
 
         /// <summary>
@@ -303,7 +304,7 @@ namespace Source.DLaB.Xrm
         /// <param name="values">The list of values to search for being in the column name.</param>
         public static QueryExpression CreateIn(string logicalName, ColumnSet columnSet, string columnName, params object[] values)
         {
-            return CreateIn(new LateBoundQuerySettings(logicalName) { Columns = columnSet }, columnName, values);
+            return CreateIn(new LateBoundQuerySettings(logicalName) { Columns = columnSet }, columnName, values)!;
         }
 
         /// <summary>
@@ -316,7 +317,7 @@ namespace Source.DLaB.Xrm
         /// <param name="values">The list of values to search for being in the column name.</param>
         public static QueryExpression CreateIn(string logicalName, ColumnSet columnSet, bool first, string columnName, IEnumerable values)
         {
-            return CreateIn(new LateBoundQuerySettings(logicalName) { Columns = columnSet, First = first }, columnName, values);
+            return CreateIn(new LateBoundQuerySettings(logicalName) { Columns = columnSet, First = first }, columnName, values)!;
         }
 
         /// <summary>
@@ -331,7 +332,7 @@ namespace Source.DLaB.Xrm
                 params object[] values)
            
         {
-            return CreateIn(new LateBoundQuerySettings(logicalName) { Columns = columnSet, First = first }, columnName, values);
+            return CreateIn(new LateBoundQuerySettings(logicalName) { Columns = columnSet, First = first }, columnName, values)!;
         }
 
 
@@ -339,7 +340,7 @@ namespace Source.DLaB.Xrm
         /// Returns a Query Expression for the given inputs
         /// </summary>
         /// <param name="columnSet">Columns to retrieve.</param>
-        /// <param name="first">Used to specificy that only one entity should be returned.</param>
+        /// <param name="first">Used to specify that only one entity should be returned.</param>
         /// <param name="logicalName"></param>
         /// <param name="activeOnly">Specifies if only Active Records should be returned.</param>
         /// <param name="columnName">The name of the column to perform the in against.</param>
@@ -360,7 +361,7 @@ namespace Source.DLaB.Xrm
         /// Returns a Query Expression for the given inputs
         /// </summary>
         /// <param name="columnSet">Columns to retrieve.</param>
-        /// <param name="first">Used to specificy that only one entity should be returned.</param>
+        /// <param name="first">Used to specify that only one entity should be returned.</param>
         /// <param name="logicalName"></param>
         /// <param name="activeOnly">Specifies if only Active Records should be returned.</param>
         /// <param name="columnName">The name of the column to perform the in against.</param>

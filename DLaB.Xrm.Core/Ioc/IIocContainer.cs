@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 namespace DLaB.Xrm.Ioc
@@ -61,7 +62,7 @@ namespace Source.DLaB.Xrm.Ioc
         /// <param name="actualProvider">The Provider</param>
         /// <param name="defaultLifetime">The lifetime to use for any registrations being added by the serice provider.</param>
         /// <returns></returns>
-        IServiceProvider BuildServiceProvider(IServiceProvider actualProvider = null, Lifetime defaultLifetime = Lifetime.Scoped);
+        IServiceProvider BuildServiceProvider(IServiceProvider? actualProvider = null, Lifetime defaultLifetime = Lifetime.Scoped);
 
         /// <summary>
         /// Determines if the given type is registered.

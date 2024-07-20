@@ -1,3 +1,4 @@
+#nullable enable
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
@@ -25,7 +26,7 @@ namespace Source.DLaB.Xrm
         /// <param name="id">Id of the entity to search for.</param>
         /// <param name="columnSet">Columns to retrieve.</param>
         /// <returns></returns>
-        public static Entity GetEntityOrDefault(this IOrganizationService service, string logicalName, Guid id, ColumnSet columnSet = null)
+        public static Entity? GetEntityOrDefault(this IOrganizationService service, string logicalName, Guid id, ColumnSet? columnSet = null)
         {
             var idName = EntityHelper.GetIdAttributeName(logicalName);
             return columnSet == null 
@@ -42,7 +43,7 @@ namespace Source.DLaB.Xrm
         /// <param name="anonymousTypeInitializer">An Anonymous Type Initializer where the properties of the anonymous
         /// type are the column names to add.</param>
         /// <returns></returns>
-        public static T GetEntityOrDefault<T>(this IOrganizationService service, Guid id, Expression<Func<T, object>> anonymousTypeInitializer = null) where T : Entity
+        public static T? GetEntityOrDefault<T>(this IOrganizationService service, Guid id, Expression<Func<T, object>>? anonymousTypeInitializer = null) where T : Entity
         {
             var idName = EntityHelper.GetIdAttributeName<T>();
             return anonymousTypeInitializer == null 
@@ -60,7 +61,7 @@ namespace Source.DLaB.Xrm
         /// <param name="kvps">the KeyAttributes Collection</param>
         /// <param name="columnSet">Columns to retrieve.</param>
         /// <returns></returns>
-        public static Entity GetEntityOrDefault(this IOrganizationService service, string logicalName, KeyAttributeCollection kvps, ColumnSet columnSet = null)
+        public static Entity? GetEntityOrDefault(this IOrganizationService service, string logicalName, KeyAttributeCollection kvps, ColumnSet? columnSet = null)
         {
             if(kvps.Count == 0)
             {
@@ -96,7 +97,7 @@ namespace Source.DLaB.Xrm
         /// <param name="kvps">the KeyAttributes Collection</param>
         /// <param name="anonymousTypeInitializer">An Anonymous Type Initializer where the properties of the anonymous</param>
         /// <returns></returns>
-        public static T GetEntityOrDefault<T>(this IOrganizationService service, KeyAttributeCollection kvps, Expression<Func<T, object>> anonymousTypeInitializer = null) where T : Entity
+        public static T? GetEntityOrDefault<T>(this IOrganizationService service, KeyAttributeCollection kvps, Expression<Func<T, object>>? anonymousTypeInitializer = null) where T : Entity
         {
             var logicalName = EntityHelper.GetEntityLogicalName<T>();
             var cs = anonymousTypeInitializer == null

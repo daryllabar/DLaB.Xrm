@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿#nullable enable
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
+using System.Collections.Generic;
 #if DLAB_UNROOT_COMMON_NAMESPACE
-using DLaB.Common.Exceptions;
 #else
 using Source.DLaB.Common.Exceptions;
 #endif
@@ -35,7 +32,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        TEntity GetCurrentValue(TEntity entity);
+        TEntity? GetCurrentValue(TEntity entity);
         /// <summary>
         /// Called prior to a full update.
         /// </summary>

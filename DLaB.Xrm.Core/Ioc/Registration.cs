@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 namespace DLaB.Xrm.Ioc
@@ -18,15 +19,15 @@ namespace Source.DLaB.Xrm.Ioc
         /// <summary>
         /// The type to be created.
         /// </summary>
-        public Type Type { get; set; }
+        public Type? Type { get; set; }
         /// <summary>
         /// Factory method to create the instance.
         /// </summary>
-        public Func<IServiceProvider, object> Factory { get; set; }
+        public Func<IServiceProvider, object>? Factory { get; set; }
         /// <summary>
         /// The instance to be used.
         /// </summary>
-        public object Instance { get; set; }
+        public object? Instance { get; set; }
 
         /// <summary>
         /// Creates a registration.
@@ -36,7 +37,7 @@ namespace Source.DLaB.Xrm.Ioc
         /// <param name="factory">The function factory to call to create the type.  If not null, type is not required.</param>
         /// <param name="instance">If not null, the lifetime must be Singleton and the type is not required.</param>
         /// <exception cref="Exception"></exception>
-        public Registration(Type type = null, Lifetime lifetime = Lifetime.Scoped, Func<IServiceProvider, object> factory = null, object instance = null)
+        public Registration(Type? type = null, Lifetime lifetime = Lifetime.Scoped, Func<IServiceProvider, object>? factory = null, object? instance = null)
         {
             if (instance != null && lifetime != Lifetime.Singleton)
             {
@@ -51,7 +52,8 @@ namespace Source.DLaB.Xrm.Ioc
                 {
                     throw new Exception($@"Either {nameof(type)} or {nameof(factory)} or {nameof(instance)} must not be null!");
                 }
-                else if (type.IsInterface)
+                
+                if (type.IsInterface)
                 {
                     throw new Exception($@"Implementation Type ({type.FullName}) must not be an interface!");
                 }
@@ -68,7 +70,7 @@ namespace Source.DLaB.Xrm.Ioc
         /// </summary>
         /// <param name="obj">The object to compare with the current object.</param>
         /// <returns>True if the specified object is equal to the current object; otherwise, false.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null || GetType() != obj.GetType())
             {
@@ -104,7 +106,7 @@ namespace Source.DLaB.Xrm.Ioc
             unchecked
             {
                 var hash = 17;
-                hash = hash * 23 + Type.GetHashCode();
+                hash = hash * 23 + Type?.GetHashCode() ?? 0;
                 hash = hash * 23 + Lifetime.GetHashCode();
 
                 if (Factory != null)

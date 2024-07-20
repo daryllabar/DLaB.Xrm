@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using Microsoft.Xrm.Sdk.Query;
@@ -24,7 +25,7 @@ namespace Source.DLaB.Xrm.Comparers
         /// <param name="condition1">The condition1.</param>
         /// <param name="condition2">The condition2.</param>
         /// <returns></returns>
-        public bool Equals(ConditionExpression condition1, ConditionExpression condition2)
+        public bool Equals(ConditionExpression? condition1, ConditionExpression? condition2)
         {
             if (condition1 == condition2) { return true; }
             if (condition1 == null || condition2 == null) { return false; }

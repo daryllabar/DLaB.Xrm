@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace Source.DLaB.Xrm
             var field = type.GetField("EntityLogicalName");
             if (field != null)
             {
-                return (string) field.GetValue(null);
+                return (string) field.GetValue(null)!;
             }
             if (type == typeof(Entity))
             {
@@ -84,7 +85,7 @@ namespace Source.DLaB.Xrm
                 throw new Exception("Must pass in a derived type from Microsoft.Xrm.Sdk.Client.OrganizationServiceContext");
             }
 
-            return GetType(contextType.Assembly, contextType.Namespace, entityLogicalName);
+            return GetType(contextType.Assembly, contextType.Namespace!, entityLogicalName);
         }
 
         private static readonly ConcurrentDictionary<string, Dictionary<string, Type>> Cache = new ConcurrentDictionary<string, Dictionary<String, Type>>();
@@ -112,7 +113,7 @@ namespace Source.DLaB.Xrm
                     ToDictionary(v => v.Key, v => v.Value);
             });
 
-            if (!mappings.TryGetValue(entityLogicalName, out Type otherType))
+            if (!mappings.TryGetValue(entityLogicalName, out Type? otherType))
             {
                 throw new Exception($"Unable to find a Type in assembly \"{earlyBoundAssembly.FullName}\", namespace \"{@namespace}\", with a logical name of \"{entityLogicalName}\"");
             }
@@ -135,7 +136,7 @@ namespace Source.DLaB.Xrm
                 throw new Exception("Must pass in a derived type from Microsoft.Xrm.Sdk.Client.OrganizationServiceContext");
             }
 
-            return IsTypeDefined(contextType.Assembly, contextType.Namespace, entityLogicalName);
+            return IsTypeDefined(contextType.Assembly, contextType.Namespace!, entityLogicalName);
         }
 
         /// <summary>
@@ -174,7 +175,7 @@ namespace Source.DLaB.Xrm
         /// <param name="logicalName"></param>
         /// <param name="config"></param>
         /// <returns></returns>
-        public static string GetIdAttributeName(string logicalName, IEntityHelperConfig config = null)
+        public static string GetIdAttributeName(string logicalName, IEntityHelperConfig? config = null)
         {
             return GetIrregularIdAttributeName(logicalName, config) ?? logicalName + "id";
         }
@@ -206,13 +207,13 @@ namespace Source.DLaB.Xrm
                           ?.GetCustomAttribute<AttributeLogicalNameAttribute>()?.LogicalName;
             if (!string.IsNullOrWhiteSpace(idName))
             {
-                return idName;
+                return idName!;
             }
 
             var field = type.GetField("EntityLogicalName");
             if (field != null)
             {
-                return (string)field.GetValue(null);
+                return (string)field.GetValue(null)!;
             }
             if (type == typeof(Entity))
             {
@@ -230,9 +231,9 @@ namespace Source.DLaB.Xrm
         /// <param name="logicalName"></param>
         /// <param name="config"></param>
         /// <returns></returns>
-        public static string GetIrregularIdAttributeName(string logicalName, IEntityHelperConfig config = null)
+        public static string? GetIrregularIdAttributeName(string logicalName, IEntityHelperConfig? config = null)
         {
-            string name;
+            string? name;
 
             switch (logicalName)
             {
@@ -267,7 +268,7 @@ namespace Source.DLaB.Xrm
         /// <typeparam name="T">Entity Type to use Reflection to lookup the entity logical name for</typeparam>
         /// <param name="config">Interface for handling irregular primary attribute names.</param>
         /// <returns></returns>
-        public static string GetIrregularIdAttributeName<T>(IEntityHelperConfig config = null) where T : Entity
+        public static string? GetIrregularIdAttributeName<T>(IEntityHelperConfig? config = null) where T : Entity
         {
             return GetIrregularIdAttributeName(GetEntityLogicalName<T>(), config);
         }
@@ -282,7 +283,7 @@ namespace Source.DLaB.Xrm
         /// <param name="logicalName">Name of the logical.</param>
         /// <param name="config">Interface for handling irregular primary attribute names.</param>
         /// <returns></returns>
-        public static PrimaryFieldInfo GetPrimaryFieldInfo(string logicalName, IEntityHelperConfig config = null)
+        public static PrimaryFieldInfo GetPrimaryFieldInfo(string logicalName, IEntityHelperConfig? config = null)
         {
             var info = new PrimaryFieldInfo();
                 switch (logicalName)
@@ -538,13 +539,13 @@ namespace Source.DLaB.Xrm
                                                           .FirstOrDefault(a => a.LogicalName == "customerid") != null);
             if (customerId != null)
             {
-                return customerId.GetAttributeLogicalName();
+                return customerId.GetAttributeLogicalName()!;
             }
             if (possibleProperties.Count == 0)
             {
                 throw new Exception($"No Property found for type {childType.FullName}, of type {parentType.FullName}.");
             }
-            return possibleProperties.First().GetAttributeLogicalName();
+            return possibleProperties.First().GetAttributeLogicalName()!;
         }
 
         /// <summary>

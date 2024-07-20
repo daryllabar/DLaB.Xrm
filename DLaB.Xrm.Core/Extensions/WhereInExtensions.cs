@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -396,7 +397,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnName">The name of the column to perform the in against.</param>
         /// <param name="values">The list of values to search for being in the column name.</param>
         /// <returns></returns>
-        public static T GetFirstOrDefaultIn<T>(this IOrganizationService service,
+        public static T? GetFirstOrDefaultIn<T>(this IOrganizationService service,
                 string columnName, IEnumerable values) where T : Entity
         {
             var settings = new QuerySettings<T> { First = true };
@@ -412,7 +413,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnName">The name of the column to perform the in against.</param>
         /// <param name="values">The list of values to search for being in the column name.</param>
         /// <returns></returns>
-        public static T GetFirstOrDefaultIn<T>(this IOrganizationService service,
+        public static T? GetFirstOrDefaultIn<T>(this IOrganizationService service,
                 string columnName, params object[] values) where T : Entity
         {
             var settings = new QuerySettings<T> { First = true };
@@ -430,7 +431,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnName">The name of the column to perform the in against.</param>
         /// <param name="values">The list of values to search for being in the column name.</param>
         /// <returns></returns>
-        public static T GetFirstOrDefaultIn<T>(this IOrganizationService service, 
+        public static T? GetFirstOrDefaultIn<T>(this IOrganizationService service, 
                 Expression<Func<T, object>> anonymousTypeInitializer, string columnName, IEnumerable values)
             where T : Entity
         {
@@ -448,7 +449,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnName">The name of the column to perform the in against.</param>
         /// <param name="values">The list of values to search for being in the column name.</param>
         /// <returns></returns>
-        public static T GetFirstOrDefaultIn<T>(this IOrganizationService service, ColumnSet columnSet,
+        public static T? GetFirstOrDefaultIn<T>(this IOrganizationService service, ColumnSet columnSet,
                 string columnName, IEnumerable values) where T : Entity
         {
             var settings = new QuerySettings<T> { Columns = columnSet, First = true };
@@ -466,7 +467,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnName">The name of the column to perform the in against.</param>
         /// <param name="values">The list of values to search for being in the column name.</param>
         /// <returns></returns>
-        public static T GetFirstOrDefaultIn<T>(this IOrganizationService service, 
+        public static T? GetFirstOrDefaultIn<T>(this IOrganizationService service, 
                 Expression<Func<T, object>> anonymousTypeInitializer, string columnName, params object[] values)
             where T : Entity
         {
@@ -484,7 +485,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnName">The name of the column to perform the in against.</param>
         /// <param name="values">The list of values to search for being in the column name.</param>
         /// <returns></returns>
-        public static T GetFirstOrDefaultIn<T>(this IOrganizationService service, ColumnSet columnSet,
+        public static T? GetFirstOrDefaultIn<T>(this IOrganizationService service, ColumnSet columnSet,
                 string columnName, params object[] values) where T : Entity
         {
             var settings = new QuerySettings<T> { Columns = columnSet, First = true };

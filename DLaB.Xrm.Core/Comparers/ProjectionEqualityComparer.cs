@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 #if DLAB_UNROOT_COMMON_NAMESPACE
@@ -69,7 +70,7 @@ namespace Source.DLaB.Xrm.Comparers
     /// </summary>
     /// <typeparam name="TSource">The type of the source.</typeparam>
     /// <typeparam name="TKey">The type of the key.</typeparam>
-    public class ProjectionEqualityComparer<TSource, TKey>
+    public class ProjectionEqualityComparer<TSource, TKey> 
         : IEqualityComparer<TSource>
     {
         readonly Func<TSource, TKey> _projection;
@@ -91,7 +92,7 @@ namespace Source.DLaB.Xrm.Comparers
         /// <param name="comparer">The comparer.</param>
         public ProjectionEqualityComparer(
             Func<TSource, TKey> projection,
-            IEqualityComparer<TKey> comparer)
+            IEqualityComparer<TKey>? comparer)
         {
             projection.ThrowIfNull("projection");
             _comparer = comparer ?? EqualityComparer<TKey>.Default;
@@ -104,7 +105,7 @@ namespace Source.DLaB.Xrm.Comparers
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        public bool Equals(TSource x, TSource y)
+        public bool Equals(TSource? x, TSource? y)
         {
             // ReSharper disable CompareNonConstrainedGenericWithNull
             if (x == null && y == null)
@@ -133,9 +134,9 @@ namespace Source.DLaB.Xrm.Comparers
             // ReSharper disable once CompareNonConstrainedGenericWithNull
             if (obj == null)
             {
-                throw new ArgumentNullException("obj");
+                throw new ArgumentNullException(nameof(obj));
             }
-            return _comparer.GetHashCode(_projection(obj));
+            return _comparer.GetHashCode(_projection(obj)!);
         }
     }
 }

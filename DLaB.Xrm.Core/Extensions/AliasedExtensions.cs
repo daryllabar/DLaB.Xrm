@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace Source.DLaB.Xrm
         /// <param name="attributeName">The logical name of the attribute of the aliased value</param>
         /// <param name="value">The Value to store in the aliased value</param>
         /// <param name="formattedValue">The formatted value</param>
-        public static void AddAliasedValue(this Entity entity, string logicalName, string attributeName, object value, string formattedValue = null)
+        public static void AddAliasedValue(this Entity entity, string logicalName, string attributeName, object value, string? formattedValue = null)
         {
             entity.AddAliasedValue(null, logicalName, attributeName, value, formattedValue);
         }
@@ -56,7 +57,7 @@ namespace Source.DLaB.Xrm
         /// <param name="attributeName">The logical name of the attribute of the aliased value</param>
         /// <param name="value">The Value to store in the aliased value</param>
         /// <param name="formattedValue">The formatted value</param>
-        public static void AddAliasedValue(this Entity entity, string aliasName, string logicalName, string attributeName, object value, string formattedValue = null)
+        public static void AddAliasedValue(this Entity entity, string? aliasName, string logicalName, string attributeName, object value, string? formattedValue = null)
         {
             aliasName = aliasName ?? logicalName;
             var name = aliasName + "." + attributeName;
@@ -78,7 +79,7 @@ namespace Source.DLaB.Xrm
         /// <param name="attributeName">The logical name of the attribute of the aliased value</param>
         /// <param name="value">The Value to store in the aliased value</param>
         /// <param name="formattedValue">The formatted value</param>
-        public static void AddOrReplaceAliasedValue(this Entity entity, string logicalName, string attributeName, object value, string formattedValue = null)
+        public static void AddOrReplaceAliasedValue(this Entity entity, string logicalName, string attributeName, object value, string? formattedValue = null)
         {
             // Check for value already existing
             foreach (var attribute in entity.Attributes.Where(a => a.Value is AliasedValue))
@@ -119,7 +120,7 @@ namespace Source.DLaB.Xrm
         /// <param name="entity">The entity.</param>
         /// <param name="aliasedEntityName">Name of the aliased entity.</param>
         /// <returns></returns>
-        public static T GetAliasedEntity<T>(this Entity entity, string aliasedEntityName) where T : Entity, new()
+        public static T GetAliasedEntity<T>(this Entity entity, string? aliasedEntityName) where T : Entity, new()
         {
             var entityLogicalName = EntityHelper.GetEntityLogicalName<T>();
             var aliasedEntity = new T();
@@ -181,7 +182,7 @@ namespace Source.DLaB.Xrm
         /// <param name="attributeName">The aliased attribute from the linked entity.  Can be prepended with the
         /// linked entities logical name and a period. ie "Contact.LastName"</param>
         /// <returns></returns>
-        public static T GetAliasedValue<T>(this Entity entity, string attributeName)
+        public static T? GetAliasedValue<T>(this Entity entity, string attributeName)
         {
             var aliasedEntityName = SplitAliasedAttributeEntityName(ref attributeName);
 
@@ -243,7 +244,7 @@ namespace Source.DLaB.Xrm
 
         #region Helpers
 
-        private static bool IsSpecifiedAliasedValue(this KeyValuePair<string, object> entry, string aliasedEntityName, string attributeName)
+        private static bool IsSpecifiedAliasedValue(this KeyValuePair<string, object> entry, string? aliasedEntityName, string attributeName)
         {
             if (!(entry.Value is AliasedValue aliased))
             {
@@ -274,9 +275,9 @@ namespace Source.DLaB.Xrm
         /// updating the attribute name and returning the aliased EntityName
         /// </summary>
         /// <param name="attributeName"></param>
-        private static string SplitAliasedAttributeEntityName(ref string attributeName)
+        private static string? SplitAliasedAttributeEntityName(ref string attributeName)
         {
-            string aliasedEntityName = null;
+            string? aliasedEntityName = null;
             if (attributeName.Contains('.'))
             {
                 var split = attributeName.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);

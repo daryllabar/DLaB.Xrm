@@ -1,14 +1,16 @@
 ﻿#if NET
+extern alias DLaBXrm;
 using DataverseUnitTest;
+using DLaBXrm::DLaB.Xrm.Comparers;
 #else
 using DLaB.Xrm.Test;
+using Source.DLaB.Xrm.Comparers;
+using Source.DLaB.Xrm;
 #endif
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
-using Source.DLaB.Xrm.Comparers;
 using System;
 using System.Collections.Generic;
-using Source.DLaB.Xrm;
 
 namespace DLaB.Xrm.Tests.Core.Comparers
 {

@@ -620,7 +620,7 @@ namespace Source.DLaB.Xrm
         /// <param name="logicalName">Logical Name of the Entity:</param>
         /// <param name="columnNameAndValuePairs"></param>
         /// <returns></returns>
-        public static Entity GetFirstOrDefault(this IOrganizationService service, string logicalName, params object[] columnNameAndValuePairs)
+        public static Entity? GetFirstOrDefault(this IOrganizationService service, string logicalName, params object[] columnNameAndValuePairs)
         {
             var settings = new LateBoundQuerySettings(logicalName);
             return service.RetrieveMultiple(settings.CreateExpression(columnNameAndValuePairs)).Entities.FirstOrDefault();
@@ -637,7 +637,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static Entity GetFirstOrDefault(this IOrganizationService service, string logicalName, ColumnSet columnSet,
+        public static Entity? GetFirstOrDefault(this IOrganizationService service, string logicalName, ColumnSet columnSet,
                 params object[] columnNameAndValuePairs)
         {
             var settings = new LateBoundQuerySettings(logicalName)

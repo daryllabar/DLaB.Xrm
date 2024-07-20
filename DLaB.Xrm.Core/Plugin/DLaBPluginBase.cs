@@ -1,3 +1,4 @@
+#nullable enable
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 using DLaB.Xrm.Ioc;
 
@@ -15,7 +16,7 @@ namespace Source.DLaB.Xrm.Plugin
     public abstract class DLaBPluginBase: DLaBGenericPluginBase<IExtendedPluginContext>
     {
         /// <inheritdoc />
-        protected DLaBPluginBase(string unsecureConfig, string secureConfig, IIocContainer container = null): base(unsecureConfig, secureConfig, container)
+        protected DLaBPluginBase(string? unsecureConfig, string? secureConfig, IIocContainer? container = null): base(unsecureConfig, secureConfig, container)
         {
         }
     }

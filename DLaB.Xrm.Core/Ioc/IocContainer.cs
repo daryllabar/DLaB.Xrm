@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
@@ -181,7 +182,7 @@ namespace Source.DLaB.Xrm.Ioc
         /// <inheritdoc />
         public IIocContainer AddSingleton<TService>(TService implementationInstance)
         {
-            return AddSingleton(typeof(TService), implementationInstance);
+            return AddSingleton(typeof(TService), implementationInstance!);
         }
 
         /// <inheritdoc />
@@ -248,7 +249,7 @@ namespace Source.DLaB.Xrm.Ioc
 
 
         /// <inheritdoc />
-        public IServiceProvider BuildServiceProvider(IServiceProvider fallbackProvider = null, Lifetime defaultLifetime = Lifetime.Scoped)
+        public IServiceProvider BuildServiceProvider(IServiceProvider? fallbackProvider = null, Lifetime defaultLifetime = Lifetime.Scoped)
         {
             return new ScopedServiceProvider(fallbackProvider, _registrations, _instances)
             {

@@ -18,10 +18,10 @@
     </contentFiles>
     <dependencies>
       <group targetFramework="net">
-        <dependency id="DLaB.Common.Source" version="1.4.*" include="all" />
+        <dependency id="DLaB.Common.Source" version="1.5.*" include="all" />
       </group>
       <group targetFramework="netcoreapp">
-        <dependency id="DLaB.Common.Source" version="1.4.*" include="all" />
+        <dependency id="DLaB.Common.Source" version="1.5.*" include="all" />
         <dependency id="System.Configuration.ConfigurationManager" version="8.0.0" />
       </group>
     </dependencies>
@@ -32,34 +32,7 @@
       <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework="net" />
     </frameworkAssemblies>
   </metadata>
-  <files>
-    <file src="..\DLaB.Xrm.Core\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.15" />
-    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.15\Comparers" />
-    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.15\Exceptions" />
-    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.15\Extensions" />
-    <file src="..\DLaB.Xrm.Core\Ioc\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.15\Ioc" />
-    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.15\Plugin" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.15\Sandbox" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="content\App_Packages\DLaB.Xrm.Source.4.1.0.15\Serialization" />
-
-    <file src="..\DLaB.Xrm.Core\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.15" />
-    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.15\Comparers" />
-    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.15\Exceptions" />
-    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.15\Extensions" />
-    <file src="..\DLaB.Xrm.Core\Ioc\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.15\Ioc" />
-    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.15\Plugin" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.15\Sandbox" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="contentFiles\cs\netcoreapp\DLaB.Xrm.Source.4.1.0.15\Serialization" />
-
-    <file src="..\DLaB.Xrm.Core\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.15" />
-    <file src="..\DLaB.Xrm.Core\Comparers\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.15\Comparers" />
-    <file src="..\DLaB.Xrm.Core\Exceptions\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.15\Exceptions" />
-    <file src="..\DLaB.Xrm.Core\Extensions\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.15\Extensions" />
-    <file src="..\DLaB.Xrm.Core\Ioc\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.15\Ioc" />
-    <file src="..\DLaB.Xrm.Core\Plugin\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.15\Plugin" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.15\Sandbox" />
-    <file src="..\DLaB.Xrm.Core\Sandbox\Serialization\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Source.4.1.0.15\Serialization" />
-		
+  <files>		
     <file src="..\Icon.64x64.png" target="images\" />
   </files>
 </package>

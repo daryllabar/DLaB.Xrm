@@ -10,6 +10,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ActivityPropertyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Async\ByIdExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Async\DeleteExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Async\ExtendedOrganizationServiceAsync.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Async\ExtendedOrganizationServiceAsyncSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Async\GetAllExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Async\OrganizationServiceExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Async\OrganizationServiceFileColumnExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Async\RetrieveAllEntitiesAsync.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Async\TaskExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Async\WhereEqualExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Async\WhereInExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\AttributeComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\ColumnSetComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\ConditionExpressionComparer.cs" />

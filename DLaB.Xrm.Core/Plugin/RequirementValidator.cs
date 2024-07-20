@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿#nullable enable
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Linq.Expressions;
 using Microsoft.Xrm.Sdk.Query;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
+
 using DLaB.Common;
 using DLaB.Xrm.Comparers;
 
@@ -27,7 +29,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <summary>
         /// The reason why the requirement was not met.  SkipExecution must be called first.
         /// </summary>
-        public InvalidRequirementReason Reason { get; protected set; }
+        public InvalidRequirementReason? Reason { get; protected set; }
 
         /// <summary>
         /// Returns true if the context does not meet the requirements for execution
@@ -734,7 +736,7 @@ namespace Source.DLaB.Xrm.Plugin
             public EntityList UpdatedToValues { get; } = new EntityList();
             public EntityOrList UpdatedToOrValues { get; } = new EntityOrList();
             
-            public InvalidRequirementReason Reason { get; private set; }
+            public InvalidRequirementReason? Reason { get; private set; }
 
             private bool IsPreImageRequired { get; set; } = true;
 
@@ -754,16 +756,21 @@ namespace Source.DLaB.Xrm.Plugin
                 var service = context.SystemOrganizationService;
                 AssertHasPreImageIfRequired(service, preImage);
 
+                if(entity == null)
+                {
+                    throw new Exception($"A Requirement has been defined for entity of type {EntityType} but the entity type was not found in the context.");
+                }
+
                 return SkipExecution(context, entity, RequiredColumns, RequiredOrColumns, checkNotNull: true)
                        || SkipExecution(context, entity, RequiredColumnsAllowNulls, RequiredOrColumnsAllowNulls, checkNotNull: false)
                        || SkipMissing(context, entity, MissingColumns, MissingOrColumns, allowNull: false)
                        || SkipMissing(context, entity, MissingColumnsAllowNulls, MissingOrColumnsAllowNulls, allowNull: true)
                        || SkipNonNullExecution(context, entity, RequiredNullColumns, RequiredNullOrColumns)
                        || SkipValueExecution(context, entity, ContainedValues.GetValues(service), ContainedOrValues.GetValues())
-                       || SkipExecutionForUpdate(context, entity, preImage, UpdatedColumns, UpdatedOrColumns, checkNotNull: true)
-                       || SkipExecutionForUpdate(context, entity, preImage, UpdatedColumnsAllowNulls, UpdatedOrColumnsAllowNulls, checkNotNull: false)
-                       || SkipNonNullExecutionForUpdate(context, entity, preImage, UpdatedNullColumns, UpdatedNullOrColumns)
-                       || SkipValueExecutionForUpdate(context, entity, preImage, UpdatedToValues.GetValues(service), UpdatedToOrValues.GetValues());
+                       || SkipExecutionForUpdate(context, entity, preImage!, UpdatedColumns, UpdatedOrColumns, checkNotNull: true)
+                       || SkipExecutionForUpdate(context, entity, preImage!, UpdatedColumnsAllowNulls, UpdatedOrColumnsAllowNulls, checkNotNull: false)
+                       || SkipNonNullExecutionForUpdate(context, entity, preImage!, UpdatedNullColumns, UpdatedNullOrColumns)
+                       || SkipValueExecutionForUpdate(context, entity, preImage!, UpdatedToValues.GetValues(service), UpdatedToOrValues.GetValues());
             }
 
             private bool SkipExecution(IExtendedPluginContext context, Entity entity, HashSet<string> allColumns, List<List<string>> atLeastOneColumns, bool checkNotNull)
@@ -1062,7 +1069,7 @@ namespace Source.DLaB.Xrm.Plugin
                     && ColumnValueHasChanged(service, target, preImage, att.Key));
             }
 
-            private void AssertHasPreImageIfRequired(IOrganizationService service, Entity preImage)
+            private void AssertHasPreImageIfRequired(IOrganizationService service, Entity? preImage)
             {
                 if (preImage != null
                     || !IsPreImageRequired)
@@ -1341,9 +1348,9 @@ namespace Source.DLaB.Xrm.Plugin
                 return !AttributeComparer.ValuesAreEqual(service, target[column], preImage.Contains(column) ? preImage[column] : null);
             }
 
-            private Entity GetEntity(IExtendedPluginContext context)
+            private Entity? GetEntity(IExtendedPluginContext context)
             {
-                Entity entity;
+                Entity? entity;
                 switch (EntityType)
                 {
                     case ContextEntity.CoalesceTargetPostImage:
@@ -1363,7 +1370,7 @@ namespace Source.DLaB.Xrm.Plugin
                         throw new ArgumentOutOfRangeException();
                 }
 
-                if (entity == null )
+                if (entity == null)
                 {
                     throw new Exception($"A Requirement has been defined for entity of type {EntityType} but the entity type was not found in the context.");
                 }
@@ -1374,7 +1381,7 @@ namespace Source.DLaB.Xrm.Plugin
 
         private class EntityList: EntityListBase
         {
-            private Dictionary<string, object> Values { get; set; }
+            private Dictionary<string, object> Values { get; set; } = null!;
 
             public Dictionary<string, object> GetValues(IOrganizationService service)
             {
@@ -1407,7 +1414,7 @@ namespace Source.DLaB.Xrm.Plugin
 
         private class EntityOrList : EntityListBase
         {
-            private List<Dictionary<string, object>> Values { get; set; }
+            private List<Dictionary<string, object>> Values { get; set; } = null!;
 
             public List<Dictionary<string, object>> GetValues()
             {

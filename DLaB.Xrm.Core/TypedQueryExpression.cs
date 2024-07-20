@@ -152,7 +152,10 @@ namespace Source.DLaB.Xrm
         /// </returns>
         public static implicit operator QueryExpression(TypedQueryExpression<TEntity> container)
         {
-            return container?.Query;
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            return container == null
+                ? null!
+                : container.Query;
         }
 
         #endregion Type Conversions

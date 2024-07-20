@@ -1,4 +1,5 @@
-﻿#if !PRE_MULTISELECT
+﻿#nullable enable
+#if !PRE_MULTISELECT
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using System;
@@ -6,11 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-
-#if DLAB_UNROOT_COMMON_NAMESPACE
-using DLaB.Common;
-#else
-#endif
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 
 namespace DLaB.Xrm
@@ -82,7 +78,7 @@ namespace Source.DLaB.Xrm
         /// <param name="fileInfo">Information about the file or image to upload.</param>
         /// <param name="fileMimeType">The mime type of the file or image, if known.</param>
         /// <returns></returns>
-        public static CommitFileBlocksUploadResponse UploadFile(this IOrganizationService service, EntityReference entityReference, string fileAttributeName, FileInfo fileInfo, string fileMimeType = null)
+        public static CommitFileBlocksUploadResponse UploadFile(this IOrganizationService service, EntityReference entityReference, string fileAttributeName, FileInfo fileInfo, string? fileMimeType = null)
         {
             var initResponse = (InitializeFileBlocksUploadResponse)service.Execute(new InitializeFileBlocksUploadRequest()
             {
@@ -97,7 +93,7 @@ namespace Source.DLaB.Xrm
             }
         }
 
-        private static CommitFileBlocksUploadResponse UploadStream(IOrganizationService service, string fileName, Stream uploadFileStream, string fileContinuationToken, string fileMimeType)
+        private static CommitFileBlocksUploadResponse UploadStream(IOrganizationService service, string fileName, Stream uploadFileStream, string fileContinuationToken, string? fileMimeType)
         {
             var blockIds = new List<string>();
             var buffer = new byte[_4MB];
@@ -153,7 +149,7 @@ namespace Source.DLaB.Xrm
         /// <param name="fileData">The byte array containing the file or image data to upload.</param>
         /// <param name="fileMimeType">The mime type of the file or image, if known.</param>
         /// <returns></returns>
-        public static CommitFileBlocksUploadResponse UploadFile(this IOrganizationService service, EntityReference entityReference, string fileAttributeName, string fileName, byte[] fileData, string fileMimeType = null)
+        public static CommitFileBlocksUploadResponse UploadFile(this IOrganizationService service, EntityReference entityReference, string fileAttributeName, string fileName, byte[] fileData, string? fileMimeType = null)
         {
             var initResponse = (InitializeFileBlocksUploadResponse)service.Execute(new InitializeFileBlocksUploadRequest()
             {
@@ -573,12 +569,12 @@ namespace Source.DLaB.Xrm
             /// <summary>
             /// Given a file path, determine the MIME type
             /// </summary>
-            /// <param name="subpath">A file path</param>
+            /// <param name="subPath">A file path</param>
             /// <param name="contentType">The resulting MIME type</param>
             /// <returns>True if MIME type could be determined</returns>
-            public bool TryGetContentType(string subpath, out string contentType)
+            public bool TryGetContentType(string subPath, out string? contentType)
             {
-                var extension = GetExtension(subpath);
+                var extension = GetExtension(subPath);
                 if (extension != null)
                 {
                     return Mappings.TryGetValue(extension, out contentType);
@@ -587,7 +583,7 @@ namespace Source.DLaB.Xrm
                 return false;
             }
 
-            private static string GetExtension(string path)
+            private static string? GetExtension(string path)
             {
                 // Don't use Path.GetExtension as that may throw an exception if there are
                 // invalid characters in the path. Invalid characters should be handled

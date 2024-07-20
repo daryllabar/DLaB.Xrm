@@ -1,8 +1,10 @@
 ﻿#if NET
+extern alias DLaBXrm;
 using DataverseUnitTest;
 using DataverseUnitTest.Builders;
 #else
 using DLaB.Xrm.Test.Builders;
+using Source.DLaB.Xrm;
 #endif
 
 using System;
@@ -14,7 +16,6 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
-using Source.DLaB.Xrm;
 
 namespace DLaB.Xrm.Tests.Core
 {

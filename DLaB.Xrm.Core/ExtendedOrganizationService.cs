@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xrm.Sdk;
@@ -33,7 +34,7 @@ namespace Source.DLaB.Xrm
         /// <param name="service">IOrganizationService to wrap.</param>
         /// <param name="trace">Tracing Service Required</param>
         /// <param name="settings">Settings</param>
-        public ExtendedOrganizationService(IOrganizationService service, ITracingService trace, ExtendedOrganizationServiceSettings settings = null)
+        public ExtendedOrganizationService(IOrganizationService service, ITracingService trace, ExtendedOrganizationServiceSettings? settings = null)
         {
             Service = service;
             Settings = settings ?? new ExtendedOrganizationServiceSettings();
@@ -274,7 +275,7 @@ namespace Source.DLaB.Xrm
             switch (request.RequestName)
             {
                 case "RetrieveMultiple":
-                    var query = request["Query"] as QueryBase;
+                    var query = (QueryBase)request["Query"];
                     message += GetDetailedMessage(query);
 
                     break;
