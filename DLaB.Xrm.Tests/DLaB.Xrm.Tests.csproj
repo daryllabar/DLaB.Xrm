@@ -46,7 +46,7 @@
     <ProjectReference Include="..\DLaB.Xrm.Test\DLaB.Xrm.Test.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DLaB.Common.Source" Version="1.4.0.8" />
+    <PackageReference Include="DLaB.Common.Source" Version="1.5.0.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.DirectoryServices" Version="8.0.0" />

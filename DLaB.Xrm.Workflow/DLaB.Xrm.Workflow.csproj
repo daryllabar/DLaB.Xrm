@@ -31,7 +31,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DLaB.Common.Source" Version="1.4.0.8" />
+    <PackageReference Include="DLaB.Common.Source" Version="1.5.0.1" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.52" />
     <PackageReference Include="Microsoft.CrmSdk.Workflow" Version="9.0.2.52" />
