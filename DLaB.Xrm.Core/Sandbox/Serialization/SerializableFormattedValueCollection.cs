@@ -42,9 +42,10 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// </returns>
         public static explicit operator FormattedValueCollection(SerializableFormattedValueCollection collection)
         {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (collection == null)
             {
-                return null;
+                return null!;
             }
             var xrmCollection = new FormattedValueCollection();
             xrmCollection.AddRange(collection.Select(v =>(KeyValuePair<string, string>)v));

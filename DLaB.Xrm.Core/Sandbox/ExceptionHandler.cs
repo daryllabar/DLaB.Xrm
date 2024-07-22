@@ -74,7 +74,7 @@ namespace Source.DLaB.Xrm.Sandbox
         /// <returns></returns>
         private static bool IsValidToBeThrown(Exception ex)
         {
-            var assembly = ex.GetType().Assembly.FullName.ToLower();
+            var assembly = ex.GetType().Assembly.FullName!.ToLower();
             return assembly.StartsWith("mscorlib,") || assembly.StartsWith("microsoft.xrm.sdk,") || assembly.StartsWith("system.");
         }
     }

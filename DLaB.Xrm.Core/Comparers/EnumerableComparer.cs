@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,27 +16,27 @@ namespace Source.DLaB.Xrm.Comparers
     /// <para>The ability for it to accept an IEqualityComparer for type T was added.</para>
     ///  </summary>
     /// <typeparam name="T"></typeparam>
-    public class EnumerableComparer<T> : IEqualityComparer<IEnumerable<T>>
+    public class EnumerableComparer<T> : IEqualityComparer<IEnumerable<T>> where T : notnull
     {
 
-        private IEqualityComparer<T> Comparer { get; }
+        private IEqualityComparer<T>? Comparer { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EnumerableComparer{T}"/> class.
         /// </summary>
         /// <param name="comparer">The comparer.</param>
-        public EnumerableComparer(IEqualityComparer<T> comparer = null)
+        public EnumerableComparer(IEqualityComparer<T>? comparer = null)
         {
             Comparer = comparer;
         }
 
         /// <summary>
-        /// Checks for the give nlists to be equal
+        /// Checks for the give lists to be equal
         /// </summary>
         /// <param name="first">The first.</param>
         /// <param name="second">The second.</param>
         /// <returns></returns>
-        public bool Equals(IEnumerable<T> first, IEnumerable<T> second)
+        public bool Equals(IEnumerable<T>? first, IEnumerable<T>? second)
         {
             if (first == null)
                 return second == null;
@@ -60,7 +61,7 @@ namespace Source.DLaB.Xrm.Comparers
             return !HaveMismatchedElement(first, second, Comparer);
         }
 
-        private static bool HaveMismatchedElement(IEnumerable<T> first, IEnumerable<T> second, IEqualityComparer<T> comparer = null)
+        private static bool HaveMismatchedElement(IEnumerable<T> first, IEnumerable<T> second, IEqualityComparer<T>? comparer = null)
         {
 
             var firstElementCounts = GetElementCounts(first, out int firstCount, comparer);
@@ -73,7 +74,7 @@ namespace Source.DLaB.Xrm.Comparers
                                                  kvp.Value != secondCount);
         }
 
-        private static Dictionary<T, int> GetElementCounts(IEnumerable<T> enumerable, out int nullCount, IEqualityComparer<T> comparer = null)
+        private static Dictionary<T, int> GetElementCounts(IEnumerable<T?> enumerable, out int nullCount, IEqualityComparer<T>? comparer = null)
         {
             var dictionary = new Dictionary<T, int>(comparer);
             nullCount = 0;

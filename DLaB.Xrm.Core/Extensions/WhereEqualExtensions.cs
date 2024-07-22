@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -206,7 +207,7 @@ namespace Source.DLaB.Xrm
             int orIndex = 0;
             int conditionIndex = 0;
             var orFilter = GetOrFilter(filterExpression, ors);
-            var currentFilter = hasOr ? orFilter.AddFilter(LogicalOperator.And) : filterExpression;
+            var currentFilter = hasOr ? orFilter!.AddFilter(LogicalOperator.And) : filterExpression;
 
             for (int i = 0; i < length; i += 2)
             {
@@ -214,7 +215,7 @@ namespace Source.DLaB.Xrm
                 {
                     i++; // Skip LogicalOperator
                     orIndex++;
-                    currentFilter = orFilter.AddFilter(LogicalOperator.And); // Create new And filter, adding to Or
+                    currentFilter = orFilter!.AddFilter(LogicalOperator.And); // Create new And filter, adding to Or
                 }
 
                 if (conditions.Length > conditionIndex && conditions[conditionIndex] == i)
@@ -288,15 +289,15 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Helper function to get the or filter based on the FilterExpression.  If it already is or, just return it.
+        /// Helper function to get the "or" filter based on the FilterExpression.  If it already is and "or", just return it.
         /// Else, return a new child or filter
         /// </summary>
         /// <param name="filterExpression"></param>
         /// <param name="ors"></param>
         /// <returns></returns>
-        private static FilterExpression GetOrFilter(FilterExpression filterExpression, int[] ors)
+        private static FilterExpression? GetOrFilter(FilterExpression filterExpression, int[] ors)
         {
-            FilterExpression orFilter = null;
+            FilterExpression? orFilter = null;
             if (ors.Length > 0)
             {
                 if (ors[0] == 0)
@@ -515,7 +516,7 @@ namespace Source.DLaB.Xrm
         {
             var entity = service.GetFirstOrDefault(logicalName, columnNameAndValuePairs);
             AssertExistsWhere(entity, logicalName, columnNameAndValuePairs);
-            return entity;
+            return entity!;
         }
 
         /// <summary>
@@ -533,9 +534,9 @@ namespace Source.DLaB.Xrm
         {
             var entity = service.GetFirstOrDefault(logicalName, columnSet, columnNameAndValuePairs);
             AssertExistsWhere(entity, logicalName, columnNameAndValuePairs);
-            return entity;
+            return entity!;
         }
-        private static void AssertExistsWhere(Entity entity, string logicalName, object[] columnNameAndValuePairs)
+        private static void AssertExistsWhere(Entity? entity, string logicalName, object[] columnNameAndValuePairs)
         {
             if (entity != null) { return; }
             throw new InvalidOperationException("No " + logicalName + " found where " +
@@ -560,7 +561,7 @@ namespace Source.DLaB.Xrm
         {
             var entity = service.GetFirstOrDefault<T>(columnNameAndValuePairs);
             AssertExistsWhere(entity, columnNameAndValuePairs);
-            return entity;
+            return entity!;
         }
 
         /// <summary>
@@ -598,15 +599,15 @@ namespace Source.DLaB.Xrm
         {
             var entity = service.GetFirstOrDefault<T>(columnSet, columnNameAndValuePairs);
             AssertExistsWhere(entity, columnNameAndValuePairs);
-            return entity;
+            return entity!;
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static void AssertExistsWhere<T>(T entity, object[] columnNameAndValuePairs) where T : Entity
+        private static void AssertExistsWhere<T>(T? entity, object[] columnNameAndValuePairs) where T : Entity
         {
             if (entity != null) { return; }
             throw new InvalidOperationException("No " + EntityHelper.GetEntityLogicalName<T>() + " found where " +
-                                                QueryExpressionFactory.Create<T>((ColumnSet)null, true, columnNameAndValuePairs).GetSqlStatement());
+                                                QueryExpressionFactory.Create<T>((ColumnSet?)null, true, columnNameAndValuePairs).GetSqlStatement());
         }
 
         #endregion GetFirst<T>
@@ -620,7 +621,7 @@ namespace Source.DLaB.Xrm
         /// <param name="logicalName">Logical Name of the Entity:</param>
         /// <param name="columnNameAndValuePairs"></param>
         /// <returns></returns>
-        public static Entity GetFirstOrDefault(this IOrganizationService service, string logicalName, params object[] columnNameAndValuePairs)
+        public static Entity? GetFirstOrDefault(this IOrganizationService service, string logicalName, params object[] columnNameAndValuePairs)
         {
             var settings = new LateBoundQuerySettings(logicalName);
             return service.RetrieveMultiple(settings.CreateExpression(columnNameAndValuePairs)).Entities.FirstOrDefault();
@@ -637,7 +638,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static Entity GetFirstOrDefault(this IOrganizationService service, string logicalName, ColumnSet columnSet,
+        public static Entity? GetFirstOrDefault(this IOrganizationService service, string logicalName, ColumnSet columnSet,
                 params object[] columnNameAndValuePairs)
         {
             var settings = new LateBoundQuerySettings(logicalName)
@@ -661,7 +662,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static T GetFirstOrDefault<T>(this IOrganizationService service,
+        public static T? GetFirstOrDefault<T>(this IOrganizationService service,
               params object[] columnNameAndValuePairs) where T : Entity
         {
             var settings = new QuerySettings<T> { First = true };
@@ -680,7 +681,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static T GetFirstOrDefault<T>(this IOrganizationService service,
+        public static T? GetFirstOrDefault<T>(this IOrganizationService service,
                 Expression<Func<T, object>> anonymousTypeInitializer, params object[] columnNameAndValuePairs)
             where T : Entity
         {
@@ -699,7 +700,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static T GetFirstOrDefault<T>(this IOrganizationService service, ColumnSet columnSet,
+        public static T? GetFirstOrDefault<T>(this IOrganizationService service, ColumnSet columnSet,
                 params object[] columnNameAndValuePairs) where T : Entity
         {
             var settings = new QuerySettings<T>

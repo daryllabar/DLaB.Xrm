@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Diagnostics;
 using Microsoft.Xrm.Sdk;
@@ -57,7 +58,7 @@ namespace Source.DLaB.Xrm
         /// <value>
         /// The name of the active attribute.
         /// </value>
-        public string AttributeName { get; set; }
+        public string? AttributeName { get; set; }
         /// <summary>
         /// Gets or sets the state of the active.
         /// </summary>

@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using Microsoft.Xrm.Sdk.Query;
 #if DLAB_UNROOT_COMMON_NAMESPACE
@@ -24,14 +25,14 @@ namespace Source.DLaB.Xrm.Comparers
             Comparer = ProjectionEqualityComparer<PagingInfo>.Create(i => new { i.Count, i.PageNumber, i.PagingCookie, i.ReturnTotalRecordCount});
         }
         /// <summary>
-        /// Compares the two page infos
+        /// Compares the two PageInfos
         /// </summary>
         /// <param name="page1">The page1.</param>
         /// <param name="page2">The page2.</param>
         /// <returns></returns>
-        public bool Equals(PagingInfo page1, PagingInfo page2)
+        public bool Equals(PagingInfo? page1, PagingInfo? page2)
         {
-            return Comparer.Equals(page1, page2);
+            return Comparer.Equals(page1!, page2!);
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using Microsoft.Xrm.Sdk.Query;
 #if DLAB_UNROOT_COMMON_NAMESPACE
@@ -23,7 +24,7 @@ namespace Source.DLaB.Xrm.Comparers
         /// <param name="link1">The link1.</param>
         /// <param name="link2">The link2.</param>
         /// <returns></returns>
-        public bool Equals(LinkEntity link1, LinkEntity link2)
+        public bool Equals(LinkEntity? link1, LinkEntity? link2)
         {
             if (link1 == link2) { return true; }
             if (link1 == null || link2 == null) { return false; }

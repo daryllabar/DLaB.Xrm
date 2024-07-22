@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -32,7 +33,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// The name of the entity.
         /// </value>
         [DataMember]
-        public string EntityName { get; set; }
+        public string? EntityName { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum active row version.
@@ -41,7 +42,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// The minimum active row version.
         /// </value>
         [DataMember]
-        public string MinActiveRowVersion { get; set; }
+        public string? MinActiveRowVersion { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [more records].
@@ -59,7 +60,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// The paging cookie.
         /// </value>
         [DataMember]
-        public string PagingCookie { get; set; }
+        public string? PagingCookie { get; set; }
 
         /// <summary>
         /// Gets or sets the total record count.
@@ -85,7 +86,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// <value>
         /// The extension data.
         /// </value>
-        public ExtensionDataObject ExtensionData { get; set; }
+        public ExtensionDataObject? ExtensionData { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableEntityCollection"/> class.
@@ -123,9 +124,10 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// </returns>
         public static explicit operator EntityCollection(SerializableEntityCollection collection)
         {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (collection == null)
             {
-                return null;
+                return null!;
             }
             var xrmCollection = new EntityCollection
             {

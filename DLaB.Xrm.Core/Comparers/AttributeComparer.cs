@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Source.DLaB.Xrm.Comparers
         /// <param name="value">The value</param>
         /// <param name="preValue">The value to Compare</param>
         /// <returns></returns>
-        public static bool ValuesAreEqual(IOrganizationService service, object value, object preValue)
+        public static bool ValuesAreEqual(IOrganizationService service, object? value, object? preValue)
         {
             if (preValue == null)
             {

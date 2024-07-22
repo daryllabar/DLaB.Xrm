@@ -1,4 +1,5 @@
-﻿#if DLAB_UNROOT_NAMESPACE || DLAB_XRM
+﻿#nullable enable
+#if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 using DLaB.Xrm.Ioc;
 
 namespace DLaB.Xrm.Plugin
@@ -21,6 +22,6 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="unsecureConfig">The unsecure configuration string.</param>
         /// <param name="secureConfig">The secure configuration string.</param>
         /// <returns>The updated IoC container.</returns>
-        IIocContainer RegisterPluginServices(IIocContainer container, IRegisteredEventsPlugin plugin = null, string unsecureConfig = null, string secureConfig = null);
+        IIocContainer RegisterPluginServices(IIocContainer container, IRegisteredEventsPlugin? plugin = null, string? unsecureConfig = null, string? secureConfig = null);
     }
 }

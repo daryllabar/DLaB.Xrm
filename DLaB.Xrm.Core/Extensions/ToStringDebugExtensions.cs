@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿#nullable enable
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Source.DLaB.Xrm
         /// Returns the length of the number of byte array
         /// </summary>
         /// <param name="bits">The Byte Array.</param>
-        public static string ToStringDebug(this byte[] bits)
+        public static string ToStringDebug(this byte[]? bits)
         {
             if (bits == null)
             {
@@ -50,78 +51,32 @@ namespace Source.DLaB.Xrm
             }
         }
 
-        private static string ObjectToStringDebugInternal(object obj, StringDebugInfo info)
+        private static string ObjectToStringDebugInternal(object? obj, StringDebugInfo info)
         {
-            string value;
-            switch (obj)
+            string value = obj switch
             {
-                case null:
-                    value = "null";
-                    break;
-
-                case ColumnSet cs:
-                    value = cs.AllColumns
-                        ? "\"ColumnSet(allColumns:true)\""
-                        : $"\"{string.Join(",", cs.Columns.OrderBy(c => c))}\"";
-                    break;
-
-                case Entity entity:
-                    value = entity.ToStringAttributes(info);
-                    break;
-
-                case EntityReference entityRef:
-                    value = entityRef.ToStringDebug();
-                    break;
-
-                case EntityCollection entities:
-                    value = entities.ToStringDebug(info);
-                    break;
-
-                case EntityReferenceCollection entityRefCollection:
-                    value = entityRefCollection.ToStringDebug(info);
-                    break;
-
-                case Dictionary<string, string> dict:
-                    value = dict.ToStringDebug(info);
-                    break;
-
-                case FetchExpression fetch:
-                    value = $"\"{fetch.Query.Trim()}\"";
-                    break;
-
-                case byte[] imageArray:
-                    value = imageArray.ToStringDebug();
-                    break;
-
-                case IEnumerable enumerable when !(enumerable is string):
-                    value = enumerable.ToStringDebug(info);
-                    break;
-
-                case OptionSetValue optionSet:
-                    value = optionSet.Value.ToString(CultureInfo.InvariantCulture);
-                    break;
-
-                case Money money:
-                    value = money.Value.ToString(CultureInfo.InvariantCulture);
-                    break;
-
-                case QueryExpression qe:
-                    value = $"\"{qe.GetSqlStatement().Trim()}\"";
-                    break;
-
-                case bool yesNo:
-                    value = yesNo
-                        ? "true"
-                        : "false";
-                    break;
-
-                default:
-                    value = obj.IsNumeric()
-                        ? obj.ToString()
-                        : $"\"{obj}\"";
-                    break;
-            }
-
+                null => "null",
+                ColumnSet cs => cs.AllColumns
+                                        ? "\"ColumnSet(allColumns:true)\""
+                                        : $"\"{string.Join(",", cs.Columns.OrderBy(c => c))}\"",
+                Entity entity => entity.ToStringAttributes(info),
+                EntityReference entityRef => entityRef.ToStringDebug(),
+                EntityCollection entities => entities.ToStringDebug(info),
+                EntityReferenceCollection entityRefCollection => entityRefCollection.ToStringDebug(info),
+                Dictionary<string, string> dict => dict.ToStringDebug(info),
+                FetchExpression fetch => $"\"{fetch.Query.Trim()}\"",
+                byte[] imageArray => imageArray.ToStringDebug(),
+                IEnumerable enumerable when !(enumerable is string) => enumerable.ToStringDebug(info),
+                OptionSetValue optionSet => optionSet.Value.ToString(CultureInfo.InvariantCulture),
+                Money money => money.Value.ToString(CultureInfo.InvariantCulture),
+                QueryExpression qe => $"\"{qe.GetSqlStatement().Trim()}\"",
+                bool yesNo => yesNo
+                                        ? "true"
+                                        : "false",
+                _ => obj.IsNumeric()
+                                        ? obj.ToString()!
+                                        : $"\"{obj}\"",
+            };
             return value;
         }
 
@@ -134,7 +89,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="dict">The dictionary.</param>
         /// <param name="info">Optional arguments.</param>
-        public static string ToStringDebug(this Dictionary<string, string> dict, StringDebugInfo info = null)
+        public static string ToStringDebug(this Dictionary<string, string> dict, StringDebugInfo? info = null)
         {
             return Wrap("{",
                 dict.Select(e => $@"{e.Key}: ""{e.Value}"""),
@@ -151,7 +106,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <param name="info">Optional arguments.</param>
-        public static string ToStringAttributes(this Entity entity, StringDebugInfo info = null)
+        public static string ToStringAttributes(this Entity? entity, StringDebugInfo? info = null)
         {
             info = info ?? StringDebugInfo.Default;
             if (entity == null)
@@ -170,7 +125,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <param name="info">Optional arguments.</param>
-        public static string ToStringDebug(this Entity entity, StringDebugInfo info = null)
+        public static string ToStringDebug(this Entity? entity, StringDebugInfo? info = null)
         {
             info = info ?? StringDebugInfo.Default;
             if (entity == null)
@@ -199,7 +154,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="collection">The collection.</param>
         /// <param name="info">Optional arguments.</param>
-        public static string ToStringDebug(this EntityCollection collection, StringDebugInfo info = null)
+        public static string ToStringDebug(this EntityCollection? collection, StringDebugInfo? info = null)
         {
             info = info ?? StringDebugInfo.Default;
             if (collection == null)
@@ -242,7 +197,7 @@ namespace Source.DLaB.Xrm
         /// <param name="images">The images.</param>
         /// <param name="name">The name.</param>
         /// <param name="info">Optional arguments.</param>
-        public static string ToStringDebug(this EntityImageCollection images, string name, StringDebugInfo info = null)
+        public static string ToStringDebug(this EntityImageCollection? images, string name, StringDebugInfo? info = null)
         {
             info = info ?? StringDebugInfo.Default;
             if (images == null)
@@ -308,7 +263,7 @@ namespace Source.DLaB.Xrm
         private static string ToIdString(Guid id, KeyAttributeCollection keys)
         {
             var parts = new List<string>();
-            var keyCount = keys?.Count;
+            var keyCount = keys.Count;
             if (keyCount > 0 && id == Guid.Empty)
             {
                 if (keyCount == 1)
@@ -346,7 +301,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="collection">The collection.</param>
         /// <param name="info">Optional arguments.</param>
-        public static string ToStringDebug(this EntityReferenceCollection collection, StringDebugInfo info = null)
+        public static string ToStringDebug(this EntityReferenceCollection? collection, StringDebugInfo? info = null)
         {
             if (collection == null)
             {
@@ -368,7 +323,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="collection">The images.</param>
         /// <param name="info">Optional arguments.</param>
-        public static string ToStringDebug(this IEnumerable collection, StringDebugInfo info = null)
+        public static string ToStringDebug(this IEnumerable collection, StringDebugInfo? info = null)
         {
             info = info ?? StringDebugInfo.Default;
             var prefix = info.SingleLine
@@ -425,7 +380,7 @@ namespace Source.DLaB.Xrm
             if (ConfigurationManager.AppSettings.AllKeys.Any())
             {
                 lines.Add("* App Config Values *");
-                lines.AddRange(ConfigurationManager.AppSettings.AllKeys.Select(key => $"    [{key}]: {GetConfigValueMaskingPasswords(key)}"));
+                lines.AddRange(ConfigurationManager.AppSettings.AllKeys.Select(key => $"    [{key}]: {GetConfigValueMaskingPasswords(key!)}"));
             }
 
             return lines;
@@ -439,7 +394,7 @@ namespace Source.DLaB.Xrm
         /// Converts the object to a json like string
         /// </summary>
         /// <returns></returns>
-        public static string ObjectToStringDebug(this object obj, StringDebugInfo info = null)
+        public static string ObjectToStringDebug(this object? obj, StringDebugInfo? info = null)
         {
             return ObjectToStringDebugInternal(obj, info ?? StringDebugInfo.Default);
         }
@@ -454,7 +409,7 @@ namespace Source.DLaB.Xrm
         /// <param name="parameters">The parameters.</param>
         /// <param name="name">The name.</param>
         /// <param name="info">Optional arguments.</param>
-        public static string ToStringDebug(this ParameterCollection parameters, string name, StringDebugInfo info = null)
+        public static string ToStringDebug(this ParameterCollection? parameters, string name, StringDebugInfo? info = null)
         {
             info = info ?? StringDebugInfo.Default;
             if (parameters == null)
@@ -518,8 +473,9 @@ namespace Source.DLaB.Xrm
             return new string(space[0], spaces);
         }
 
-        private static string Wrap(string start, IEnumerable<string> middle, string end, StringDebugInfo info, string initialIndent = null, string middleJoinSeparator = ",")
+        private static string Wrap(string start, IEnumerable<string> middle, string end, StringDebugInfo? info, string? initialIndent = null, string middleJoinSeparator = ",")
         {
+            info = info ?? new StringDebugInfo();
             initialIndent = initialIndent ?? info.Indent;
             if (info.SingleLine)
             {
@@ -540,7 +496,7 @@ namespace Source.DLaB.Xrm
                    + end;
         }
 
-        private static string GetConfigValueMaskingPasswords(string key)
+        private static string? GetConfigValueMaskingPasswords(string key)
         {
             var value = ConfigurationManager.AppSettings[key];
             if (!string.IsNullOrWhiteSpace(value) && key.ContainsIgnoreCase("password"))
@@ -580,7 +536,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         public string Tab { get; }
         private Dictionary<int,StringDebugInfo> IncreasedIndents { get; set; }
-        private StringDebugInfo NoTab { get; set; }
+        private StringDebugInfo? NoTab { get; set; }
 
         /// <summary>
         /// Default StringDebugInfo.
@@ -598,11 +554,11 @@ namespace Source.DLaB.Xrm
         {
         }
 
-        private StringDebugInfo(StringDebugInfo toCopy, int? indentSpaces = null, int? tabWidth = null, bool? singleLine = null)
+        private StringDebugInfo(StringDebugInfo? toCopy, int? indentSpaces = null, int? tabWidth = null, bool? singleLine = null)
         {
-            IndentSpaces = indentSpaces ?? toCopy.IndentSpaces;
-            TabWidth = tabWidth ?? toCopy.TabWidth;
-            SingleLine = singleLine ?? toCopy.SingleLine;
+            IndentSpaces = indentSpaces ?? toCopy?.IndentSpaces ?? 0;
+            TabWidth = tabWidth ?? toCopy?.TabWidth ?? 0;
+            SingleLine = singleLine ?? toCopy?.SingleLine ?? false;
 
             Indent = Extensions.GenerateNonBreakingSpace(IndentSpaces );
             Tab = Extensions.GenerateNonBreakingSpace(TabWidth);

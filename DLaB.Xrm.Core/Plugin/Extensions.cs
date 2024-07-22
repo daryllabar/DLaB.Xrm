@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 #if !DLAB_XRM_DEBUG
@@ -10,6 +11,7 @@ using Microsoft.Xrm.Sdk.Extensions;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 using DLaB.Xrm.Exceptions;
+using Microsoft.Crm.Sdk.Messages;
 
 namespace DLaB.Xrm.Plugin
 #else
@@ -73,7 +75,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="entityLogicalName"></param>
         /// <param name="message"></param>
         /// <param name="execute"></param>
-        public static void AddEvent(this List<RegisteredEvent> events, PipelineStage stage, string entityLogicalName, MessageType message, Action<IExtendedPluginContext> execute){
+        public static void AddEvent(this List<RegisteredEvent> events, PipelineStage stage, string? entityLogicalName, MessageType message, Action<IExtendedPluginContext>? execute){
             events.Add(new RegisteredEvent(stage, message, execute, entityLogicalName));
         }
 
@@ -125,7 +127,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="entityLogicalName"></param>
         /// <param name="execute"></param>
         /// <param name="messages"></param>
-        public static void AddEvents(this List<RegisteredEvent> events, PipelineStage stage, string entityLogicalName, Action<IExtendedPluginContext> execute, params MessageType[] messages)
+        public static void AddEvents(this List<RegisteredEvent> events, PipelineStage stage, string? entityLogicalName, Action<IExtendedPluginContext>? execute, params MessageType[] messages)
         {
             foreach (var message in messages)
             {
@@ -171,9 +173,9 @@ namespace Source.DLaB.Xrm.Plugin
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T GetTarget<T>(this IExtendedPluginContext context) where T : Entity
+        public static T? GetTarget<T>(this IExtendedPluginContext context) where T : Entity
         {
-            // Obtain the target business entity from the input parmameters.
+            // Obtain the target business entity from the input parameters.
             try
             {
                 return ((IPluginExecutionContext)context).GetTarget<T>();
@@ -261,14 +263,14 @@ namespace Source.DLaB.Xrm.Plugin
         /// Returns true if the current plugin maps to the parameters given, or the current plugin has been triggered by the given parameters
         /// </summary>
         /// <returns></returns>
-        public static bool CalledFrom(this IPluginExecutionContext context, string entityLogicalName = null, MessageType message = null, int? stage = null)
+        public static bool CalledFrom(this IPluginExecutionContext context, string? entityLogicalName = null, MessageType? message = null, int? stage = null)
         {
-            if (message == null && entityLogicalName == null && stage == null)
+            if (message is null && entityLogicalName == null && stage == null)
             {
                 throw new Exception("At least one parameter for IPluginExecutionContext.CalledFrom must be populated");
             }
             return context.GetContexts().Any(c =>
-                (message == null || c.MessageName == message.Name) &&
+                (message is null || c.MessageName == message.Name) &&
                 (entityLogicalName == null || c.PrimaryEntityName == entityLogicalName) &&
                 (stage == null || c.Stage == stage.Value));
         }
@@ -286,7 +288,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="context">The context</param>
         /// <param name="imageName">Name of the image.</param>
         /// <returns></returns>
-        public static T CoalesceTargetWithPreEntity<T>(this IPluginExecutionContext context, string imageName = null) where T : Entity
+        public static T CoalesceTargetWithPreEntity<T>(this IPluginExecutionContext context, string? imageName = null) where T : Entity
         {
             return DereferenceTarget<T>(context).CoalesceEntity(context.GetPreEntity<T>(imageName));
         }
@@ -301,7 +303,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="context">The context.</param>
         /// <param name="imageName">Name of the image.</param>
         /// <returns></returns>
-        public static T CoalesceTargetWithPostEntity<T>(this IPluginExecutionContext context, string imageName = null) where T : Entity
+        public static T CoalesceTargetWithPostEntity<T>(this IPluginExecutionContext context, string? imageName = null) where T : Entity
         {
             return DereferenceTarget<T>(context).CoalesceEntity(context.GetPostEntity<T>(imageName));
         }
@@ -346,7 +348,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="context">The context.</param>
         /// <param name="events">The events.</param>
         /// <returns></returns>
-        public static RegisteredEvent GetEvent(this IPluginExecutionContext context, IEnumerable<RegisteredEvent> events)
+        public static RegisteredEvent? GetEvent(this IPluginExecutionContext context, IEnumerable<RegisteredEvent> events)
         {
             return events.Where(
                     e =>
@@ -368,7 +370,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="context"></param>
         /// <param name="variableName"></param>
         /// <returns></returns>
-        public static T GetFirstSharedVariable<T>(this IPluginExecutionContext context, string variableName)
+        public static T? GetFirstSharedVariable<T>(this IPluginExecutionContext context, string variableName)
         {
             while (context != null)
             {
@@ -387,7 +389,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="context"></param>
         /// <param name="variableName"></param>
         /// <returns></returns>
-        public static object GetFirstSharedVariable(this IPluginExecutionContext context, string variableName)
+        public static object? GetFirstSharedVariable(this IPluginExecutionContext context, string variableName)
         {
             while (context != null)
             {
@@ -419,7 +421,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="context"></param>
         /// <param name="imageName"></param>
         /// <returns></returns>
-        public static T GetPreEntity<T>(this IExecutionContext context, string imageName = null) where T : Entity
+        public static T? GetPreEntity<T>(this IExecutionContext context, string? imageName = null) where T : Entity
         {
             return context.PreEntityImages.GetEntity<T>(imageName, DLaBExtendedPluginContextBase.PluginImageNames.PreImage);
         }
@@ -432,7 +434,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="context"></param>
         /// <param name="imageName"></param>
         /// <returns></returns>
-        public static T GetPostEntity<T>(this IExecutionContext context, string imageName = null) where T : Entity
+        public static T? GetPostEntity<T>(this IExecutionContext context, string? imageName = null) where T : Entity
         {
             return context.PostEntityImages.GetEntity<T>(imageName, DLaBExtendedPluginContextBase.PluginImageNames.PostImage);
         }
@@ -466,7 +468,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <typeparam name="T"></typeparam>
         /// <param name="context">The context.</param>
         /// <returns></returns>
-        public static T GetTarget<T>(this IPluginExecutionContext context) where T : Entity
+        public static T? GetTarget<T>(this IPluginExecutionContext context) where T : Entity
         {
             var parameters = context.InputParameters;
             if (!parameters.ContainsKey(ParameterName.Target) || !(parameters[ParameterName.Target] is Entity))
@@ -474,18 +476,18 @@ namespace Source.DLaB.Xrm.Plugin
                 return null;
             }
 
-            // Obtain the target business entity from the input parmameters.
+            // Obtain the target business entity from the input parameters.
 
-            return ((Entity)parameters[ParameterName.Target]).AsEntity<T>();
+            return ((Entity)parameters[ParameterName.Target])?.AsEntity<T>();
         }
 
         /// <summary>
         /// Finds and returns the Target as an Entity Reference (Delete Plugins)
         /// </summary>
         /// <returns></returns>
-        public static EntityReference GetTargetEntityReference(this IPluginExecutionContext context)
+        public static EntityReference? GetTargetEntityReference(this IPluginExecutionContext context)
         {
-            EntityReference entity = null;
+            EntityReference? entity = null;
             var parameters = context.InputParameters;
             if (parameters.ContainsKey(ParameterName.Target) &&
                  parameters[ParameterName.Target] is EntityReference)
@@ -534,7 +536,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="messageName">Name of the message.</param>
         /// <param name="logicalName">Name of the logical.</param>
         /// <param name="stage">The stage.</param>
-        public static void PreventPluginExecution(this IPluginExecutionContext context, string pluginTypeFullName, string messageName = null, string logicalName = null, PipelineStage? stage = null)
+        public static void PreventPluginExecution(this IPluginExecutionContext context, string pluginTypeFullName, string? messageName = null, string? logicalName = null, PipelineStage? stage = null)
         {
             var preventionName = GetPreventPluginSharedVariableName(pluginTypeFullName);
             if (!context.SharedVariables.TryGetValue(preventionName, out object value))
@@ -577,22 +579,22 @@ namespace Source.DLaB.Xrm.Plugin
         public static void PreventPluginExecution<T>(this IPluginExecutionContext context, RegisteredEvent @event)
             where T : IRegisteredEventsPlugin
         {
-            context.PreventPluginExecution(typeof(T).FullName, @event);
+            context.PreventPluginExecution(typeof(T).FullName!, @event);
         }
 
         /// <summary>
         /// Adds a shared Variable to the context that is checked by the GenericPluginBase to determine if it should be skipped  * NOTE * The Plugin has to finish executing for the Shared Variable to be passed to a new plugin
         /// </summary>
         /// <typeparam name="T">The type of the plugin.</typeparam>
-        public static void PreventPluginExecution<T>(this IPluginExecutionContext context, string messageName = null, string logicalName = null, PipelineStage? stage = null)
+        public static void PreventPluginExecution<T>(this IPluginExecutionContext context, string? messageName = null, string? logicalName = null, PipelineStage? stage = null)
             where T : IRegisteredEventsPlugin
         {
-            context.PreventPluginExecution(typeof(T).FullName, messageName, logicalName, stage);
+            context.PreventPluginExecution(typeof(T).FullName!, messageName, logicalName, stage);
         }
 
         #endregion PreventPluginExecution<T>
 
-        private static string GetPreventionRule(string messageName = null, string logicalName = null, PipelineStage? stage = null)
+        private static string GetPreventionRule(string? messageName = null, string? logicalName = null, PipelineStage? stage = null)
         {
             var rule = messageName == null ? string.Empty : "MessageName:" + messageName + "|";
             rule += logicalName == null ? string.Empty : "LogicalName:" + logicalName + "|";
@@ -616,7 +618,7 @@ namespace Source.DLaB.Xrm.Plugin
         public static bool HasPluginExecutionBeenPrevented<T>(this IPluginExecutionContext context, RegisteredEvent @event)
             where T : IRegisteredEventsPlugin
         {
-            var preventionName = GetPreventPluginSharedVariableName(typeof(T).FullName);
+            var preventionName = GetPreventPluginSharedVariableName(typeof(T).FullName!);
             return context.HasPluginExecutionBeenPreventedInternal(@event, preventionName);
         }
 
@@ -654,7 +656,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="userId">The user ID.</param>
         /// <param name="settings">The extended organization service settings.</param>
         /// <returns>The extended organization service.</returns>
-        public static ExtendedOrganizationService CreateExtendedOrganizationService(this IServiceProvider serviceProvider, Guid? userId, ExtendedOrganizationServiceSettings settings = null)
+        public static ExtendedOrganizationService CreateExtendedOrganizationService(this IServiceProvider serviceProvider, Guid? userId, ExtendedOrganizationServiceSettings? settings = null)
         {
             var factory = serviceProvider.Get<IOrganizationServiceFactory>();
             var tracingService = serviceProvider.Get<ITracingService>();

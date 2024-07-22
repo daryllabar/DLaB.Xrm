@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="DataverseUnitTest" Version="2.3.0.61" />
-    <PackageReference Include="DLaB.Common.Source" Version="1.4.0.8" />
+    <PackageReference Include="DLaB.Common" Version="1.5.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.5.0" />
     <PackageReference Include="MSTest.TestFramework" Version="3.5.0" />
@@ -24,11 +24,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DLaB.Xrm.DotNetCore.Test\DLaB.Xrm.DotNetCore.Test.csproj" />
+    <ProjectReference Include="..\DLaB.Xrm\DLaB.Xrm.csproj">
+      <Aliases>DLaBXrm</Aliases>
+    </ProjectReference>
   </ItemGroup>
 
   <Import Project="..\DLaB.Xrm.Tests.Core\DLaB.Xrm.Tests.Core.projitems" Label="Shared" />
-
-  <Import Project="..\DLaB.Xrm.Core\DLaB.Xrm.Base.projitems" Label="Shared" />
 
   <Import Project="..\DLaB.Xrm.Test.Core\DLaB.Xrm.Test.Core.projitems" Label="Shared" />
 

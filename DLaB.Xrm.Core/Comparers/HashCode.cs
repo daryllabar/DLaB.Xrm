@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
@@ -45,7 +46,7 @@ namespace Source.DLaB.Xrm.Comparers
         /// <param name="obj">The object.</param>
         /// <param name="comparer">The comparer.</param>
         /// <returns></returns>
-        public HashCode Hash<T>(T obj, IEqualityComparer<T> comparer = null)
+        public HashCode Hash<T>(T obj, IEqualityComparer<T>? comparer = null)
         {
             var h = 0;
             // ReSharper disable once CompareNonConstrainedGenericWithNull

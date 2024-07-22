@@ -45,9 +45,10 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// </returns>
         public static explicit operator RelatedEntityCollection(SerializableRelatedEntityCollection collection)
         {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (collection == null)
             {
-                return null;
+                return null!;
             }
             var xrmCollection = new RelatedEntityCollection();
             xrmCollection.AddRange(collection.Select(v => (KeyValuePair<Relationship, EntityCollection>)v));

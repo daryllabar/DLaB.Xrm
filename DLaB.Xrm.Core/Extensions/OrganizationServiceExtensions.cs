@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using Microsoft.Xrm.Sdk;
@@ -8,6 +9,7 @@ using System.Linq.Expressions;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata.Query;
+
 #if DLAB_UNROOT_COMMON_NAMESPACE
 using DLaB.Common;
 #else
@@ -39,7 +41,7 @@ namespace Source.DLaB.Xrm
         /// <param name="backupTable">The backup table to use if no record is found in the initial table.  This table has to exist, or an exception will be thrown.</param>
         /// <param name="backupTableColumn">The Column to update in the backup table.</param>
         // ReSharper disable StringLiteralTypo
-        public static void AcquireLock(this IOrganizationService service, string value, ITracingService tracer = null,
+        public static void AcquireLock(this IOrganizationService service, string value, ITracingService? tracer = null,
             string initialTable = "email", string initialTableColumn = "transactioncurrencyid",
             string backupTable = "businessunit", string backupTableColumn = "address2_fax")
         {
@@ -204,7 +206,7 @@ namespace Source.DLaB.Xrm
         /// <param name="service">The Service.</param>
         /// <param name="entity">The Entity to Create or Update.</param>
         /// <param name="updater">The IMinimumUpdater to use.</param>
-        public static void CreateOrMinimumUpdate<TEntity>(this IOrganizationService service, TEntity entity, IMinimumUpdater<TEntity> updater = null) where TEntity: Entity
+        public static void CreateOrMinimumUpdate<TEntity>(this IOrganizationService service, TEntity entity, IMinimumUpdater<TEntity>? updater = null) where TEntity: Entity
         {
             if (entity.Id == Guid.Empty)
             {
@@ -261,7 +263,7 @@ namespace Source.DLaB.Xrm
             }
         }
 
-        private static TEntity GetCurrentValue<TEntity>(IOrganizationService service, TEntity entity, IMinimumUpdater<TEntity> updater) where TEntity : Entity
+        private static TEntity? GetCurrentValue<TEntity>(IOrganizationService service, TEntity entity, IMinimumUpdater<TEntity>? updater) where TEntity : Entity
         {
             if(updater != null)
             {
@@ -269,7 +271,7 @@ namespace Source.DLaB.Xrm
             }
 
             return typeof(TEntity) == typeof(Entity)
-                ? (TEntity) service.GetEntityOrDefault(entity.LogicalName, entity.Id)
+                ? (TEntity?) service.GetEntityOrDefault(entity.LogicalName, entity.Id)
                 : service.GetEntityOrDefault<TEntity>(entity.Id);
         }
 
@@ -482,7 +484,7 @@ namespace Source.DLaB.Xrm
                     Requests = requestCollection
                 };
 
-                return service.Execute(multipleRequest) as ExecuteMultipleResponse;
+                return (ExecuteMultipleResponse) service.Execute(multipleRequest);
             }
             catch (Exception ex)
             {
@@ -582,7 +584,7 @@ namespace Source.DLaB.Xrm
 
         #region GetEntityLogicalName
 
-        private static readonly ConcurrentDictionary<int, string> ObjectTypeToLogicalNameMapping = new ConcurrentDictionary<int, string>();
+        private static readonly ConcurrentDictionary<int, string?> ObjectTypeToLogicalNameMapping = new ConcurrentDictionary<int, string?>();
         private static readonly object ObjectTypeToLogicalNameMappingLock = new object();
         /// <summary>
         /// Gets the Entity Logical Name for the given object Type Code
@@ -591,14 +593,14 @@ namespace Source.DLaB.Xrm
         /// <param name="objectTypeCode">The Object Type Code</param>
         /// <param name="useCache">Allows for caching the calls in a thread safe manner</param>
         /// <returns></returns>
-        public static string GetEntityLogicalName(this IOrganizationService service, int objectTypeCode, bool useCache = true)
+        public static string? GetEntityLogicalName(this IOrganizationService service, int objectTypeCode, bool useCache = true)
         {
             return useCache
                 ? ObjectTypeToLogicalNameMapping.GetOrAddSafe(ObjectTypeToLogicalNameMappingLock, objectTypeCode, c => GetEntityLogicalNameInternal(service, c))
                 : GetEntityLogicalNameInternal(service, objectTypeCode);
         }
 
-        private static string GetEntityLogicalNameInternal(this IOrganizationService service, int objectTypeCode)
+        private static string? GetEntityLogicalNameInternal(this IOrganizationService service, int objectTypeCode)
         {
             var entityFilter = new MetadataFilterExpression(LogicalOperator.And);
             entityFilter.Conditions.Add(new MetadataConditionExpression("ObjectTypeCode", MetadataConditionOperator.Equals, objectTypeCode));
@@ -661,7 +663,7 @@ namespace Source.DLaB.Xrm
         {
             var entity = service.GetFirstOrDefault(qe);
             AssertExists(entity, qe);
-            return entity;
+            return entity!;
         }
 
         /// <summary>
@@ -675,7 +677,7 @@ namespace Source.DLaB.Xrm
         {
             var entity = service.GetFirstOrDefault<T>(qe);
             AssertExists(entity, qe);
-            return entity;
+            return entity!;
         }
 
         /// <summary>
@@ -689,11 +691,11 @@ namespace Source.DLaB.Xrm
         {
             var entity = service.GetFirstOrDefault(qe);
             AssertExists(entity, qe);
-            return entity;
+            return entity!;
         }
 
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-        private static void AssertExists<T>(T entity, QueryExpression qe) where T : Entity
+        private static void AssertExists<T>(T? entity, QueryExpression qe) where T : Entity
         {
             if (entity == null)
             {
@@ -712,7 +714,7 @@ namespace Source.DLaB.Xrm
         /// <param name="service">The service.</param>
         /// <param name="query">The query.</param>
         /// <returns></returns>
-        public static Entity GetFirstOrDefault(this IOrganizationService service, QueryBase query)
+        public static Entity? GetFirstOrDefault(this IOrganizationService service, QueryBase query)
         {
             query.First();
             return service.RetrieveMultiple(query).Entities.FirstOrDefault();
@@ -725,7 +727,7 @@ namespace Source.DLaB.Xrm
         /// <param name="service">The service.</param>
         /// <param name="fe">The fetch expression.</param>
         /// <returns></returns>
-        public static T GetFirstOrDefault<T>(this IOrganizationService service, FetchExpression fe) where T : Entity
+        public static T? GetFirstOrDefault<T>(this IOrganizationService service, FetchExpression fe) where T : Entity
         {
             var entity = service.RetrieveMultiple(fe).Entities.FirstOrDefault();
             return entity?.AsEntity<T>();
@@ -738,7 +740,7 @@ namespace Source.DLaB.Xrm
         /// <param name="service">The service.</param>
         /// <param name="qb">The query.</param>
         /// <returns></returns>
-        public static T GetFirstOrDefault<T>(this IOrganizationService service, QueryBase qb) where T : Entity
+        public static T? GetFirstOrDefault<T>(this IOrganizationService service, QueryBase qb) where T : Entity
         {
             qb.First();
             return service.GetEntities<T>(qb).FirstOrDefault();
@@ -751,7 +753,7 @@ namespace Source.DLaB.Xrm
         /// <param name="service">The service.</param>
         /// <param name="qe">The query expression.</param>
         /// <returns></returns>
-        public static T GetFirstOrDefault<T>(this IOrganizationService service, TypedQueryExpression<T> qe) where T : Entity
+        public static T? GetFirstOrDefault<T>(this IOrganizationService service, TypedQueryExpression<T> qe) where T : Entity
         {
             return service.GetFirstOrDefault<T>(qe.Query);
         }

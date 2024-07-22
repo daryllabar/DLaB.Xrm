@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,7 +20,7 @@ namespace Source.DLaB.Xrm.Ioc
         private readonly Dictionary<Type, Registration> _registrations = new Dictionary<Type, Registration>();
         private readonly Dictionary<Type, object> _scopedInstances = new Dictionary<Type, object>();
         private readonly ConcurrentDictionary<Type, object> _instances;
-        private readonly IServiceProvider _scopedProvider;
+        private readonly IServiceProvider? _scopedProvider;
         private readonly Stack<Type> _currentRequestedTypes = new Stack<Type>();
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace Source.DLaB.Xrm.Ioc
         /// <param name="registrations">List of registrations by Type.  This is copied so future changes won't affect this provider instance.</param>
         /// <param name="instances">All Singleton Instances.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public ScopedServiceProvider(IServiceProvider scopedProvider, Dictionary<Type, Registration> registrations, ConcurrentDictionary<Type, object> instances)
+        public ScopedServiceProvider(IServiceProvider? scopedProvider, Dictionary<Type, Registration> registrations, ConcurrentDictionary<Type, object> instances)
         {
             _scopedInstances[typeof(IServiceProvider)] = this;
             _registrations[typeof(IServiceProvider)] = new Registration(typeof(IServiceProvider), Lifetime.Scoped, s => this);
@@ -57,7 +58,7 @@ namespace Source.DLaB.Xrm.Ioc
         }
 
         /// <inheritdoc />
-        public object GetService(Type serviceType)
+        public object? GetService(Type serviceType)
         {
             if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
 
@@ -130,10 +131,15 @@ namespace Source.DLaB.Xrm.Ioc
                 var value = registration.Factory(this);
                 if (value == null)
                 {
-                    throw new InvalidOperationException($"Factory for type {registration.Type.FullName} returned null.");
+                    throw new InvalidOperationException($"Factory for type {registration.Type?.FullName} returned null.");
                 }
 
                 return value;
+            }
+
+            if (registration.Type == null)
+            {
+                throw new InvalidOperationException($"Type is required if Instance and Factory are not provided.");
             }
 
             if (_currentRequestedTypes.Contains(registration.Type))
@@ -155,7 +161,7 @@ namespace Source.DLaB.Xrm.Ioc
                 var constructorParameters = constructor.GetParameters();
                 if (constructorParameters.Length == 0)
                 {
-                    return Activator.CreateInstance(registration.Type);
+                    return Activator.CreateInstance(registration.Type)!;
                 }
 
                 var parameters = constructorParameters.Select(parameterInfo => GetService(parameterInfo.ParameterType)).ToArray();
@@ -183,7 +189,7 @@ namespace Source.DLaB.Xrm.Ioc
             {
                 var method = typeof(LazyActivator).GetMethod(nameof(TypedCreateLazyInstance)) ?? throw new InvalidOperationException($"Unable to find method {nameof(TypedCreateLazyInstance)}");
                 var genericMethod = method.MakeGenericMethod(type);
-                return genericMethod.Invoke(null, new object[] { serviceProvider });
+                return genericMethod.Invoke(null, new object[] { serviceProvider })!;
             }
 
             /// <summary>
@@ -193,10 +199,10 @@ namespace Source.DLaB.Xrm.Ioc
             /// <param name="serviceProvider">The service provider.</param>
             /// <returns>The created lazy instance.</returns>
             [DebuggerStepThrough, DebuggerStepperBoundary]
-            public static Lazy<T> TypedCreateLazyInstance<T>(IServiceProvider serviceProvider)
+            public static Lazy<T?> TypedCreateLazyInstance<T>(IServiceProvider serviceProvider)
             {
                 var helper = new Helper(serviceProvider);
-                return new Lazy<T>(helper.GetService<T>);
+                return new Lazy<T?>(helper.GetService<T>);
             }
 
             /// <summary>
@@ -221,7 +227,7 @@ namespace Source.DLaB.Xrm.Ioc
                 /// <typeparam name="T">The type of the service.</typeparam>
                 /// <returns>The service object of the specified type.</returns>
                 [DebuggerStepThrough]
-                public T GetService<T>() { return (T)_provider.GetService(typeof(T)); }
+                public T? GetService<T>() { return (T?)_provider.GetService(typeof(T)); }
             }
         }
     }

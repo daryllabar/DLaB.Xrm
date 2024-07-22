@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xrm.Sdk;
@@ -26,7 +27,7 @@ namespace Source.DLaB.Xrm
         /// Default Construction
         /// </summary>
         /// <param name="currentValuesById"></param>
-        public MinimumUpdaterDefault(Dictionary<Guid, TEntity> currentValuesById = null)
+        public MinimumUpdaterDefault(Dictionary<Guid, TEntity>? currentValuesById = null)
         {
             CurrentValuesById = currentValuesById ?? new Dictionary<Guid, TEntity>();
         }
@@ -52,7 +53,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        public virtual TEntity GetCurrentValue(TEntity entity)
+        public virtual TEntity? GetCurrentValue(TEntity entity)
         {
             return CurrentValuesById.TryGetValue(entity.Id, out var current) ? current : null;
         }

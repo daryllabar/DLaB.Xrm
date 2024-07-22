@@ -1,9 +1,7 @@
+#nullable enable
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System.Collections.Generic;
@@ -23,8 +21,14 @@ using Source.DLaB.Common;
 #endif
 using System.Collections.Concurrent;
 using System.Runtime.Caching;
+#if !NET
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text;
+#endif
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 using DLaB.Xrm.Exceptions;
+
 
 namespace DLaB.Xrm
 #else
@@ -97,7 +101,7 @@ namespace Source.DLaB.Xrm
         /// <param name="imageName">The name to Search For</param>
         /// <param name="defaultName">The Default Name to use</param>
         /// <returns></returns>
-        public static T GetEntity<T>(this DataCollection<string, Entity> images, string imageName = null, string defaultName = null) where T : Entity
+        public static T? GetEntity<T>(this DataCollection<string, Entity> images, string? imageName = null, string? defaultName = null) where T : Entity
         {
             if (images.Count == 0)
             {
@@ -106,7 +110,7 @@ namespace Source.DLaB.Xrm
 
             if (images.Count == 1 && imageName == null)
             {
-                return images.Values.FirstOrDefault().AsEntity<T>();
+                return images.Values.FirstOrDefault()?.AsEntity<T>();
             }
 
             Entity entity;
@@ -118,7 +122,7 @@ namespace Source.DLaB.Xrm
 
             return defaultName != null && images.TryGetValue(defaultName, out entity)
                 ? entity.AsEntity<T>()
-                : images.Values.FirstOrDefault(v => v != null).AsEntity<T>();
+                : images.Values.FirstOrDefault(v => v != null)?.AsEntity<T>();
         }
 
 #endregion DataCollection<string,Entity>
@@ -192,7 +196,7 @@ namespace Source.DLaB.Xrm
         /// <param name="baseEntity"></param>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        public static T CoalesceEntity<T>(this T baseEntity, Entity entity) where T : Entity
+        public static T CoalesceEntity<T>(this T baseEntity, Entity? entity) where T : Entity
         {
             if (entity == null)
             {
@@ -350,7 +354,7 @@ namespace Source.DLaB.Xrm
         /// <param name="entity">The entity.</param>
         /// <param name="attributeLogicalName">Name of the attribute logical.</param>
         /// <returns></returns>
-        public static string GetFormattedAttributeValueOrNull(this Entity entity, string attributeLogicalName)
+        public static string? GetFormattedAttributeValueOrNull(this Entity entity, string attributeLogicalName)
         {
             if (string.IsNullOrWhiteSpace(attributeLogicalName))
             {
@@ -473,7 +477,7 @@ namespace Source.DLaB.Xrm
         /// <param name="entity">The entity.</param>
         /// <param name="attributeName">Name of the attribute.</param>
         /// <returns></returns>
-        public static T GetOrDefault<T>(this Entity entity, string attributeName)
+        public static T? GetOrDefault<T>(this Entity entity, string attributeName)
         {
             return entity.GetOrDefault(attributeName, default(T));
         }
@@ -486,7 +490,7 @@ namespace Source.DLaB.Xrm
         /// <param name="attributeName">Name of the attribute.</param>
         /// <param name="defaultValue">The value to use if the entity does not contain the attribute.</param>
         /// <returns></returns>
-        public static T GetOrDefault<T>(this Entity entity, string attributeName, T defaultValue)
+        public static T? GetOrDefault<T>(this Entity entity, string attributeName, T defaultValue)
         {
             T value;
             if (entity.Contains(attributeName))
@@ -536,7 +540,7 @@ namespace Source.DLaB.Xrm
                 return entity;
             }
             var toEntity = typeof(Entity).GetMethod(nameof(Entity.ToEntity));
-            return (Entity) toEntity?.MakeGenericMethod(earlyBoundType).Invoke(entity, null);
+            return (Entity) toEntity!.MakeGenericMethod(earlyBoundType).Invoke(entity, null)!;
         }
 
         /// <summary>
@@ -666,7 +670,7 @@ namespace Source.DLaB.Xrm
                 Value = a.Value as EntityCollection
             }).Where(a => a.Value != null).ToList())
             {
-                var sdkEntities = att.Value.Entities.Select(e => e.ToSdkEntity()).ToList();
+                var sdkEntities = att.Value!.Entities.Select(e => e.ToSdkEntity()).ToList();
 
                 att.Value.Entities.Clear();
                 att.Value.Entities.AddRange(sdkEntities);
@@ -682,7 +686,7 @@ namespace Source.DLaB.Xrm
         /// <returns>new cloned entity</returns>
         public static T Clone<T>(this T source, bool deepClone = false) where T : Entity
         {
-            return source?.CloneInternal(deepClone);
+            return source.CloneInternal(deepClone);
         }
 //#else
 //        /// <summary>
@@ -700,12 +704,7 @@ namespace Source.DLaB.Xrm
 //#endif
         private static T CloneInternal<T>(this T source, bool deepClone = false) where T : Entity
         {
-            if (source == null)
-            {
-                return null;
-            }
-
-            var entity = (T)Activator.CreateInstance(source.GetType());
+            var entity = (T)Activator.CreateInstance(source.GetType())!;
             entity.Id = source.Id;
             entity.LogicalName = source.LogicalName;
             entity.EntityState = source.EntityState;
@@ -722,6 +721,10 @@ namespace Source.DLaB.Xrm
                 {
                     switch (attribute.Value)
                     {
+                        case null:
+                            entity[attribute.Key] = null;
+                            break;
+
                         case AliasedValue av:
                             entity[attribute.Key] = new AliasedValue(av.EntityLogicalName, av.AttributeLogicalName, av.Value);
                             break;
@@ -808,11 +811,6 @@ namespace Source.DLaB.Xrm
 
         private static EntityCollection CloneInternal(this EntityCollection source, bool deepClone = true)
         {
-            if (source == null)
-            {
-                return null;
-            }
-
             var clone = new EntityCollection
             {
                 EntityName = source.EntityName,
@@ -842,7 +840,7 @@ namespace Source.DLaB.Xrm
                 return (List<T>)(object)col.Entities.ToList();
             }
 
-            return col.Entities.Select(e => e.AsEntity<T>()).ToList();
+            return col.Entities.Select(e => e.AsEntity<T>()).Where(e => e != null)!.ToList<T>();
         }
 
 #endregion EntityCollection
@@ -870,11 +868,6 @@ namespace Source.DLaB.Xrm
         /// <returns>new cloned entity</returns>
         public static EntityReference Clone(this EntityReference source)
         {
-            if (source == null)
-            {
-                return null;
-            }
-
             var clone = new EntityReference
             {
                 ExtensionData = source.ExtensionData,
@@ -907,7 +900,7 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Returns the Id of the entity reference or Guid.Empty if it is null"
+        /// Returns the Id of the entity reference or Guid.Empty if it is null
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -917,11 +910,11 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Returns the Name of the entity reference or null if it is null"
+        /// Returns the Name of the entity reference or null if it is null
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static string GetNameOrDefault(this EntityReference entity)
+        public static string? GetNameOrDefault(this EntityReference? entity)
         {
             return entity?.Name;
         }
@@ -949,7 +942,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="fe"></param>
         /// <returns></returns>
-        public static string GetEntityName(this FetchExpression fe)
+        public static string? GetEntityName(this FetchExpression fe)
         {
             var xml = new XmlDocument();
             xml.LoadXml(fe.Query);
@@ -1130,7 +1123,7 @@ namespace Source.DLaB.Xrm
         /// <param name="context">The context.</param>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns></returns>
-        public static T GetInputParameterValue<T>(this IExecutionContext context, string parameterName)
+        public static T? GetInputParameterValue<T>(this IExecutionContext context, string parameterName)
         {
             return context.InputParameters.GetParameterValue<T>(parameterName);
         }
@@ -1141,7 +1134,7 @@ namespace Source.DLaB.Xrm
         /// <param name="context">The context.</param>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns></returns>
-        public static object GetInputParameterValue(this IExecutionContext context, string parameterName)
+        public static object? GetInputParameterValue(this IExecutionContext context, string parameterName)
         {
             return context.InputParameters.GetParameterValue(parameterName);
         }
@@ -1153,7 +1146,7 @@ namespace Source.DLaB.Xrm
         /// <param name="context">The context.</param>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns></returns>
-        public static T GetOutputParameterValue<T>(this IExecutionContext context, string parameterName)
+        public static T? GetOutputParameterValue<T>(this IExecutionContext context, string parameterName)
         {
             return context.OutputParameters.GetParameterValue<T>(parameterName);
         }
@@ -1164,7 +1157,7 @@ namespace Source.DLaB.Xrm
         /// <param name="context">The context.</param>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns></returns>
-        public static object GetOutputParameterValue(this IExecutionContext context, string parameterName)
+        public static object? GetOutputParameterValue(this IExecutionContext context, string parameterName)
         {
             return context.OutputParameters.GetParameterValue(parameterName);
         }
@@ -1202,7 +1195,7 @@ namespace Source.DLaB.Xrm
         /// <param name="context">The context.</param>
         /// <param name="variableName">Name of the variable.</param>
         /// <returns></returns>
-        public static T GetSharedVariable<T>(this IExecutionContext context, string variableName)
+        public static T? GetSharedVariable<T>(this IExecutionContext context, string variableName)
         {
             return context.SharedVariables.GetParameterValue<T>(variableName);
         }
@@ -1213,16 +1206,16 @@ namespace Source.DLaB.Xrm
         /// <param name="context">The context.</param>
         /// <param name="variableName">Name of the variable.</param>
         /// <returns></returns>
-        public static object GetSharedVariable(this IExecutionContext context, string variableName)
+        public static object? GetSharedVariable(this IExecutionContext context, string variableName)
         {
             return context.SharedVariables.GetParameterValue(variableName);
         }
 
-#endregion GetParameterValue
+        #endregion GetParameterValue
 
-#endregion IExecutionContext
+        #endregion IExecutionContext
 
-#region IServiceProvider
+        #region IServiceProvider
 
         /// <summary>
         /// Gets the service.
@@ -1230,9 +1223,23 @@ namespace Source.DLaB.Xrm
         /// <typeparam name="T"></typeparam>
         /// <param name="provider">The provider.</param>
         /// <returns></returns>
-        public static T GetService<T>(this IServiceProvider provider)
+        public static T GetRequiredService<T>(this IServiceProvider provider)
         {
-            return (T)provider.GetService(typeof(T));
+            var service = (T?)provider.GetService(typeof(T));
+            return service == null 
+                ? throw new Exception("Required Service not found: " + typeof(T).FullName)
+                : service;
+        }
+
+        /// <summary>
+        /// Gets the service.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="provider">The provider.</param>
+        /// <returns></returns>
+        public static T? GetService<T>(this IServiceProvider provider)
+        {
+            return (T?)provider.GetService(typeof(T));
         }
 
         /// <summary>
@@ -1243,7 +1250,7 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static IOrganizationService CreateOrganizationService(this IServiceProvider provider, Guid? userId = null)
         {
-            return provider.GetService<IOrganizationServiceFactory>().CreateOrganizationService(userId);
+            return provider.GetRequiredService<IOrganizationServiceFactory>().CreateOrganizationService(userId);
         }
 
 #endregion IServiceProvider
@@ -1256,7 +1263,7 @@ namespace Source.DLaB.Xrm
         /// <param name="label">The label.</param>
         /// <param name="defaultIfNull">The default if null.</param>
         /// <returns></returns>
-        public static string GetLocalOrDefaultText(this Label label, string defaultIfNull = null)
+        public static string? GetLocalOrDefaultText(this Label label, string? defaultIfNull = null)
         {
             var local = label.UserLocalizedLabel ?? label.LocalizedLabels.FirstOrDefault();
 
@@ -1548,10 +1555,10 @@ namespace Source.DLaB.Xrm
         /// <param name="parameters">The ParameterCollection.</param>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns></returns>
-        public static T GetParameterValue<T>(this ParameterCollection parameters, string parameterName)
+        public static T? GetParameterValue<T>(this ParameterCollection parameters, string parameterName)
         {
             var attributeValue = parameters.GetParameterValue(parameterName);
-            return (T)(attributeValue ?? default(T));
+            return (T?)(attributeValue ?? default(T));
         }
 
         /// <summary>
@@ -1561,7 +1568,7 @@ namespace Source.DLaB.Xrm
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">parameterName</exception>
-        public static object GetParameterValue(this ParameterCollection parameters, string parameterName)
+        public static object? GetParameterValue(this ParameterCollection parameters, string parameterName)
         {
             if (string.IsNullOrWhiteSpace(parameterName))
             {
@@ -1581,7 +1588,7 @@ namespace Source.DLaB.Xrm
         /// <param name="throwIfNotFound">Throws an error if the property does not contain an AttributeLogicalNameAttribute</param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        public static string GetAttributeLogicalName(this PropertyInfo property, bool throwIfNotFound = true)
+        public static string? GetAttributeLogicalName(this PropertyInfo property, bool throwIfNotFound = true)
         {
             var attribute = property.GetCustomAttribute<AttributeLogicalNameAttribute>();
             if (attribute == null && throwIfNotFound)
@@ -1773,7 +1780,7 @@ namespace Source.DLaB.Xrm
         public static T DeserializeEntity<T>(this string xml) where T : Entity
         {
             var entity = xml.DeserializeEntity();
-            return entity?.AsEntity<T>();
+            return entity.AsEntity<T>();
         }
 
         /// <summary>

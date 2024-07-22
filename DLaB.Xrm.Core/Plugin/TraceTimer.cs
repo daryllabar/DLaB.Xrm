@@ -126,10 +126,6 @@ namespace Source.DLaB.Xrm.Plugin
                 // release any unmanaged objects
                 // set the object references to null
                 Stop();
-
-                EndMessageFormat = null;
-                TracingService = null;
-                Timer = null;
             }
             catch
             {

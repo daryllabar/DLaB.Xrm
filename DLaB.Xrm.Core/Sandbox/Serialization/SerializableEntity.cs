@@ -1,17 +1,16 @@
+#nullable enable
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using Microsoft.Xrm.Sdk;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 namespace DLaB.Xrm.Sandbox.Serialization
 #else
 namespace Source.DLaB.Xrm.Sandbox.Serialization
 #endif
-	
+
 {
     /// <summary>
     /// In Sandbox Mode, You can't serialize and entity.  This Entity Type removes the dependencies that required a non-sandboxed plugin from serializing an Entity
@@ -26,7 +25,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// The name of the logical.
         /// </value>
         [DataMember]
-        public string LogicalName { get; set; }
+        public string? LogicalName { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier.
@@ -80,7 +79,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// The row version.
         /// </value>
         [DataMember]
-        public string RowVersion { get; set; }
+        public string? RowVersion { get; set; }
 #if !PRE_KEYATTRIBUTE
         /// <summary>
         /// Gets or sets the key attributes.
@@ -97,7 +96,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// <value>
         /// The extension data.
         /// </value>
-        public ExtensionDataObject ExtensionData { get; set; }
+        public ExtensionDataObject? ExtensionData { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableEntity"/> class.
@@ -140,9 +139,10 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// </returns>
         public static explicit operator Entity(SerializableEntity entity)
         {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (entity == null)
             {
-                return null;
+                return null!;
             }
             var xrmEntity = new Entity
             {

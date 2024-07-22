@@ -40,7 +40,6 @@ namespace Source.DLaB.Xrm
             var response = GetEntitiesWithCookie(service, qe);
 
             while (response.MoreRecords
-                   && response.Entities != null
                    && (maxCount == null || maxCount.Value <= _totalRetrievedCount))
             {
                 UpdatePageCount(page, maxCount);
@@ -71,7 +70,7 @@ namespace Source.DLaB.Xrm
             }
 
             // No more records on server, return whatever has been received
-            if (response.Entities == null)
+            if (response.Entities.Count == 0)
             {
                 yield break;
             }
@@ -123,19 +122,25 @@ namespace Source.DLaB.Xrm
         private EntitiesWithCookie<T> GetEntitiesWithCookie(IOrganizationService service, QueryExpression qe)
         {
             var response = service.RetrieveMultiple(qe);
-            return new EntitiesWithCookie<T>
-            {
-                Entities = response.Entities.Select(e => e.AsEntity<T>()),
-                Cookie = response.PagingCookie,
-                MoreRecords = response.MoreRecords
-            };
+            return new EntitiesWithCookie<T>(
+                response.Entities.Select(e => e.AsEntity<T>()),
+                response.PagingCookie,
+                response.MoreRecords
+            );
         }
 
         private class EntitiesWithCookie<TEntity> where TEntity : Entity
         {
-            public IEnumerable<TEntity> Entities { get; set; }
-            public string Cookie { get; set; }
-            public bool MoreRecords { get; set; }
+            public EntitiesWithCookie(IEnumerable<TEntity> select, string responsePagingCookie, bool responseMoreRecords)
+            {
+                Entities = select.ToList();
+                Cookie = responsePagingCookie;
+                MoreRecords = responseMoreRecords;
+            }
+
+            public List<TEntity> Entities { get; }
+            public string Cookie { get; }
+            public bool MoreRecords { get; }
         }
     }
 }

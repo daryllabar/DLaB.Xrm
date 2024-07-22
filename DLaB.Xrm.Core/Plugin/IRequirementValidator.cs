@@ -1,4 +1,5 @@
-﻿#if DLAB_UNROOT_NAMESPACE || DLAB_XRM
+﻿#nullable enable
+#if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 namespace DLaB.Xrm.Plugin
 #else
 namespace Source.DLaB.Xrm.Plugin
@@ -12,7 +13,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <summary>
         /// The reason why the requirement was not met.  SkipExecution must be called first.
         /// </summary>
-        InvalidRequirementReason Reason { get; }
+        InvalidRequirementReason? Reason { get; }
 
         /// <summary>
         /// Returns true if the context does not meet the requirements for execution

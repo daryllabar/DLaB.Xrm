@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Linq;
 #if !DLAB_XRM_DEBUG
@@ -108,13 +109,13 @@ namespace Source.DLaB.Xrm.Plugin
         /// <inheritdoc />
         public IServiceProvider ServiceProvider { get; }
         /// <inheritdoc />
-        public RegisteredEvent Event { get; private set; }
+        public RegisteredEvent Event { get; private set; } = null!;
         /// <inheritdoc />
         public IOrganizationService InitiatingUserOrganizationService => _organizationServices.InitiatingUser.Value;
         /// <inheritdoc />
         public IOrganizationService OrganizationService => _organizationServices.Organization.Value;
         /// <inheritdoc />
-        public string PluginTypeName { get; private set; }
+        public string PluginTypeName { get; private set; } = null!;
         /// <inheritdoc />
         public virtual EntityReference PrimaryEntity => new EntityReference(PrimaryEntityName, PrimaryEntityId);
         /// <inheritdoc />
@@ -168,7 +169,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="pluginTypeName"></param>
         /// <param name="event"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DLaBExtendedPluginContextBase(IServiceProvider serviceProvider, string pluginTypeName, RegisteredEvent @event = null) : this(serviceProvider)
+        public DLaBExtendedPluginContextBase(IServiceProvider serviceProvider, string pluginTypeName, RegisteredEvent? @event = null) : this(serviceProvider)
         {
             InitializePluginProperties(null, pluginTypeName, @event);
         }
@@ -190,8 +191,9 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="plugin">The plugin.</param>
         /// <param name="pluginTypeName">The name of the Plugin Type</param>
         /// <param name="event">The registered Event for this context</param>
-        private void InitializePluginProperties(IRegisteredEventsPlugin plugin, string pluginTypeName = null, RegisteredEvent @event = null)
+        private void InitializePluginProperties(IRegisteredEventsPlugin? plugin, string? pluginTypeName = null, RegisteredEvent? @event = null)
         {
+#pragma warning disable CS8601 // Possible null reference assignment.  Exception will be thrown if null
             if (plugin == null)
             {
                 Event = @event;
@@ -199,9 +201,10 @@ namespace Source.DLaB.Xrm.Plugin
             }
             else
             {
-                Event = PluginExecutionContext.GetEvent(plugin.RegisteredEvents);
+                Event = PluginExecutionContext.GetEvent(plugin.RegisteredEvents)!;
                 PluginTypeName = plugin.GetType().FullName;
             }
+#pragma warning restore CS8601 // Possible null reference assignment.
 
             if (Event == null)
             {
@@ -283,7 +286,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns>A service object of type <paramref name="serviceType" />.
         /// -or-
         /// <see langword="null" /> if there is no service object of type <paramref name="serviceType" />.</returns>
-        public object GetService(Type serviceType)
+        public object? GetService(Type serviceType)
         {
             return ServiceProvider.GetService(serviceType);
         }

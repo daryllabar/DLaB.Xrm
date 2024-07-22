@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -52,9 +53,9 @@ namespace Source.DLaB.Xrm.Plugin
         /// </summary>
         public IIocContainer Container => _container.Value;
 
-        private IEnumerable<RegisteredEvent> _events;
+        private IEnumerable<RegisteredEvent>? _events;
         /// <inheritdoc />
-        public IEnumerable<RegisteredEvent> RegisteredEvents => _events ?? (_events = CreateEvents());
+        public IEnumerable<RegisteredEvent> RegisteredEvents => _events ??= CreateEvents();
 
         /// <summary>
         /// Gets or sets the secure configuration.
@@ -62,14 +63,14 @@ namespace Source.DLaB.Xrm.Plugin
         /// <value>
         /// The secure configuration.
         /// </value>
-        public string SecureConfig { get; }
+        public string? SecureConfig { get; }
         /// <summary>
         /// Gets or sets the unsecure configuration.
         /// </summary>
         /// <value>
         /// The unsecure configuration.
         /// </value>
-        public string UnsecureConfig { get; }
+        public string? UnsecureConfig { get; }
 
         #endregion Properties
 
@@ -81,7 +82,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="unsecureConfig"></param>
         /// <param name="secureConfig"></param>
         /// <param name="container"></param>
-        protected DLaBGenericPluginBase(string unsecureConfig, string secureConfig, IIocContainer container = null)
+        protected DLaBGenericPluginBase(string? unsecureConfig, string? secureConfig, IIocContainer? container = null)
         {
             _lazyIsInitialized = new Lazy<bool>(LazyTriggeredInitialize);
             SecureConfig = secureConfig;
@@ -114,7 +115,7 @@ namespace Source.DLaB.Xrm.Plugin
         #region Initialize
 
         // This used to be a simple lock, but the Solution Checker doesn't like locks, so this is an ugly Lazy implementation
-        private volatile IServiceProvider _initializerServiceProvider; // Maybe set multiple
+        private volatile IServiceProvider _initializerServiceProvider = null!; // Maybe set multiple
         private readonly Lazy<bool> _lazyIsInitialized; // Initialized in Constructor
 
         private bool LazyTriggeredInitialize()
@@ -171,7 +172,7 @@ namespace Source.DLaB.Xrm.Plugin
                 throw new InvalidOperationException("The type in attribute.Recorder must implement IPluginServicesRegistrationRecorder.");
             }
 
-            var recorder = (IPluginServicesRegistrationRecorder)Activator.CreateInstance(attribute.Recorder);
+            var recorder = (IPluginServicesRegistrationRecorder)Activator.CreateInstance(attribute.Recorder)!;
             return recorder.RegisterPluginServices(container, this, UnsecureConfig, SecureConfig);
         }
 
@@ -392,7 +393,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// </summary>
         protected virtual bool IsPostContextTraced(T context) { return ContainsAnyIgnoreCase(SecureConfig, TracePostContext, TracePrePostContext); }
 
-        private bool ContainsAnyIgnoreCase(string source, params string[] values)
+        private bool ContainsAnyIgnoreCase(string? source, params string[] values)
         {
             return source != null
                 && values.Any(v => CultureInfo.InvariantCulture.CompareInfo.IndexOf(source, v, CompareOptions.IgnoreCase) >= 0);

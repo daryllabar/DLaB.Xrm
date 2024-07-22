@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Linq;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
@@ -20,7 +21,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <summary>
         /// The columns that did not meet the requirement
         /// </summary>
-        public IReadOnlyList<string> Columns { get; set; }
+        public IReadOnlyList<string>? Columns { get; set; }
 
         /// <summary>
         /// The type of Column requirement
@@ -43,9 +44,9 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="mapping">The Mapping</param>
         public List<string> MapFormattedColumn(IDictionary<string, string> mapping)
         {
-            return Columns.Select(c => mapping.TryGetValue(c, out var formatted)
+            return Columns?.Select(c => mapping.TryGetValue(c, out var formatted)
                 ? formatted
-                : c).ToList();
+                : c)?.ToList() ?? new List<string>();
         }
     }
 }

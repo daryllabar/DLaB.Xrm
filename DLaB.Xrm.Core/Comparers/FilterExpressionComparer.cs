@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using Microsoft.Xrm.Sdk.Query;
 #if DLAB_UNROOT_COMMON_NAMESPACE
@@ -23,7 +24,7 @@ namespace Source.DLaB.Xrm.Comparers
         /// <param name="filter1">The filter1.</param>
         /// <param name="filter2">The filter2.</param>
         /// <returns></returns>
-        public bool Equals(FilterExpression filter1, FilterExpression filter2)
+        public bool Equals(FilterExpression? filter1, FilterExpression? filter2)
         {
             if (filter1 == filter2) { return true; }
             if (filter1 == null || filter2 == null) { return false; }

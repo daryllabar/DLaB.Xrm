@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>DLaB.Xrm</id>
+    <version>5.0.0.1</version>
+    <authors>Daryl LaBar</authors>
+    <owners>Daryl LaBar</owners>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/daryllabar/DLaB.Xrm</projectUrl>
+    <icon>images\Icon.64x64.png</icon>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Contains extensions for Xrm development.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>Dynamics CRM Plugin XRM</tags>
+    <dependencies>
+			<group>
+				<dependency id="DLaB.Common" version="1.5.0.1" include="all" />
+			</group>
+			<group targetFramework=".NETFramework4.6.2">
+	      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.52" include="all" />
+			</group>
+			<group targetFramework=".NETFramework4.7.2">
+				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.52" include="all" />
+			</group>
+			<group targetFramework=".NETFramework4.8">
+				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.52" include="all" />
+			</group>
+	    <group targetFramework="NET6.0">
+				<dependency id="Microsoft.PowerPlatform.Dataverse.Client" version="1.1.27" include="all" />
+				<dependency id="System.Runtime.Caching" version="8.0.0" include="all" />
+		    <dependency id="System.Text.Json" version="8.0.4" include="all" />
+				<dependency id="System.Threading.Tasks.Extensions" version="4.5.4" include="all" />
+	    </group>
+    </dependencies>
+    <frameworkAssemblies>
+	    <frameworkAssembly assemblyName="System.Configuration"         targetFramework="net462" />
+	    <frameworkAssembly assemblyName="System.Runtime.Caching"       targetFramework="net462" />
+	    <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="net462" />
+	    <frameworkAssembly assemblyName="System.Service.Model"         targetFramework="net462" />
+
+	    <frameworkAssembly assemblyName="System.Configuration"         targetFramework="net472" />
+	    <frameworkAssembly assemblyName="System.Runtime.Caching"       targetFramework="net472" />
+	    <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="net472" />
+	    <frameworkAssembly assemblyName="System.Service.Model"         targetFramework="net472" />
+
+	    <frameworkAssembly assemblyName="System.Configuration"         targetFramework="net48" />
+	    <frameworkAssembly assemblyName="System.Runtime.Caching"       targetFramework="net48" />
+	    <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="net48" />
+	    <frameworkAssembly assemblyName="System.Service.Model"         targetFramework="net48" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+	  <file src="bin\Release\net462\DLaB.Xrm.dll" target="lib\net462\DLaB.Xrm.dll" />
+	  <file src="bin\Release\net472\DLaB.Xrm.dll" target="lib\net472\DLaB.Xrm.dll" />
+	  <file src="bin\Release\net48\DLaB.Xrm.dll"  target="lib\net48\DLaB.Xrm.dll" />
+	  <file src="bin\Release\net6.0\DLaB.Xrm.dll" target="lib\net6.0\DLaB.Xrm.dll" />
+		
+    <file src="..\Icon.64x64.png" target="images\" />
+  </files>
+</package>

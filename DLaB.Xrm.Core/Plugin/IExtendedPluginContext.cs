@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using Microsoft.Xrm.Sdk;
 
@@ -63,9 +64,20 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns>A service object specified type.
         /// -or-
         /// <see langword="null" /> if there is no service object of specified type.</returns>
-        public static TService Get<TService>(this IExtendedPluginContext context) where TService : class
+        public static TService? Get<TService>(this IExtendedPluginContext context) where TService : class
         {
             return context.ServiceProvider.GetService<TService>();
+        }
+
+        /// <summary>Gets the service object of the specified type, throwing an error if not found.</summary>
+        /// <typeparam name="TService">A type that specifies the type of service object to get</typeparam>
+        /// <param name="context">The context</param>
+        /// <returns>A service object specified type.
+        /// -or-
+        /// <see langword="null" /> if there is no service object of specified type.</returns>
+        public static TService GetRequired<TService>(this IExtendedPluginContext context) where TService : class
+        {
+            return context.ServiceProvider.GetRequiredService<TService>();
         }
     }
 }

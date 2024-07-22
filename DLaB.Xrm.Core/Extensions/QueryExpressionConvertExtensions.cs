@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -118,14 +119,14 @@ namespace Source.DLaB.Xrm
             return ce.Values[index];
         }
 
-        private static string GetDisplayValue(object value)
+        private static string GetDisplayValue(object? value)
         {
             if (value == null) { return "<null>"; }
             var type = value.GetType();
 
-            if (typeof(String).IsAssignableFrom(type))
+            if (typeof(string).IsAssignableFrom(type))
             {
-                if (DateTime.TryParse(value as String, out DateTime localTime))
+                if (DateTime.TryParse(value as string, out DateTime localTime))
                 {
                     value = localTime.ToUniversalTime().ToString(CultureInfo.InvariantCulture);
                 }
@@ -147,7 +148,7 @@ namespace Source.DLaB.Xrm
                 return "'" + dateTimeValue + "'";
             }
             
-            return value.ToString();
+            return value.ToString()!;
         }
 
         #endregion ConditionExpression

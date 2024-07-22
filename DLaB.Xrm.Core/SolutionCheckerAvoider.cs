@@ -22,7 +22,7 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static ColumnSet CreateColumnSetWithAllColumns()
         {
-            return (ColumnSet)Activator.CreateInstance(typeof(ColumnSet), new object[] { true });
+            return (ColumnSet)Activator.CreateInstance(typeof(ColumnSet), new object[] { true })!;
         }
     }
 }

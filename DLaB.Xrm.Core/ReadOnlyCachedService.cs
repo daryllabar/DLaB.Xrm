@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿#nullable enable
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using System;
@@ -49,7 +50,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         protected virtual string ParamKvpSeparator => DefaultRequestParamKvpSeparator;
 
-        private MemoryCache _cache;
+        private MemoryCache? _cache;
         /// <summary>
         /// Cache that is used to store the results of requests
         /// </summary>
@@ -268,11 +269,11 @@ namespace Source.DLaB.Xrm
             var parts = request.Parameters.Select(kvp => ReplaceSeparators(kvp.Key) + ParamKeySeparator + ReplaceSeparators(kvp.Value?.ObjectToStringDebug()));
             return ReplaceSeparators(request.RequestName) + ParamKvpSeparator + string.Join(ParamKvpSeparator, parts);
 
-            string ReplaceSeparators(string value)
+            string ReplaceSeparators(string? value)
             {
                 return string.IsNullOrWhiteSpace(value)
                     ? string.Empty
-                    : value.Replace(ParamKeySeparator, ' ').Replace(ParamKvpSeparator, " ");
+                    : value!.Replace(ParamKeySeparator, ' ').Replace(ParamKvpSeparator, " ");
             }
         }
     }
