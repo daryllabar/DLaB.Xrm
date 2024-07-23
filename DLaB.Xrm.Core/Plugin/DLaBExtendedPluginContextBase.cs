@@ -169,7 +169,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <param name="pluginTypeName"></param>
         /// <param name="event"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DLaBExtendedPluginContextBase(IServiceProvider serviceProvider, string pluginTypeName, RegisteredEvent? @event = null) : this(serviceProvider)
+        public DLaBExtendedPluginContextBase(IServiceProvider serviceProvider, string pluginTypeName, RegisteredEvent @event) : this(serviceProvider)
         {
             InitializePluginProperties(null, pluginTypeName, @event);
         }
