@@ -135,6 +135,15 @@ namespace DLaB.Xrm.Tests.Core
         }
 
         [TestMethod]
+        public void NestedLazyType_Should_Pop()
+        {
+            _sut.AddScoped<IFirst, First>();
+            var provider = _sut.BuildServiceProvider();
+            Assert.IsNotNull(provider.Get<First>());
+            Assert.IsNotNull(provider.Get<Second>());
+        }
+
+        [TestMethod]
         public void IgnoreStrategy()
         {
             _sut.AddSingleton<IExample>(s => new Example());
@@ -227,5 +236,23 @@ namespace DLaB.Xrm.Tests.Core
     public interface IExample
     {
         string Value { get; set; }
+    }
+
+    public class First : IFirst
+    {
+        public First(Lazy<IExample> example)
+        {
+
+        }
+    }
+
+    public interface IFirst { }
+
+    public class Second
+    {
+        public Second(IFirst first)
+        {
+
+        }
     }
 }

@@ -147,7 +147,6 @@ namespace Source.DLaB.Xrm.Ioc
                 var calls = string.Join("," + Environment.NewLine, _currentRequestedTypes.Select(t => "  - " + t.FullName));
                 throw new InvalidOperationException($"Circular dependency detected for type {registration.Type.FullName}.{Environment.NewLine}{calls}");
             }
-            _currentRequestedTypes.Push(registration.Type);
 
             if (registration.Type.IsGenericType && registration.Type.GetGenericTypeDefinition() == typeof(Lazy<>))
             {
@@ -157,6 +156,8 @@ namespace Source.DLaB.Xrm.Ioc
 
             try
             {
+                _currentRequestedTypes.Push(registration.Type);
+
                 var constructor = registration.Type.GetConstructors()[0];
                 var constructorParameters = constructor.GetParameters();
                 if (constructorParameters.Length == 0)
