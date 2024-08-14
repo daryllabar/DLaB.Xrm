@@ -75,9 +75,6 @@ namespace Source.DLaB.Xrm
             {
                 switch (kvp.Value)
                 {
-                    case null:
-                        qe.WhereEqual(new ConditionExpression(kvp.Key, ConditionOperator.Null));
-                        break;
                     case EntityReference ef:
                         qe.WhereEqual(kvp.Key, ef.Id);
                         break;

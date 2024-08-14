@@ -182,7 +182,7 @@ namespace Source.DLaB.Xrm
         public static FilterExpression WhereEqual(this FilterExpression filterExpression, params object[] columnNameAndValuePairs)
         {
             if (columnNameAndValuePairs == null) { throw new ArgumentNullException(nameof(columnNameAndValuePairs)); }
-            int length = columnNameAndValuePairs.Length;
+            var length = columnNameAndValuePairs.Length;
             if (length == 0)
             {
                 return filterExpression;
@@ -204,12 +204,12 @@ namespace Source.DLaB.Xrm
                     "columnNameAndValuePairs length");
             }
 
-            int orIndex = 0;
-            int conditionIndex = 0;
+            var orIndex = 0;
+            var conditionIndex = 0;
             var orFilter = GetOrFilter(filterExpression, ors);
             var currentFilter = hasOr ? orFilter!.AddFilter(LogicalOperator.And) : filterExpression;
 
-            for (int i = 0; i < length; i += 2)
+            for (var i = 0; i < length; i += 2)
             {
                 if (hasOr && ors.Length > orIndex && ors[orIndex] == i)
                 {
