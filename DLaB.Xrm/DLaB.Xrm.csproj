@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	  <DebugType>embedded</DebugType>
-	  <FileVersion>5.0.0.3</FileVersion>
-	  <Version>5.0.0.3</Version>
+	  <FileVersion>5.0.0.4</FileVersion>
+	  <Version>5.0.0.4</Version>
 	  <SignAssembly>true</SignAssembly>
 		<TargetFrameworks>net462;net472;net48;net6.0</TargetFrameworks>
     <OutputType>Library</OutputType>
@@ -62,10 +62,10 @@
   </ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'">
-    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.52" />
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.56" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-		<PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.1.27" />
+		<PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.1.32" />
     <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
 	</ItemGroup> 

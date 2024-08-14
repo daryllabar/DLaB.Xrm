@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DLaB.Xrm</id>
-    <version>5.0.0.3</version>
+    <version>5.0.0.4</version>
     <authors>Daryl LaBar</authors>
     <owners>Daryl LaBar</owners>
     <license type="expression">MIT</license>
@@ -16,15 +16,15 @@
     <dependencies>
 			<group targetFramework=".NETFramework4.6.2">
 				<dependency id="DLaB.Common" version="1.5.0.1" include="all" />
-	      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.52" include="all" />
+	      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.56" include="all" />
 			</group>
 			<group targetFramework=".NETFramework4.7.2">
 				<dependency id="DLaB.Common" version="1.5.0.1" include="all" />
-				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.52" include="all" />
+				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.56" include="all" />
 			</group>
 			<group targetFramework=".NETFramework4.8">
 				<dependency id="DLaB.Common" version="1.5.0.1" include="all" />
-				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.52" include="all" />
+				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.56" include="all" />
 			</group>
 	    <group targetFramework="NET6.0">
 				<dependency id="DLaB.Common" version="1.5.0.1" include="all" />
@@ -38,17 +38,17 @@
 	    <frameworkAssembly assemblyName="System.Configuration"         targetFramework="net462" />
 	    <frameworkAssembly assemblyName="System.Runtime.Caching"       targetFramework="net462" />
 	    <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="net462" />
-	    <frameworkAssembly assemblyName="System.Service.Model"         targetFramework="net462" />
+	    <frameworkAssembly assemblyName="System.ServiceModel"         targetFramework="net462" />
 
 	    <frameworkAssembly assemblyName="System.Configuration"         targetFramework="net472" />
 	    <frameworkAssembly assemblyName="System.Runtime.Caching"       targetFramework="net472" />
 	    <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="net472" />
-	    <frameworkAssembly assemblyName="System.Service.Model"         targetFramework="net472" />
+	    <frameworkAssembly assemblyName="System.ServiceModel"         targetFramework="net472" />
 
 	    <frameworkAssembly assemblyName="System.Configuration"         targetFramework="net48" />
 	    <frameworkAssembly assemblyName="System.Runtime.Caching"       targetFramework="net48" />
 	    <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="net48" />
-	    <frameworkAssembly assemblyName="System.Service.Model"         targetFramework="net48" />
+	    <frameworkAssembly assemblyName="System.ServiceModel"         targetFramework="net48" />
     </frameworkAssemblies>
   </metadata>
   <files>
