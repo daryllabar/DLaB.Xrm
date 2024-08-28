@@ -1,10 +1,9 @@
 ﻿#if NET
-extern alias DLaBXrm;
 using DataverseUnitTest;
 using DataverseUnitTest.Builders;
+using Extensions = DataverseUnitTest.Extensions;
 #else
 using DLaB.Xrm.Test.Builders;
-using Source.DLaB.Xrm;
 #endif
 
 using System;
@@ -16,6 +15,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
+using Source.DLaB.Xrm;
 
 namespace DLaB.Xrm.Tests.Core
 {
@@ -32,7 +32,7 @@ namespace DLaB.Xrm.Tests.Core
             var contact = sut.GetEntity<Contact>(id);
             contact.FirstName = "First";
             Assert.IsNotNull(contact);
-            service.Delete(contact);
+            Extensions.Delete(service, contact);
             var contact2 = sut.GetEntity<Contact>(id);
             Assert.AreNotEqual(contact.FirstName, contact2.FirstName);
         }
@@ -48,8 +48,8 @@ namespace DLaB.Xrm.Tests.Core
             
             var contacts = sut.GetEntities<Contact>();
             Assert.AreEqual(2, contacts.Count);
-            service.Delete(contacts[0]);
-            service.Delete(contacts[1]);
+            Extensions.Delete(service, contacts[0]);
+            Extensions.Delete(service, contacts[1]);
             
             contacts = sut.GetEntities<Contact>();
             Assert.AreEqual(2, contacts.Count);

@@ -1,12 +1,10 @@
 ﻿#if NET
 using DataverseUnitTest;
-using DLaB.Xrm.Plugin;
-#else
-using Source.DLaB.Xrm.Plugin;
 #endif
 using DLaB.Xrm.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using Source.DLaB.Xrm.Plugin;
 
 namespace DLaB.Xrm.Tests.Core.Plugin
 {

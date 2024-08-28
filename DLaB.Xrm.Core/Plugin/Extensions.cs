@@ -342,7 +342,7 @@ namespace Source.DLaB.Xrm.Plugin
         #endregion GetContexts
 
         /// <summary>
-        /// Gets the event by iterating over all of the expected registered events to ensure that the plugin has been invoked by an expected event.
+        /// Gets the event by iterating over all the expected registered events to ensure that the plugin has been invoked by an expected event.
         /// For any given plug-in event at an instance in time, we would expect at most 1 result to match.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -439,6 +439,33 @@ namespace Source.DLaB.Xrm.Plugin
             return context.PostEntityImages.GetEntity<T>(imageName, DLaBExtendedPluginContextBase.PluginImageNames.PostImage);
         }
 
+
+        /// <summary>
+        /// If the imageName is populated and the PreEntityImages contains the given imageName Key, the Value is cast to the Entity type T, else an error is thrown
+        /// If the imageName is not populated, than the first image in PreEntityImages with a value, is cast to the Entity type T, else an error is thrown
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="imageName"></param>
+        /// <returns></returns>
+        public static T GetRequiredPreEntity<T>(this IExecutionContext context, string? imageName = null) where T : Entity
+        {
+            return context.GetPreEntity<T>(imageName) ?? throw new InvalidPluginExecutionException("The required pre entity was not found!" + (string.IsNullOrWhiteSpace(imageName) ? string.Empty : "  Image Name: " + imageName));
+        }
+
+        /// <summary>
+        /// If the imageName is populated and the PostEntityImages contains the given imageName Key, the Value is cast to the Entity type T, else an error is thrown
+        /// If the imageName is not populated, than the first image in PostEntityImages with a value, is cast to the Entity type T, else an error is thrown
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="imageName"></param>
+        /// <returns></returns>
+        public static T GetRequiredPostEntity<T>(this IExecutionContext context, string? imageName = null) where T : Entity
+        {
+            return context.GetPostEntity<T>() ?? throw new InvalidPluginExecutionException("The required post entity was not found!" + (string.IsNullOrWhiteSpace(imageName) ? string.Empty : "  Image Name: " + imageName));
+        }
+
         #endregion Get(Pre/Post)Entities
 
         /// <summary>
@@ -470,15 +497,13 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         public static T? GetTarget<T>(this IPluginExecutionContext context) where T : Entity
         {
-            var parameters = context.InputParameters;
-            if (!parameters.ContainsKey(ParameterName.Target) || !(parameters[ParameterName.Target] is Entity))
+            if (context.InputParameters.TryGetValue(ParameterName.Target, out var target) && target is Entity targetEntity)
             {
-                return null;
+                // Obtain the target business entity from the input parameters.
+                return targetEntity.AsEntity<T>();
             }
 
-            // Obtain the target business entity from the input parameters.
-
-            return ((Entity)parameters[ParameterName.Target])?.AsEntity<T>();
+            return null;
         }
 
         /// <summary>
@@ -495,6 +520,29 @@ namespace Source.DLaB.Xrm.Plugin
                 entity = (EntityReference)parameters[ParameterName.Target];
             }
             return entity;
+        }
+
+        /// <summary>
+        /// Gets the required target entity from the plugin execution context, throwing an exception if not found.
+        /// </summary>
+        /// <typeparam name="T">The type of the target entity.</typeparam>
+        /// <param name="context">The plugin execution context.</param>
+        /// <returns>The required target entity.</returns>
+        public static T GetRequiredTarget<T>(this IPluginExecutionContext context) where T : Entity
+        {
+            return context.GetTarget<T>()
+                   ?? throw new InvalidPluginExecutionException("Context is missing required target!");
+        }
+
+        /// <summary>
+        /// Gets the required target entity reference from the plugin execution context, throwing an exception if not found.
+        /// </summary>
+        /// <param name="context">The plugin execution context.</param>
+        /// <returns>The required target entity reference.</returns>
+        public static EntityReference GetRequiredTargetEntityReference(this IPluginExecutionContext context)
+        {
+            return context.GetTargetEntityReference()
+                   ?? throw new InvalidPluginExecutionException("Context is missing required target entity reference!");
         }
 
         #endregion GetTarget

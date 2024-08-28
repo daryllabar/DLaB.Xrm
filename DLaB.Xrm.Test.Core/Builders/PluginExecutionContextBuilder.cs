@@ -1,11 +1,10 @@
 ﻿#if NET
-extern alias DLaBXrm;
 using DataverseUnitTest.Builders;
-using DLaBXrm::DLaB.Xrm.Plugin;
 #else
 using DLaB.Xrm.Test.Builders;
-using Source.DLaB.Xrm.Plugin;
 #endif
+
+using Source.DLaB.Xrm.Plugin;
 using System;
 using System.Linq;
 

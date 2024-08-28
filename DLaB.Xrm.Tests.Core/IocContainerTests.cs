@@ -1,12 +1,7 @@
-﻿#if NET
-extern alias DLaBXrm;
-using DLaBXrm::DLaB.Xrm.Ioc;
-#else
-using Source.DLaB.Xrm.Ioc;
-#endif
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk.Extensions;
 using System;
+using Source.DLaB.Xrm.Ioc;
 
 namespace DLaB.Xrm.Tests.Core
 {

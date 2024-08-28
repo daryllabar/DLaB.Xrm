@@ -1,21 +1,15 @@
-﻿#if NET
-extern alias DLaBXrm;
-using DLaBXrm::DLaB.Xrm.Plugin;
-using MessageType = DLaBXrm::DLaB.Xrm.Plugin.MessageType;
-using ParameterName = DLaBXrm::DLaB.Xrm.Plugin.ParameterName;
-#else
-using Source.DLaB.Xrm.Plugin;
-using MessageType = Source.DLaB.Xrm.Plugin.MessageType;
-using ParameterName = Source.DLaB.Xrm.Plugin.ParameterName;
-#endif
-using DLaB.Xrm.Entities;
+﻿using DLaB.Xrm.Entities;
 using DLaB.Xrm.Test;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
+using Source.DLaB.Xrm;
+using Source.DLaB.Xrm.Plugin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using MessageType = Source.DLaB.Xrm.Plugin.MessageType;
+using ParameterName = Source.DLaB.Xrm.Plugin.ParameterName;
 
 namespace DLaB.Xrm.Tests.Core
 {
