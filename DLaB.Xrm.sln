@@ -19,6 +19,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DLaB.Xrm.Workflow.Core", "D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{DEDEE8E9-2FCB-484A-AA86-B43C3DEA324E}"
 	ProjectSection(SolutionItems) = preProject
+		DLaB.Xrm\DLaB.Xrm.nuspec = DLaB.Xrm\DLaB.Xrm.nuspec
 		DLaB.Xrm\DLaB.Xrm.Source.nuspec = DLaB.Xrm\DLaB.Xrm.Source.nuspec
 		DLaB.Xrm.Workflow\DLaB.Xrm.Workflow.Source.nuspec = DLaB.Xrm.Workflow\DLaB.Xrm.Workflow.Source.nuspec
 		Icon.64x64.png = Icon.64x64.png

@@ -15,20 +15,20 @@
     <tags>Dynamics CRM Plugin XRM</tags>
     <dependencies>
 			<group targetFramework=".NETFramework4.6.2">
-				<dependency id="DLaB.Common" version="1.5.0.1" include="all" />
-	      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.56" include="all" />
+				<dependency id="DLaB.Common" version="1.5.*" include="all" />
+	      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.*" include="all" />
 			</group>
 			<group targetFramework=".NETFramework4.7.2">
-				<dependency id="DLaB.Common" version="1.5.0.1" include="all" />
-				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.56" include="all" />
+				<dependency id="DLaB.Common" version="1.5.*" include="all" />
+				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.*" include="all" />
 			</group>
 			<group targetFramework=".NETFramework4.8">
-				<dependency id="DLaB.Common" version="1.5.0.1" include="all" />
-				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.2.56" include="all" />
+				<dependency id="DLaB.Common" version="1.5.*" include="all" />
+				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.*" include="all" />
 			</group>
 	    <group targetFramework="NET6.0">
-				<dependency id="DLaB.Common" version="1.5.0.1" include="all" />
-				<dependency id="Microsoft.PowerPlatform.Dataverse.Client" version="1.1.27" include="all" />
+				<dependency id="DLaB.Common" version="1.5.*" include="all" />
+				<dependency id="Microsoft.PowerPlatform.Dataverse.Client" version="1.*" include="all" />
 				<dependency id="System.Runtime.Caching" version="8.0.0" include="all" />
 		    <dependency id="System.Text.Json" version="8.0.4" include="all" />
 				<dependency id="System.Threading.Tasks.Extensions" version="4.5.4" include="all" />

@@ -15,7 +15,7 @@
     <tags>Dynamics CRM Plugin XRM</tags>
     <dependencies>
 	    <group>
-		    <dependency id="DLaB.Common.Source" version="1.5.0.1" include="all" />
+		    <dependency id="DLaB.Common.Source" version="1.5.*" include="all" />
 	    </group>
     </dependencies>
     <frameworkAssemblies>

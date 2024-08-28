@@ -15,6 +15,7 @@
     <PackageReference Include="DLaB.Common" Version="1.5.0.1" />
     <PackageReference Include="DLaB.Common.Source" Version="1.5.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
+    <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.1.32" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.5.2" />
     <PackageReference Include="MSTest.TestFramework" Version="3.5.2" />
     <PackageReference Include="coverlet.collector" Version="6.0.2">

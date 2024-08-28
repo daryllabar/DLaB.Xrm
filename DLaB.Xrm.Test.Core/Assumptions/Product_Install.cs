@@ -1,5 +1,6 @@
 ﻿#if NET
 using DataverseUnitTest.Assumptions;
+using Source.DLaB.Xrm;
 #endif
 using DLaB.Xrm.Entities;
 using Microsoft.Xrm.Sdk;
