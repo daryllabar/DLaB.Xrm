@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLaB.Xrm.Workflow", "DLaB.X
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLaB.Xrm.Tests", "DLaB.Xrm.Tests\DLaB.Xrm.Tests.csproj", "{1DF3BE66-5B01-44B1-A810-03E2116E7518}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLaB.Xrm.Test", "DLaB.Xrm.Test\DLaB.Xrm.Test.csproj", "{EF9B877D-CB30-45C1-B28F-43CC26850356}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLaB.Xrm.Test", "DLaB.Xrm.Test\DLaB.Xrm.Test.csproj", "{EF9B877D-CB30-45C1-B28F-43CC26850356}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DLaB.Xrm.Test.Core", "DLaB.Xrm.Test.Core\DLaB.Xrm.Test.Core.shproj", "{C987F4C2-40B4-4572-B7C5-36C138361AFB}"
 EndProject

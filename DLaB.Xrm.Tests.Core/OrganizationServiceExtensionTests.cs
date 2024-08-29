@@ -1,6 +1,5 @@
 ﻿#if NET
 using DataverseUnitTest;
-#else
 #endif
 
 using System;

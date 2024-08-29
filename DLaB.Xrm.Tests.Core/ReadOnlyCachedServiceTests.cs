@@ -3,7 +3,7 @@ using DataverseUnitTest;
 using DataverseUnitTest.Builders;
 using Extensions = DataverseUnitTest.Extensions;
 #else
-using DLaB.Xrm.Test.Builders;
+using DLaB.Xrm.Test.Core.Builders;
 #endif
 
 using System;
