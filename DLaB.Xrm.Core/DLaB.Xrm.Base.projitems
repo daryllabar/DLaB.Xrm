@@ -60,6 +60,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Ioc\IContainerWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ioc\IIocRegister.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\IPluginServicesRegistrationRecorder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugin\OrganizationServicesResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\PluginServicesRegistrationRecorderAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ioc\IocExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ioc\DuplicateRegistrationStrategy.cs" />

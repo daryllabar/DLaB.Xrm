@@ -67,6 +67,13 @@ namespace Source.DLaB.Xrm.Plugin
                     return s.CreateExtendedOrganizationService(context.UserId);
                 })
 
+                // IOrganizationServicesWrapper
+                .AddScoped(s =>
+                {
+                    var services = s.Get<OrganizationServicesWrapper>();
+                    return (IOrganizationServicesWrapper) new OrganizationServicesResolver(services);
+                })
+
                 // ITracingService
                 .AddScoped<ITracingService>(s =>
                 {
