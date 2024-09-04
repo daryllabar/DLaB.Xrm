@@ -139,13 +139,24 @@ namespace DLaB.Xrm.Tests.Core
         }
 
         [TestMethod]
+        public void NullFactory_Should_ErrorWithFactoryType()
+        {
+            _sut.AddSingleton(_ => (IExample)null);
+            var provider = _sut.BuildServiceProvider();
+            ExpectException<InvalidOperationException>(() =>
+            {
+                provider.Get<IExample>();
+            }, "Factory for type DLaB.Xrm.Tests.Core.IExample returned null.");
+        }
+
+        [TestMethod]
         public void IgnoreStrategy()
         {
-            _sut.AddSingleton<IExample>(s => new Example());
+            _sut.AddSingleton<IExample>(_ => new Example());
             var example = _sut.BuildServiceProvider().Get<IExample>();
             _sut.DuplicateRegistrationStrategy = DuplicateRegistrationStrategy.Ignore;
 
-            _sut.AddScoped(s =>
+            _sut.AddScoped(_ =>
             {
                 Assert.Fail("Duplicate registration should be ignored");
                 return example;
@@ -153,14 +164,14 @@ namespace DLaB.Xrm.Tests.Core
             _sut.BuildServiceProvider().Get<IExample>();
 
 
-            _sut.AddSingleton(s =>
+            _sut.AddSingleton(_ =>
             {
                 Assert.Fail("Duplicate registration should be ignored");
                 return example;
             });
             _sut.BuildServiceProvider().Get<IExample>();
 
-            _sut.AddTransient(s =>
+            _sut.AddTransient(_ =>
             {
                 Assert.Fail("Duplicate registration should be ignored");
                 return example;

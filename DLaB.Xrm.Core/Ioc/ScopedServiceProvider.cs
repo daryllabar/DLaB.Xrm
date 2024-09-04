@@ -94,19 +94,19 @@ namespace Source.DLaB.Xrm.Ioc
             switch (registration.Lifetime)
             {
                 case Lifetime.Singleton:
-                    instance = _instances.GetOrAdd(serviceType, (t) => CreateInstance(registration));
+                    instance = _instances.GetOrAdd(serviceType, (t) => CreateInstance(serviceType, registration));
                     break;
                 case Lifetime.Scoped:
                     if (!_scopedInstances.TryGetValue(serviceType, out var scopedInstance))
                     {
-                        scopedInstance = CreateInstance(registration);
+                        scopedInstance = CreateInstance(serviceType, registration);
                         _scopedInstances[serviceType] = scopedInstance;
                     }
 
                     instance = scopedInstance;
                     break;
                 case Lifetime.Transient:
-                    instance = CreateInstance(registration);
+                    instance = CreateInstance(serviceType, registration);
                     break;
                 default:
                     throw new NotImplementedException($"Lifetime {registration.Lifetime} ({(int)registration.Lifetime}) not implemented!");
@@ -119,7 +119,7 @@ namespace Source.DLaB.Xrm.Ioc
             return instance;
         }
 
-        private object CreateInstance(Registration registration)
+        private object CreateInstance(Type serviceType, Registration registration)
         {
             if (registration.Instance != null)
             {
@@ -131,7 +131,7 @@ namespace Source.DLaB.Xrm.Ioc
                 var value = registration.Factory(this);
                 if (value == null)
                 {
-                    throw new InvalidOperationException($"Factory for type {registration.Type?.FullName} returned null.");
+                    throw new InvalidOperationException($"Factory for type {(registration.Type ?? serviceType).FullName} returned null.");
                 }
 
                 return value;
