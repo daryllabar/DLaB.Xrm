@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DLaB.Xrm.Workflow.Source</id>
-    <version>4.0.0.8</version>
+    <version>4.0.0.9</version>
     <authors>Daryl LaBar</authors>
     <owners>Daryl LaBar</owners>
     <license type="expression">MIT</license>
@@ -15,18 +15,23 @@
     <tags>Dynamics CRM Workflow XRM</tags>
     <dependencies>
       <group>
-        <dependency id="DLaB.Common.Source" version="1.4.0.7" />
-        <dependency id="DLaB.Xrm.Source" version="4.0.0.8" />
+        <dependency id="DLaB.Common.Source" version="1.5.*" include="all" />
+        <dependency id="DLaB.Xrm.Source" version="4.*" include="all" />
       </group>
     </dependencies>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Activities" />
-      <frameworkAssembly assemblyName="System.Configuration" />
-      <frameworkAssembly assemblyName="System.Runtime.Serialization" />
+	    <frameworkAssembly assemblyName="System.Activities" targetFramework="net462" />
+                                                          
+	    <frameworkAssembly assemblyName="System.Activities" targetFramework="net472" />
+	                                                        
+	    <frameworkAssembly assemblyName="System.Activities" targetFramework="net48" />
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="content\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.8" />
+    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.8" />
+    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="contentFiles\cs\net472\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.8" />
+    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="contentFiles\cs\net48\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.8" />
     <file src="..\Icon.64x64.png" target="images\" />
   </files>
 </package>
+

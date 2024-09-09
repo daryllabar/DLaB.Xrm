@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Runtime.Serialization;
 using Microsoft.Xrm.Sdk;
@@ -34,7 +35,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// Type: Returns_StringThe logical name of the entity.
         /// </returns>
         [DataMember]
-        public string LogicalName { get; set; }
+        public string? LogicalName { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the primary attribute of the entity.
@@ -44,7 +45,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// Type: Returns_StringThe value of the primary attribute of the entity.
         /// </returns>
         [DataMember]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 #if !PRE_KEYATTRIBUTE
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// Type: Returns_String.
         /// </returns>
         [DataMember]
-        public string RowVersion { get; set; }
+        public string? RowVersion { get; set; }
 
         /// <summary>
         /// ExtensionData
@@ -80,7 +81,7 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// <returns>
         /// Type: Returns_ExtensionDataObjectThe extension data.
         /// </returns>
-        public ExtensionDataObject ExtensionData { get; set; }
+        public ExtensionDataObject? ExtensionData { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableEntityReference"/> class.
@@ -106,9 +107,10 @@ namespace Source.DLaB.Xrm.Sandbox.Serialization
         /// </returns>
         public static explicit operator EntityReference(SerializableEntityReference entity)
         {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (entity == null)
             {
-                return null;
+                return null!;
             }
             var xrmEntity = new EntityReference
             {

@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Diagnostics;
 using Microsoft.Xrm.Sdk.Query;
@@ -27,7 +28,7 @@ namespace Source.DLaB.Xrm
         /// <summary>
         /// Columns to retrieve
         /// </summary>
-        public ColumnSet Columns { get; set; }
+        public ColumnSet? Columns { get; set; }
 
         /// <summary>
         /// Adds the specified additional columns to the Columns ColumnSet
@@ -60,10 +61,10 @@ namespace Source.DLaB.Xrm
         public LogicalOperator CriteriaOperator { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the logical.
+        /// Gets or sets the logical name.
         /// </summary>
         /// <value>
-        /// The name of the logical.
+        /// The logical name.
         /// </value>
         public string LogicalName { get; set; }
 
@@ -78,16 +79,16 @@ namespace Source.DLaB.Xrm
             {
                 throw new TypeArgumentException("'Entity' is an invalid type for T.  Please use the LateBoundQuerySettings.");
             }
-            DefaultSettings(EntityHelper.GetEntityLogicalName<T>());
+            LogicalName = EntityHelper.GetEntityLogicalName<T>();
+            DefaultSettings();
         }
 
-        private void DefaultSettings(string logicalName)
+        private void DefaultSettings()
         {
             Columns = SolutionCheckerAvoider.CreateColumnSetWithAllColumns();
             First = false;
             ActiveOnly = false;
             CriteriaOperator = LogicalOperator.And;
-            LogicalName = logicalName;
         }
 
         /// <summary>
@@ -96,11 +97,8 @@ namespace Source.DLaB.Xrm
         /// <param name="logicalName">Name of the logical.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         protected QuerySettings(string logicalName){
-            if (logicalName == null)
-            {
-                throw new ArgumentNullException(nameof(logicalName));
-            }
-            DefaultSettings(logicalName);
+            LogicalName = logicalName ?? throw new ArgumentNullException(nameof(logicalName));
+            DefaultSettings();
         }
 
         /// <summary>
@@ -108,7 +106,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <returns></returns>
         public QueryExpression CreateExpression(){
-            return QueryExpressionFactory.Create(this);
+            return QueryExpressionFactory.Create(this)!;
         }
 
         /// <summary>
@@ -118,7 +116,7 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public QueryExpression CreateExpression(params object[] columnNameAndValuePairs)
         {
-            return QueryExpressionFactory.Create(this, columnNameAndValuePairs);
+            return QueryExpressionFactory.Create(this, columnNameAndValuePairs)!;
         }
 
         /// <summary>
@@ -128,7 +126,7 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public QueryExpression CreateInExpression(string columnName, params object[] values)
         {
-            return QueryExpressionFactory.CreateIn(this, columnName, values);
+            return QueryExpressionFactory.CreateIn(this, columnName, values)!;
         }
     }
 
