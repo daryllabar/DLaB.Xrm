@@ -21,7 +21,7 @@ namespace Source.DLaB.Xrm.Workflow
     /// </summary>
     public abstract class DLaBCodeActivityBase : DLaBCodeActivityBase<DLaBExtendedWorkflowContext>
     {
-        protected DLaBCodeActivityBase(IIocContainer container = null): base(container)
+        protected DLaBCodeActivityBase(IIocContainer? container = null): base(container)
         {
         }
     }

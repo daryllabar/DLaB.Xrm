@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Xrm.Sdk.Query;
 
+
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
 
 using DLaB.Common;
@@ -708,7 +709,7 @@ namespace Source.DLaB.Xrm.Plugin
 
             public HashSet<string> MissingColumns { get; } = new HashSet<string>();
             public List<List<string>> MissingOrColumns { get; } = new List<List<string>>();
-            
+
             public HashSet<string> MissingColumnsAllowNulls { get; } = new HashSet<string>();
             public List<List<string>> MissingOrColumnsAllowNulls { get; } = new List<List<string>>();
 
@@ -735,7 +736,7 @@ namespace Source.DLaB.Xrm.Plugin
 
             public EntityList UpdatedToValues { get; } = new EntityList();
             public EntityOrList UpdatedToOrValues { get; } = new EntityOrList();
-            
+
             public InvalidRequirementReason? Reason { get; private set; }
 
             private bool IsPreImageRequired { get; set; } = true;
@@ -756,7 +757,7 @@ namespace Source.DLaB.Xrm.Plugin
                 var service = context.SystemOrganizationService;
                 AssertHasPreImageIfRequired(service, preImage);
 
-                if(entity == null)
+                if (entity == null)
                 {
                     throw new Exception($"A Requirement has been defined for entity of type {EntityType} but the entity type was not found in the context.");
                 }
@@ -781,7 +782,7 @@ namespace Source.DLaB.Xrm.Plugin
                 var columnReason = checkNotNull
                     ? InvalidColumnReason.Null
                     : InvalidColumnReason.Missing;
-                var treatNotContainsAsNull =  !checkNotNull && (EntityType == ContextEntity.PreImage || EntityType == ContextEntity.CoalesceTargetPreImage);
+                var treatNotContainsAsNull = !checkNotNull && (EntityType == ContextEntity.PreImage || EntityType == ContextEntity.CoalesceTargetPreImage);
                 foreach (var column in allColumns)
                 {
                     if (!entity.Contains(column))
@@ -802,7 +803,7 @@ namespace Source.DLaB.Xrm.Plugin
                         return true;
                     }
 
-                    if (checkNotNull && entity[column] == null)
+                    if (checkNotNull && GetFinalValue(entity, column) == null)
                     {
                         Reason = new InvalidRequirementReason
                         {
@@ -822,7 +823,7 @@ namespace Source.DLaB.Xrm.Plugin
                     var requirementMet = false;
                     foreach (var column in set)
                     {
-                        if (entity.Contains(column) && (!checkNotNull || entity[column] != null)
+                        if (entity.Contains(column) && (!checkNotNull || GetFinalValue(entity, column) != null)
                             || treatNotContainsAsNull && !entity.Contains(column))
                         {
                             requirementMet = true;
@@ -867,7 +868,7 @@ namespace Source.DLaB.Xrm.Plugin
                 {
                     if (entity.Contains(column))
                     {
-                        if (allowNull && entity[column] == null)
+                        if (allowNull && GetFinalValue(entity, column) == null)
                         {
                             continue;
                         }
@@ -898,7 +899,8 @@ namespace Source.DLaB.Xrm.Plugin
                     var requirementMet = false;
                     foreach (var column in set)
                     {
-                        if (!entity.Contains(column) || (allowNull && entity[column] == null))
+                        if (!entity.Contains(column)
+                            || allowNull && GetFinalValue(entity, column) == null)
                         {
                             requirementMet = true;
                         }
@@ -948,7 +950,7 @@ namespace Source.DLaB.Xrm.Plugin
                         return true;
                     }
 
-                    if (entity[column] != null)
+                    if (GetFinalValue(entity, column) != null)
                     {
                         Reason = new InvalidRequirementReason
                         {
@@ -968,7 +970,7 @@ namespace Source.DLaB.Xrm.Plugin
                     var requirementMet = false;
                     foreach (var column in set)
                     {
-                        if (entity.Contains(column) && entity[column] == null
+                        if (entity.Contains(column) && GetFinalValue(entity, column) == null
                             || treatNotContainsAsNull && !entity.Contains(column))
                         {
                             requirementMet = true;
@@ -1137,7 +1139,7 @@ namespace Source.DLaB.Xrm.Plugin
                         return true;
                     }
 
-                    if (checkNotNull && target[column] == null)
+                    if (checkNotNull && GetFinalValue(target, column) == null)
                     {
                         Reason = new InvalidRequirementReason
                         {
@@ -1163,7 +1165,7 @@ namespace Source.DLaB.Xrm.Plugin
                     var requirementMet = false;
                     foreach (var column in set)
                     {
-                        if (target.Contains(column) && (!checkNotNull || target[column] != null) && ColumnValueHasChanged(service, target, preImage, column))
+                        if (target.Contains(column) && (!checkNotNull || GetFinalValue(target, column) != null) && ColumnValueHasChanged(service, target, preImage, column))
                         {
                             requirementMet = true;
                             break;
@@ -1212,7 +1214,7 @@ namespace Source.DLaB.Xrm.Plugin
                         return true;
                     }
 
-                    if (target[column] != null)
+                    if (GetFinalValue(target, column) != null)
                     {
                         Reason = new InvalidRequirementReason
                         {
@@ -1246,7 +1248,7 @@ namespace Source.DLaB.Xrm.Plugin
                     var requirementMet = false;
                     foreach (var column in set)
                     {
-                        if (target.Contains(column) && target[column] == null && ColumnValueHasChanged(service, target, preImage, column))
+                        if (target.Contains(column) && GetFinalValue(target, column) == null && ColumnValueHasChanged(service, target, preImage, column))
                         {
                             requirementMet = true;
                             break;
@@ -1267,7 +1269,7 @@ namespace Source.DLaB.Xrm.Plugin
                         RequirementType = ColumnRequirementCheck.Cleared
                     };
                     context.Trace("The target did not update at least one of the following columns to null: {0}!", string.Join(", ", set));
-                    return true;   
+                    return true;
                 }
 
                 return false;
@@ -1291,7 +1293,7 @@ namespace Source.DLaB.Xrm.Plugin
                         return true;
                     }
 
-                    if (!AttributeComparer.ValuesAreEqual(service, att.Value, target[att.Key])) 
+                    if (!AttributeComparer.ValuesAreEqual(service, att.Value, target[att.Key]))
                     {
                         Reason = new InvalidRequirementReason
                         {
@@ -1345,7 +1347,7 @@ namespace Source.DLaB.Xrm.Plugin
                     return false;
                 }
 
-                return !AttributeComparer.ValuesAreEqual(service, target[column], preImage.Contains(column) ? preImage[column] : null);
+                return !AttributeComparer.ValuesAreEqual(service, GetFinalValue(target, column), preImage.Contains(column) ? preImage[column] : null);
             }
 
             private Entity? GetEntity(IExtendedPluginContext context)
@@ -1376,6 +1378,25 @@ namespace Source.DLaB.Xrm.Plugin
                 }
 
                 return entity;
+            }
+
+            /// <summary>
+            /// Since empty strings are stored in the DB as nulls, treat Empty string values as null
+            /// </summary>
+            /// <param name="entity"></param>
+            /// <param name="columnName"></param>
+            /// <returns></returns>
+            private object? GetFinalValue(Entity entity, string columnName)
+            {
+                if (!entity.Contains(columnName))
+                {
+                    return null;
+                }
+
+                var value = entity[columnName];
+                return value is string strValue && string.IsNullOrWhiteSpace(strValue)
+                    ? null
+                    : value;
             }
         }
 
