@@ -10,6 +10,10 @@ namespace Source.DLaB.Xrm.Plugin
     public enum InvalidColumnReason
     {
         /// <summary>
+        /// The column was a specified value that was not allowed.
+        /// </summary>
+        InvalidValue,
+        /// <summary>
         /// The column was missing from the entity or target.
         /// </summary>
         Missing,

@@ -114,7 +114,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
-        public QueryExpression CreateExpression(params object[] columnNameAndValuePairs)
+        public QueryExpression CreateExpression(params object?[] columnNameAndValuePairs)
         {
             return QueryExpressionFactory.Create(this, columnNameAndValuePairs)!;
         }
@@ -124,7 +124,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnName">The name of the column to perform the in against</param>
         /// <param name="values">The list of values to search for being in the column name</param>
         /// <returns></returns>
-        public QueryExpression CreateInExpression(string columnName, params object[] values)
+        public QueryExpression CreateInExpression(string columnName, params object?[] values)
         {
             return QueryExpressionFactory.CreateIn(this, columnName, values)!;
         }

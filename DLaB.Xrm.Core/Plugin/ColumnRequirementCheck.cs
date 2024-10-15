@@ -42,6 +42,10 @@ namespace Source.DLaB.Xrm.Plugin
         /// </summary>
         MissingOrNull,
         /// <summary>
+        /// Determines the entity does not contain all the defined attributes with the specific values.
+        /// </summary>
+        Not,
+        /// <summary>
         /// Used for other/custom validators
         /// </summary>
         Other,

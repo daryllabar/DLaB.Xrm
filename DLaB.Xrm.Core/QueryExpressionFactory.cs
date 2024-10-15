@@ -26,7 +26,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
-        public static QueryExpression Create(string logicalName, params object[] columnNameAndValuePairs)
+        public static QueryExpression Create(string logicalName, params object?[] columnNameAndValuePairs)
         {
             return Create(new LateBoundQuerySettings(logicalName), columnNameAndValuePairs)!;
         }
@@ -39,7 +39,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
-        public static QueryExpression Create(string logicalName, ColumnSet? columnSet, params object[] columnNameAndValuePairs)
+        public static QueryExpression Create(string logicalName, ColumnSet? columnSet, params object?[] columnNameAndValuePairs)
         {
             return Create(new LateBoundQuerySettings(logicalName) { Columns = columnSet }, columnNameAndValuePairs)!;
         }
@@ -54,7 +54,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
         public static QueryExpression Create(string logicalName, ColumnSet? columnSet, bool first,
-                params object[] columnNameAndValuePairs)
+                params object?[] columnNameAndValuePairs)
         {
             return Create(new LateBoundQuerySettings(logicalName) { Columns = columnSet, First = first }, columnNameAndValuePairs)!;
         }
@@ -70,7 +70,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
         public static QueryExpression Create(string logicalName, bool activeOnly, ColumnSet? columnSet, bool first,
-                params object[] columnNameAndValuePairs)
+                params object?[] columnNameAndValuePairs)
         {
             var qe = Create(new LateBoundQuerySettings(logicalName)
             {
@@ -93,7 +93,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
-        public static TypedQueryExpression<T> Create<T>(params object[] columnNameAndValuePairs) where T : Entity
+        public static TypedQueryExpression<T> Create<T>(params object?[] columnNameAndValuePairs) where T : Entity
         {
             return Create(new QuerySettings<T>(), columnNameAndValuePairs);
         }
@@ -106,7 +106,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
-        public static TypedQueryExpression<T> Create<T>(ColumnSet? columnSet, params object[] columnNameAndValuePairs) where T : Entity
+        public static TypedQueryExpression<T> Create<T>(ColumnSet? columnSet, params object?[] columnNameAndValuePairs) where T : Entity
         {
             return Create(new QuerySettings<T> { Columns = columnSet }, columnNameAndValuePairs);
         }
@@ -121,7 +121,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
         public static TypedQueryExpression<T> Create<T>(Expression<Func<T, object>> anonymousTypeInitializer, 
-                params object[] columnNameAndValuePairs) 
+                params object?[] columnNameAndValuePairs) 
             where T : Entity
         {
             var columnSet = new ColumnSet().AddColumns(anonymousTypeInitializer);
@@ -138,7 +138,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
         public static TypedQueryExpression<T> Create<T>(ColumnSet? columnSet, bool first,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             return Create(new QuerySettings<T> { Columns = columnSet, First = first }, columnNameAndValuePairs);
         }
@@ -154,7 +154,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
         public static TypedQueryExpression<T> Create<T>(Expression<Func<T, object>> anonymousTypeInitializer, bool first,
-                params object[] columnNameAndValuePairs)
+                params object?[] columnNameAndValuePairs)
             where T : Entity
         {
             var columnSet = new ColumnSet().AddColumns(anonymousTypeInitializer);
@@ -169,7 +169,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnNameAndValuePairs">The column name and value pairs.</param>
         /// <returns></returns>
         public static TypedQueryExpression<T> Create<T>(QuerySettings<T> settings,
-            params object[] columnNameAndValuePairs) where T : Entity
+            params object?[] columnNameAndValuePairs) where T : Entity
         {
             var qe = Create(settings);
             qe.WhereEqual(columnNameAndValuePairs);
@@ -188,7 +188,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
         public static TypedQueryExpression<T> Create<T>(bool activeOnly, Expression<Func<T, object>> anonymousTypeInitializer,
-                bool first, params object[] columnNameAndValuePairs)
+                bool first, params object?[] columnNameAndValuePairs)
             where T : Entity
         {
             var columnSet = new ColumnSet().AddColumns(anonymousTypeInitializer);
@@ -206,7 +206,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
         public static TypedQueryExpression<T> Create<T>(bool activeOnly, ColumnSet columnSet, bool first,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             var qe = Create(new QuerySettings<T>
             {
@@ -529,7 +529,7 @@ namespace Source.DLaB.Xrm
         /// <param name="settings">The query settings used to Create the QueryExpression.</param>
         /// <param name="columnName">The name of the column to perform the in against.</param>
         /// <param name="values">The list of values to search for being in the column name.</param>
-        public static TypedQueryExpression<T> CreateIn<T>(QuerySettings<T> settings, string columnName, params object[] values) where T : Entity
+        public static TypedQueryExpression<T> CreateIn<T>(QuerySettings<T> settings, string columnName, params object?[] values) where T : Entity
         {
             var qe = Create(settings);
             qe.WhereIn(columnName, values);

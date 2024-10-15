@@ -28,7 +28,7 @@ namespace Source.DLaB.Xrm
         /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
         /// <param name="conditionOperator">operator that has to be applied</param>
         /// <param name="values">list of values to be compared with</param>
-        public static FilterExpression Where(this FilterExpression filterExpression, string attributeName, ConditionOperator conditionOperator, params object[] values)
+        public static FilterExpression Where(this FilterExpression filterExpression, string attributeName, ConditionOperator conditionOperator, params object?[] values)
         {
             return filterExpression.WhereEqual(new ConditionExpression(attributeName, conditionOperator, values));
         }
@@ -41,7 +41,7 @@ namespace Source.DLaB.Xrm
         /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
         /// <param name="conditionOperator">operator that has to be applied</param>
         /// <param name="values">list of values to be compared with</param>
-        public static FilterExpression Where(this FilterExpression filterExpression, string entityName, string attributeName, ConditionOperator conditionOperator, params object[] values)
+        public static FilterExpression Where(this FilterExpression filterExpression, string entityName, string attributeName, ConditionOperator conditionOperator, params object?[] values)
         {
             return filterExpression.WhereEqual(new ConditionExpression(entityName, attributeName, conditionOperator, values));
         }
@@ -56,7 +56,7 @@ namespace Source.DLaB.Xrm
         /// <param name="conditionOperator">operator that has to be applied</param>
         /// <param name="compareColumns">Boolean flag to define condition on attributes instead of condition on constant value(s)</param>
         /// <param name="values">list of values or attributes(if compareColumns is true) to be compared with</param>
-        public static FilterExpression Where(this FilterExpression filterExpression, string entityName, string attributeName, ConditionOperator conditionOperator, bool compareColumns, object[] values)
+        public static FilterExpression Where(this FilterExpression filterExpression, string entityName, string attributeName, ConditionOperator conditionOperator, bool compareColumns, object?[] values)
         {
             return filterExpression.WhereEqual(new ConditionExpression(entityName, attributeName, conditionOperator, compareColumns, values));
         }
@@ -96,7 +96,7 @@ namespace Source.DLaB.Xrm
         /// <param name="conditionOperator">operator that has to be applied</param>
         /// <param name="compareColumns">Boolean flag to define condition on attributes instead of condition on constant value(s)</param>
         /// <param name="values">list of values or attributes(if compareColumns is true) to be compared with</param>
-        public static FilterExpression Where(this FilterExpression filterExpression, string attributeName, ConditionOperator conditionOperator, bool compareColumns, object[] values)
+        public static FilterExpression Where(this FilterExpression filterExpression, string attributeName, ConditionOperator conditionOperator, bool compareColumns, object?[] values)
         {
             return filterExpression.WhereEqual(new ConditionExpression(attributeName, conditionOperator, compareColumns, values));
         }
@@ -179,7 +179,7 @@ namespace Source.DLaB.Xrm
         /// <param name="filterExpression"></param>
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
-        public static FilterExpression WhereEqual(this FilterExpression filterExpression, params object[] columnNameAndValuePairs)
+        public static FilterExpression WhereEqual(this FilterExpression filterExpression, params object?[] columnNameAndValuePairs)
         {
             if (columnNameAndValuePairs == null) { throw new ArgumentNullException(nameof(columnNameAndValuePairs)); }
             var length = columnNameAndValuePairs.Length;
@@ -221,7 +221,7 @@ namespace Source.DLaB.Xrm
                 if (conditions.Length > conditionIndex && conditions[conditionIndex] == i)
                 {
                     conditionIndex++;
-                    var ce = (ConditionExpression) columnNameAndValuePairs[i];
+                    var ce = (ConditionExpression)columnNameAndValuePairs[i]!;
                     if (ce.Operator == ConditionOperator.On && ce.Values.Any())
                     {
                         // Handle Special Case with ConditionOperator.On not working correctly
@@ -238,9 +238,14 @@ namespace Source.DLaB.Xrm
                 }
                 else
                 {
+                    var name = columnNameAndValuePairs[i];
+                    if (name == null)
+                    {
+                        throw new ArgumentNullException(nameof(columnNameAndValuePairs), "Column Name was null!");
+                    }
                     // Non Condition Expression
                     AddNameValuePairCondition(currentFilter,
-                        (string)columnNameAndValuePairs[i], columnNameAndValuePairs[i + 1]);
+                        (string)columnNameAndValuePairs[i]!, columnNameAndValuePairs[i + 1]);
                 }
             }
 
@@ -248,7 +253,7 @@ namespace Source.DLaB.Xrm
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static void AddNameValuePairCondition(FilterExpression filter, string attributeName, object value)
+        private static void AddNameValuePairCondition(FilterExpression filter, string attributeName, object? value)
         {
             if (value == null)
             {
@@ -283,9 +288,9 @@ namespace Source.DLaB.Xrm
             }
         }
 
-        private static bool ItemAtIndexIsType(this Object[] objCol, int i, Type type)
+        private static bool ItemAtIndexIsType(this object?[] objCol, int i, Type type)
         {
-            return objCol[i] != null && objCol[i].GetType() == type;
+            return objCol[i] != null && objCol[i]!.GetType() == type;
         }
 
         /// <summary>
@@ -342,7 +347,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
         /// <returns></returns>
         public static IEnumerable<Entity> GetAllEntities(this IOrganizationService service, string logicalName,
-                params object[] columnNameAndValuePairs)
+                params object?[] columnNameAndValuePairs)
         {
             return service.GetAllEntities<Entity>(QueryExpressionFactory.Create(logicalName, columnNameAndValuePairs));
         }
@@ -357,7 +362,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
         /// <returns></returns>
         public static IEnumerable<Entity> GetAllEntities(this IOrganizationService service, string logicalName, ColumnSet columnSet,
-                params object[] columnNameAndValuePairs)
+                params object?[] columnNameAndValuePairs)
         {
             return service.GetAllEntities<Entity>(QueryExpressionFactory.Create(logicalName, columnSet, columnNameAndValuePairs));
         }
@@ -375,7 +380,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
         /// <returns></returns>
         public static IEnumerable<T> GetAllEntities<T>(this IOrganizationService service,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             return service.GetAllEntities(QueryExpressionFactory.Create<T>(columnNameAndValuePairs));
         }
@@ -391,7 +396,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
         /// <returns></returns>
         public static IEnumerable<T> GetAllEntities<T>(this IOrganizationService service,
-                Expression<Func<T, object>> anonymousTypeInitializer, params object[] columnNameAndValuePairs)
+                Expression<Func<T, object>> anonymousTypeInitializer, params object?[] columnNameAndValuePairs)
             where T : Entity
         {
             var columnSet = AddColumns(new ColumnSet(), anonymousTypeInitializer);
@@ -408,7 +413,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
         /// <returns></returns>
         public static IEnumerable<T> GetAllEntities<T>(this IOrganizationService service, ColumnSet columnSet,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             return service.GetAllEntities(QueryExpressionFactory.Create<T>(columnSet, columnNameAndValuePairs));
         }
@@ -426,7 +431,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name", "John Doe"</param>
         /// <returns></returns>
         public static List<Entity> GetEntities(this IOrganizationService service, string logicalName,
-                params object[] columnNameAndValuePairs)
+                params object?[] columnNameAndValuePairs)
         {
             return service.GetEntities<Entity>(QueryExpressionFactory.Create(logicalName, columnNameAndValuePairs));
         }
@@ -442,7 +447,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
         /// <returns></returns>
         public static List<Entity> GetEntities(this IOrganizationService service, string logicalName, ColumnSet columnSet,
-                params object[] columnNameAndValuePairs)
+                params object?[] columnNameAndValuePairs)
         {
             return service.GetEntities<Entity>(QueryExpressionFactory.Create(logicalName, columnSet, columnNameAndValuePairs));
         }
@@ -460,7 +465,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
         /// <returns></returns>
         public static List<T> GetEntities<T>(this IOrganizationService service,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             return service.GetEntities(QueryExpressionFactory.Create<T>(columnNameAndValuePairs));
         }
@@ -477,7 +482,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
         /// <returns></returns>
         public static List<T> GetEntities<T>(this IOrganizationService service, Expression<Func<T, object>> anonymousTypeInitializer,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             var columnSet = AddColumns(new ColumnSet(), anonymousTypeInitializer);
             return service.GetEntities<T>(columnSet, columnNameAndValuePairs);
@@ -494,7 +499,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
         /// <returns></returns>
         public static List<T> GetEntities<T>(this IOrganizationService service, ColumnSet columnSet,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             return service.GetEntities(QueryExpressionFactory.Create<T>(columnSet, columnNameAndValuePairs));
         }
@@ -512,7 +517,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
         public static Entity GetFirst(this IOrganizationService service, string logicalName,
-                params object[] columnNameAndValuePairs)
+                params object?[] columnNameAndValuePairs)
         {
             var entity = service.GetFirstOrDefault(logicalName, columnNameAndValuePairs);
             AssertExistsWhere(entity, logicalName, columnNameAndValuePairs);
@@ -530,13 +535,13 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"</param>
         /// <returns></returns>
         public static Entity GetFirst(this IOrganizationService service, string logicalName, ColumnSet columnSet,
-                params object[] columnNameAndValuePairs)
+                params object?[] columnNameAndValuePairs)
         {
             var entity = service.GetFirstOrDefault(logicalName, columnSet, columnNameAndValuePairs);
             AssertExistsWhere(entity, logicalName, columnNameAndValuePairs);
             return entity!;
         }
-        private static void AssertExistsWhere(Entity? entity, string logicalName, object[] columnNameAndValuePairs)
+        private static void AssertExistsWhere(Entity? entity, string logicalName, object?[] columnNameAndValuePairs)
         {
             if (entity != null) { return; }
             throw new InvalidOperationException("No " + logicalName + " found where " +
@@ -557,7 +562,7 @@ namespace Source.DLaB.Xrm
         /// </param>
         /// <returns></returns>
         public static T GetFirst<T>(this IOrganizationService service,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             var entity = service.GetFirstOrDefault<T>(columnNameAndValuePairs);
             AssertExistsWhere(entity, columnNameAndValuePairs);
@@ -577,7 +582,7 @@ namespace Source.DLaB.Xrm
         /// </param>
         /// <returns></returns>
         public static T GetFirst<T>(this IOrganizationService service, Expression<Func<T, object>> anonymousTypeInitializer,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             var columnSet = AddColumns(new ColumnSet(), anonymousTypeInitializer);
             return service.GetFirst<T>(columnSet, columnNameAndValuePairs);
@@ -595,7 +600,7 @@ namespace Source.DLaB.Xrm
         /// </param>
         /// <returns></returns>
         public static T GetFirst<T>(this IOrganizationService service, ColumnSet columnSet,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             var entity = service.GetFirstOrDefault<T>(columnSet, columnNameAndValuePairs);
             AssertExistsWhere(entity, columnNameAndValuePairs);
@@ -603,7 +608,7 @@ namespace Source.DLaB.Xrm
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static void AssertExistsWhere<T>(T? entity, object[] columnNameAndValuePairs) where T : Entity
+        private static void AssertExistsWhere<T>(T? entity, object?[] columnNameAndValuePairs) where T : Entity
         {
             if (entity != null) { return; }
             throw new InvalidOperationException("No " + EntityHelper.GetEntityLogicalName<T>() + " found where " +
@@ -621,7 +626,7 @@ namespace Source.DLaB.Xrm
         /// <param name="logicalName">Logical Name of the Entity:</param>
         /// <param name="columnNameAndValuePairs"></param>
         /// <returns></returns>
-        public static Entity? GetFirstOrDefault(this IOrganizationService service, string logicalName, params object[] columnNameAndValuePairs)
+        public static Entity? GetFirstOrDefault(this IOrganizationService service, string logicalName, params object?[] columnNameAndValuePairs)
         {
             var settings = new LateBoundQuerySettings(logicalName);
             return service.RetrieveMultiple(settings.CreateExpression(columnNameAndValuePairs)).Entities.FirstOrDefault();
@@ -639,7 +644,7 @@ namespace Source.DLaB.Xrm
         /// </param>
         /// <returns></returns>
         public static Entity? GetFirstOrDefault(this IOrganizationService service, string logicalName, ColumnSet columnSet,
-                params object[] columnNameAndValuePairs)
+                params object?[] columnNameAndValuePairs)
         {
             var settings = new LateBoundQuerySettings(logicalName)
             {
@@ -663,7 +668,7 @@ namespace Source.DLaB.Xrm
         /// </param>
         /// <returns></returns>
         public static T? GetFirstOrDefault<T>(this IOrganizationService service,
-              params object[] columnNameAndValuePairs) where T : Entity
+              params object?[] columnNameAndValuePairs) where T : Entity
         {
             var settings = new QuerySettings<T> { First = true };
             return service.GetEntities<T>(settings.CreateExpression(columnNameAndValuePairs)).FirstOrDefault();
@@ -682,7 +687,7 @@ namespace Source.DLaB.Xrm
         /// </param>
         /// <returns></returns>
         public static T? GetFirstOrDefault<T>(this IOrganizationService service,
-                Expression<Func<T, object>> anonymousTypeInitializer, params object[] columnNameAndValuePairs)
+                Expression<Func<T, object>> anonymousTypeInitializer, params object?[] columnNameAndValuePairs)
             where T : Entity
         {
             var columnSet = AddColumns(new ColumnSet(), anonymousTypeInitializer);
@@ -701,7 +706,7 @@ namespace Source.DLaB.Xrm
         /// </param>
         /// <returns></returns>
         public static T? GetFirstOrDefault<T>(this IOrganizationService service, ColumnSet columnSet,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             var settings = new QuerySettings<T>
             {
@@ -726,7 +731,7 @@ namespace Source.DLaB.Xrm
         /// (string name of the column, value of the column) ie. "name","John Doe" goes to entity.name = "John Doe"
         /// </param>
         /// <returns></returns>
-        public static T GetOrCreateEntity<T>(this IOrganizationService service, params object[] columnNameAndValuePairs)
+        public static T GetOrCreateEntity<T>(this IOrganizationService service, params object?[] columnNameAndValuePairs)
                 where T : Entity, new()
         {
             return service.GetOrCreateEntity<T>(SolutionCheckerAvoider.CreateColumnSetWithAllColumns(), columnNameAndValuePairs);
@@ -745,7 +750,7 @@ namespace Source.DLaB.Xrm
         /// </param>
         /// <returns></returns>
         public static T GetOrCreateEntity<T>(this IOrganizationService service,
-                Expression<Func<T, object>> anonymousTypeInitializer, params object[] columnNameAndValuePairs)
+                Expression<Func<T, object>> anonymousTypeInitializer, params object?[] columnNameAndValuePairs)
             where T : Entity, new()
         {
             var columnSet = AddColumns(new ColumnSet(), anonymousTypeInitializer);
@@ -764,7 +769,7 @@ namespace Source.DLaB.Xrm
         /// </param>
         /// <returns></returns>
         public static T GetOrCreateEntity<T>(this IOrganizationService service, ColumnSet columnSet,
-            params object[] columnNameAndValuePairs) where T : Entity, new()
+            params object?[] columnNameAndValuePairs) where T : Entity, new()
         {
             int length = columnNameAndValuePairs.Length;
             if (length % 2 != 0)
@@ -776,19 +781,25 @@ namespace Source.DLaB.Xrm
             var entity = new T();
             for (int i = 0; i < length; i += 2)
             {
-                Type valueType = columnNameAndValuePairs[i + 1].GetType();
-                entity.Attributes[columnNameAndValuePairs[i] as string] = columnNameAndValuePairs[i + 1];
+                var value = columnNameAndValuePairs[i + 1];
+                if (value == null)
+                {
+                    continue;
+                }
+
+                var valueType = value.GetType();
+                entity.Attributes[columnNameAndValuePairs[i] as string] = value;
 
                 if (valueType == typeof(OptionSetValue))
                 {
                     // The Get Methods need OptionSetValues to be ints, but the create method needs option set 
-                    columnNameAndValuePairs[i + 1] = ((OptionSetValue)columnNameAndValuePairs[i + 1]).Value;
+                    columnNameAndValuePairs[i + 1] = ((OptionSetValue)value).Value;
                 }
 
                 if (valueType == typeof(EntityReference))
                 {
                     // The Get Methods need EntityReference to be Guids, but the create method needs EntityReference 
-                    columnNameAndValuePairs[i + 1] = ((EntityReference)columnNameAndValuePairs[i + 1]).Id;
+                    columnNameAndValuePairs[i + 1] = ((EntityReference)value).Id;
                 }
             }
 
@@ -838,7 +849,7 @@ namespace Source.DLaB.Xrm
         /// <param name="linkEntity"></param>
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
-        public static LinkEntity WhereEqual(this LinkEntity linkEntity, params object[] columnNameAndValuePairs)
+        public static LinkEntity WhereEqual(this LinkEntity linkEntity, params object?[] columnNameAndValuePairs)
         {
             linkEntity.LinkCriteria.WhereEqual(columnNameAndValuePairs);
             return linkEntity;
@@ -854,7 +865,7 @@ namespace Source.DLaB.Xrm
         /// <typeparam name="T"></typeparam>
         /// <param name="requests">The requests.</param>
         /// <param name="columnNameAndValuePairs">The column name and value pairs.</param>
-        public static void AddRetrieveMultiple<T>(this OrganizationRequestCollection requests, params object[] columnNameAndValuePairs) where T : Entity
+        public static void AddRetrieveMultiple<T>(this OrganizationRequestCollection requests, params object?[] columnNameAndValuePairs) where T : Entity
         {
             requests.Add(new RetrieveMultipleRequest { Query = QueryExpressionFactory.Create<T>(columnNameAndValuePairs), });
         }
@@ -867,7 +878,7 @@ namespace Source.DLaB.Xrm
         /// <param name="columnSet">The column set.</param>
         /// <param name="columnNameAndValuePairs">The column name and value pairs.</param>
         public static void AddRetrieveMultiple<T>(this OrganizationRequestCollection requests, ColumnSet columnSet,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             requests.Add(new RetrieveMultipleRequest { Query = QueryExpressionFactory.Create<T>(columnSet, columnNameAndValuePairs), });
         }
@@ -880,7 +891,7 @@ namespace Source.DLaB.Xrm
         /// <param name="anonymousTypeInitializer">The anonymous type initializer.</param>
         /// <param name="columnNameAndValuePairs">The column name and value pairs.</param>
         public static void AddRetrieveMultiple<T>(this OrganizationRequestCollection requests, Expression<Func<T, object>> anonymousTypeInitializer,
-                params object[] columnNameAndValuePairs) where T : Entity
+                params object?[] columnNameAndValuePairs) where T : Entity
         {
             requests.Add(new RetrieveMultipleRequest { Query = QueryExpressionFactory.Create(anonymousTypeInitializer, columnNameAndValuePairs), });
         }
@@ -898,7 +909,7 @@ namespace Source.DLaB.Xrm
         /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
         /// <param name="conditionOperator">operator that has to be applied</param>
         /// <param name="values">list of values to be compared with</param>
-        public static QueryExpression Where(this QueryExpression query, string attributeName, ConditionOperator conditionOperator, params object[] values)
+        public static QueryExpression Where(this QueryExpression query, string attributeName, ConditionOperator conditionOperator, params object?[] values)
         {
             query.Criteria.WhereEqual(new ConditionExpression(attributeName, conditionOperator, values));
             return query;
@@ -912,7 +923,7 @@ namespace Source.DLaB.Xrm
         /// <param name="attributeName">Name of the attribute on which condition is to be defined on</param>
         /// <param name="conditionOperator">operator that has to be applied</param>
         /// <param name="values">list of values to be compared with</param>
-        public static QueryExpression Where(this QueryExpression query, string entityName, string attributeName, ConditionOperator conditionOperator, params object[] values)
+        public static QueryExpression Where(this QueryExpression query, string entityName, string attributeName, ConditionOperator conditionOperator, params object?[] values)
         {
             query.Criteria.WhereEqual(new ConditionExpression(entityName, attributeName, conditionOperator, values));
             return query;
@@ -928,7 +939,7 @@ namespace Source.DLaB.Xrm
         /// <param name="conditionOperator">operator that has to be applied</param>
         /// <param name="compareColumns">Boolean flag to define condition on attributes instead of condition on constant value(s)</param>
         /// <param name="values">list of values or attributes(if compareColumns is true) to be compared with</param>
-        public static QueryExpression Where(this QueryExpression query, string entityName, string attributeName, ConditionOperator conditionOperator, bool compareColumns, object[] values)
+        public static QueryExpression Where(this QueryExpression query, string entityName, string attributeName, ConditionOperator conditionOperator, bool compareColumns, object?[] values)
         {
             query.Criteria.WhereEqual(new ConditionExpression(entityName, attributeName, conditionOperator, compareColumns, values));
             return query;
@@ -971,7 +982,7 @@ namespace Source.DLaB.Xrm
         /// <param name="conditionOperator">operator that has to be applied</param>
         /// <param name="compareColumns">Boolean flag to define condition on attributes instead of condition on constant value(s)</param>
         /// <param name="values">list of values or attributes(if compareColumns is true) to be compared with</param>
-        public static QueryExpression Where(this QueryExpression query, string attributeName, ConditionOperator conditionOperator, bool compareColumns, object[] values)
+        public static QueryExpression Where(this QueryExpression query, string attributeName, ConditionOperator conditionOperator, bool compareColumns, object?[] values)
         {
             query.Criteria.WhereEqual(new ConditionExpression(attributeName, conditionOperator, compareColumns, values));
             return query;
@@ -1059,7 +1070,7 @@ namespace Source.DLaB.Xrm
         /// <param name="query"></param>
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
-        public static QueryExpression WhereEqual(this QueryExpression query, params object[] columnNameAndValuePairs)
+        public static QueryExpression WhereEqual(this QueryExpression query, params object?[] columnNameAndValuePairs)
         {
             // Removing the active only condition is rather dangerous commented out for now, may change in the future
             // query.Criteria.WhereEqual(query.EntityName, columnNameAndValuePairs);

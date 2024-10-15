@@ -150,6 +150,22 @@ namespace DLaB.Xrm.Tests.Core
 
         #endregion Test Missing
 
+        #region Test Not
+
+        [TestMethod]
+        public void SkipExecution_ContainsInvalidValue_Should_Skip()
+        {
+            EntityTypes.ForEach(TestNotValue);
+        }
+
+        [TestMethod]
+        public void SkipExecution_ContainsAnyInvalidValue_Should_Skip()
+        {
+            EntityTypes.ForEach(TestNotAnyValue);
+        }
+
+        #endregion Test Not
+
         #region Test Updated (Non-Null) / Changed (Nullable) / Cleared (Null) / Updated (Value)
 
         [TestMethod]
@@ -288,58 +304,6 @@ namespace DLaB.Xrm.Tests.Core
 
         #endregion Test Updated (Non-Null) / Changed (Nullable) / Cleared (Null) / Updated (Value)
 
-        private void TestSkip(RequirementValidator sut, Entity target, Entity preImage, string trace = null)
-        {
-            TestSkip(sut, target, preImage, trace, MessageType.Create);
-            TestSkip(sut, target, preImage, trace, MessageType.Update);
-        }
-
-        private static void TestSkip(RequirementValidator sut, Entity target, Entity preImage, string trace, MessageType message)
-        {
-            var context = new FakeContext
-            {
-                Target = target,
-                PreImage = message == MessageType.Update ? preImage : null,
-                MessageName = message
-            };
-
-            if (message == MessageType.Create)
-            {
-                if(preImage.Attributes.Any(a => a.Value != null))
-                {
-                    // Skip tests for create where the Value is not null in the pre image
-                    return;
-                }
-            }
-
-            try
-            {
-                if (trace == null)
-                {
-                    Assert.IsFalse(sut.SkipExecution(context));
-                    Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
-                }
-                else
-                {
-                    Assert.IsTrue(sut.SkipExecution(context));
-                    Assert.AreEqual(trace, context.FakeTraceService.Traces.Single().Trace);
-                }
-            }
-            catch (AssertFailedException)
-            {
-                var logger = new DebugLogger();
-                logger.WriteLine("Failed Target:");
-                logger.WriteLine(target.ToStringDebug());
-                logger.WriteLine("Failed PreImage:");
-                logger.WriteLine(preImage.ToStringDebug());
-                logger.WriteLine("Failed Trace:");
-                logger.WriteLine(trace ?? "null");
-                logger.WriteLine("Failed Message:");
-                logger.WriteLine(message);
-                throw;
-            }
-        }
-
         #region Missing PreImage Should Throw
 
         [TestMethod]
@@ -401,6 +365,58 @@ namespace DLaB.Xrm.Tests.Core
         }
 
         #endregion Missing PreImage Should Throw
+
+        private void TestSkip(RequirementValidator sut, Entity target, Entity preImage, string trace = null)
+        {
+            TestSkip(sut, target, preImage, trace, MessageType.Create);
+            TestSkip(sut, target, preImage, trace, MessageType.Update);
+        }
+
+        private static void TestSkip(RequirementValidator sut, Entity target, Entity preImage, string trace, MessageType message)
+        {
+            var context = new FakeContext
+            {
+                Target = target,
+                PreImage = message == MessageType.Update ? preImage : null,
+                MessageName = message
+            };
+
+            if (message == MessageType.Create)
+            {
+                if (preImage.Attributes.Any(a => a.Value != null))
+                {
+                    // Skip tests for create where the Value is not null in the pre image
+                    return;
+                }
+            }
+
+            try
+            {
+                if (trace == null)
+                {
+                    Assert.IsFalse(sut.SkipExecution(context));
+                    Assert.AreEqual(0, context.FakeTraceService.Traces.Count);
+                }
+                else
+                {
+                    Assert.IsTrue(sut.SkipExecution(context));
+                    Assert.AreEqual(trace, context.FakeTraceService.Traces.Single().Trace);
+                }
+            }
+            catch (AssertFailedException)
+            {
+                var logger = new DebugLogger();
+                logger.WriteLine("Failed Target:");
+                logger.WriteLine(target.ToStringDebug());
+                logger.WriteLine("Failed PreImage:");
+                logger.WriteLine(preImage.ToStringDebug());
+                logger.WriteLine("Failed Trace:");
+                logger.WriteLine(trace ?? "null");
+                logger.WriteLine("Failed Message:");
+                logger.WriteLine(message);
+                throw;
+            }
+        }
 
         private static void TestContains(ContextEntity contextEntity)
         {
@@ -739,6 +755,39 @@ namespace DLaB.Xrm.Tests.Core
             }
 
             sut.SkipExecution(GetContext(contextEntity, new Contact()));
+        }
+
+        private static void TestNotValue(ContextEntity contextEntity)
+        {
+            var sut = new RequirementValidator().Not(contextEntity, new Contact { NickName = "NotNull", ManagerName = "Not Null" });
+            var context = GetContext(contextEntity, new Contact { NickName = "NotNull", ManagerName = "Not Null" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type matched all invalid values: {Contact.Fields.NickName}: \"NotNull\", {Contact.Fields.ManagerName}: \"Not Null\"!", context.FakeTraceService.Traces.Single().Trace);
+            
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull", ManagerName = null });
+            Assert.IsFalse(sut.SkipExecution(context));
+
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull", ManagerName = string.Empty });
+            Assert.IsFalse(sut.SkipExecution(context));
+        }
+
+        private static void TestNotAnyValue(ContextEntity contextEntity)
+        {
+            var sut = new RequirementValidator().NotAny(contextEntity, new Contact { NickName = "NotNull", ManagerName = "Not Null" });
+            var context = GetContext(contextEntity, new Contact { NickName = "NotNull", ManagerName = "Not Null" });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contained at least one invalid value for columns {Contact.Fields.NickName}, {Contact.Fields.ManagerName} which was not allowed!", context.FakeTraceService.Traces.Single().Trace);
+
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull", ManagerName = null });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contained at least one invalid value for columns {Contact.Fields.NickName}, {Contact.Fields.ManagerName} which was not allowed!", context.FakeTraceService.Traces.Single().Trace);
+
+            context = GetContext(contextEntity, new Contact { NickName = "NotNull", ManagerName = string.Empty });
+            Assert.IsTrue(sut.SkipExecution(context));
+            Assert.AreEqual($"The {contextEntity} entity type contained at least one invalid value for columns {Contact.Fields.NickName}, {Contact.Fields.ManagerName} which was not allowed!", context.FakeTraceService.Traces.Single().Trace);
+
+            context = GetContext(contextEntity, new Contact { NickName = "Not Null", ManagerName = "NotNull" });
+            Assert.IsFalse(sut.SkipExecution(context));
         }
 
         private static void AssertValid(RequirementValidator sut, ContextEntity contextEntity, Contact root)

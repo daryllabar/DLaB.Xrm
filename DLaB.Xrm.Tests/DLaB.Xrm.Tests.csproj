@@ -46,15 +46,15 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.DirectoryServices" Version="8.0.0" />
-    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
-    <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.1" />
+    <PackageReference Include="System.Runtime.Caching" Version="8.0.1" />
     <PackageReference Include="DLaB.Xrm.Entities" Version="9.0.0.3" />
-    <PackageReference Include="Microsoft.Testing.Platform" Version="1.3.2" />
-    <PackageReference Include="Microsoft.Testing.Platform.MSBuild" Version="1.3.2" />
-    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="17.11.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.5.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.5.2" />
-    <PackageReference Include="XrmUnitTest.09" Version="3.3.0.65" />
+    <PackageReference Include="Microsoft.Testing.Platform" Version="1.4.1" />
+    <PackageReference Include="Microsoft.Testing.Platform.MSBuild" Version="1.4.1" />
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="17.11.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.1" />
+    <PackageReference Include="XrmUnitTest.09" Version="3.3.0.68" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DLaB.Xrm.Test\DLaB.Xrm.Test.csproj" />

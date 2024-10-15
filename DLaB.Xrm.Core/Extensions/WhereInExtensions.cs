@@ -38,12 +38,12 @@ namespace Source.DLaB.Xrm
         /// <param name="filterExpression">The FilterExpression to apply the In Constraints to.</param>
         /// <param name="columnName">The name of the column to perform the in against.</param>
         /// <param name="values">The list of values to search for being in the column name.</param>
-        public static FilterExpression WhereIn(this FilterExpression filterExpression, string columnName, params object[] values)
+        public static FilterExpression WhereIn(this FilterExpression filterExpression, string columnName, params object?[] values)
         {
-            if (values.Length == 1){
-                var type = values[0].GetType();
-                var eNum = values[0] as IEnumerable;
-                if (type.Name != "String" && eNum != null)
+            if (values.Length == 1
+                && values[0] != null){
+                var type = values[0]!.GetType();
+                if (type.Name != "String" && values[0] is IEnumerable eNum)
                 {
                    return filterExpression.WhereIn(columnName, eNum);
                 }
@@ -73,7 +73,7 @@ namespace Source.DLaB.Xrm
         /// <param name="filterExpression">The FilterExpression to apply the In Constraints to.</param>
         /// <param name="columnName"></param>
         /// <param name="values"></param>
-        private static void AddWhereInCondition(FilterExpression filterExpression, string columnName, object[] values)
+        private static void AddWhereInCondition(FilterExpression filterExpression, string columnName, object?[] values)
         {
             if(values.Length == 0){
                 // If no values are in our values array, create a constraint which causing nothing to get returned
@@ -545,7 +545,7 @@ namespace Source.DLaB.Xrm
         /// <param name="query"></param>
         /// <param name="columnName">The name of the column to perform the in against.</param>
         /// <param name="values">The list of values to search for being in the column name.</param>
-        public static QueryExpression WhereIn(this QueryExpression query, string columnName, params object[] values)
+        public static QueryExpression WhereIn(this QueryExpression query, string columnName, params object?[] values)
         {
             query.Criteria.WhereIn(columnName, values);
             return query;

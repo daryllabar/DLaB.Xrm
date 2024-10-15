@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\ExtensionsTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\RegisteredEventBuilderTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadOnlyCachedServiceTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RequirementValidatorComparisonTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RequirementValidatorTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IocContainerTests.cs" />
   </ItemGroup>

@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections;
 using System.Linq.Expressions;
@@ -515,7 +516,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="columnNameAndValuePairs">List of pairs that look like this:
         /// (string name of the column, value of the column) ie. "name", "John Doe" </param>
-        public TypedQueryExpression<TEntity> WhereEqual(params object[] columnNameAndValuePairs)
+        public TypedQueryExpression<TEntity> WhereEqual(params object?[] columnNameAndValuePairs)
         {
             Query.WhereEqual(columnNameAndValuePairs);
             return this;
@@ -526,7 +527,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="columnName">The name of the column to perform the in against.</param>
         /// <param name="values">The list of values to search for being in the column name.</param>
-        public TypedQueryExpression<TEntity> WhereIn(string columnName, params object[] values)
+        public TypedQueryExpression<TEntity> WhereIn(string columnName, params object?[] values)
         {
             Query.WhereIn(columnName, values);
             return this;

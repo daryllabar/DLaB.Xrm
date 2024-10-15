@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Activities;
 using System.Threading;
 using Microsoft.Xrm.Sdk.Extensions;
@@ -38,7 +39,7 @@ namespace Source.DLaB.Xrm.Workflow
         /// </summary>
         public IIocContainer Container => _container.Value;
 
-        protected DLaBCodeActivityBase(IIocContainer container = null)
+        protected DLaBCodeActivityBase(IIocContainer? container = null)
         {
             container = container ?? new IocContainer();
             _container = new Lazy<IIocContainer>(() => RegisterServices(container), LazyThreadSafetyMode.ExecutionAndPublication);

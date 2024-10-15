@@ -47,6 +47,7 @@ namespace Source.DLaB.Xrm.Plugin
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -457,6 +458,34 @@ namespace Source.DLaB.Xrm.Plugin
 
         #endregion Missing
 
+        #region Not
+
+        /// <summary>
+        /// Requires exact list of specific values to not be present in the context entity
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="entity">The entity with Attributes to require not to match the given values</param>
+        /// <returns></returns>
+        public RequirementValidator Not(ContextEntity entityType, Entity entity)
+        {
+            Get(entityType).NotValues.Add(entity);
+            return this;
+        }
+
+        /// <summary>
+        /// Requires no specific value for any column to be present in the context entity
+        /// </summary>
+        /// <param name="entityType">The entity type</param>
+        /// <param name="entity">The entity with Attributes to require to have been to</param>
+        /// <returns></returns>
+        public RequirementValidator NotAny(ContextEntity entityType, Entity entity)
+        {
+            Get(entityType).NotOrValues.Add(entity);
+            return this;
+        }
+
+        #endregion Not
+
         #region Updated (Non-Null) / Changed (Nullable) / Cleared (Null) / Updated (value)
 
         #region Updated (Non-Null)
@@ -734,6 +763,9 @@ namespace Source.DLaB.Xrm.Plugin
             public EntityList ContainedValues { get; } = new EntityList();
             public EntityOrList ContainedOrValues { get; } = new EntityOrList();
 
+            public EntityList NotValues { get; } = new EntityList();
+            public EntityOrList NotOrValues { get; } = new EntityOrList();
+
             public EntityList UpdatedToValues { get; } = new EntityList();
             public EntityOrList UpdatedToOrValues { get; } = new EntityOrList();
 
@@ -768,6 +800,7 @@ namespace Source.DLaB.Xrm.Plugin
                        || SkipMissing(context, entity, MissingColumnsAllowNulls, MissingOrColumnsAllowNulls, allowNull: true)
                        || SkipNonNullExecution(context, entity, RequiredNullColumns, RequiredNullOrColumns)
                        || SkipValueExecution(context, entity, ContainedValues.GetValues(service), ContainedOrValues.GetValues())
+                       || SkipNotValueExecution(context, entity, NotValues.GetValues(service), NotOrValues.GetValues())
                        || SkipExecutionForUpdate(context, entity, preImage!, UpdatedColumns, UpdatedOrColumns, checkNotNull: true)
                        || SkipExecutionForUpdate(context, entity, preImage!, UpdatedColumnsAllowNulls, UpdatedOrColumnsAllowNulls, checkNotNull: false)
                        || SkipNonNullExecutionForUpdate(context, entity, preImage!, UpdatedNullColumns, UpdatedNullOrColumns)
@@ -1050,6 +1083,73 @@ namespace Source.DLaB.Xrm.Plugin
                         RequirementType = ColumnRequirementCheck.ContainsValue
                     };
                     context.Trace("The {0} entity type did not contain the required value for at least one of the following columns: {1}!", EntityType, string.Join(", ", missingMatch.Keys));
+                    return true;
+                }
+
+                return false;
+            }
+
+            private bool SkipNotValueExecution(IExtendedPluginContext context, Entity entity, Dictionary<string, object> notAllValues, List<Dictionary<string, object>> notAnyMatches)
+            {
+                var service = context.SystemOrganizationService;
+                var treatNotContainsAsNull = EntityType == ContextEntity.PreImage || EntityType == ContextEntity.CoalesceTargetPreImage;
+                var invalidValues = new Dictionary<string, object?>();
+                foreach (var att in notAllValues)
+                {
+                    if (!entity.Contains(att.Key))
+                    {
+                        if (treatNotContainsAsNull && att.Value != null)
+                        {
+                            break;
+                        }
+
+                        continue;
+                    }
+
+                    if (!AttributeComparer.ValuesAreEqual(service, att.Value, entity[att.Key]))
+                    {
+                        break;
+                    }
+                    invalidValues.Add(att.Key, att.Value);
+                }
+
+                if (invalidValues.Count > 0
+                    && invalidValues.Count == notAllValues.Count)
+                {
+                    Reason = new InvalidRequirementReason
+                    {
+                        Columns = invalidValues.Keys.ToList(),
+                        ColumnReason = InvalidColumnReason.InvalidValue,
+                        ContextEntity = EntityType,
+                        IsAny = false,
+                        RequirementType = ColumnRequirementCheck.Not
+                    };
+
+                    if (invalidValues.Count == 1)
+                    {
+                        context.Trace("The {0} entity type contained the value {1} for column {2} which was not allowed!", EntityType, invalidValues.Select(kvp => $"{kvp.Key}: {kvp.Value.ObjectToStringDebug()}").ToCsv());
+                    }
+                    else
+                    {
+                        context.Trace("The {0} entity type matched all invalid values: {1}!", EntityType, invalidValues.Select(kvp => $"{kvp.Key}: {kvp.Value.ObjectToStringDebug()}").ToCsv());
+                    }
+                    
+                    return true;
+                }
+
+                invalidValues.Clear();
+                var match = notAnyMatches.FirstOrDefault(set => EntityContainsAtLeastOneMatch(service, entity, set, treatNotContainsAsNull));
+                if (match != null)
+                {
+                    Reason = new InvalidRequirementReason
+                    {
+                        Columns = new List<string>(match.Keys),
+                        ColumnReason = InvalidColumnReason.InvalidValue,
+                        ContextEntity = EntityType,
+                        IsAny = true,
+                        RequirementType = ColumnRequirementCheck.Not
+                    };
+                    context.Trace("The {0} entity type contained at least one invalid value for columns {1} which was not allowed!", EntityType, match.Keys.ToCsv());
                     return true;
                 }
 
