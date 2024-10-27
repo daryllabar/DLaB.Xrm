@@ -70,4 +70,58 @@ namespace Source.DLaB.Xrm
         /// <param name="args">The arguments.</param>
         IDisposable TraceTime(string format, params object[] args);
     }
+
+    /// <summary>
+    /// Extension Class for IExtendedExecutionContext
+    /// </summary>
+    public static class ExtendedExecutionContextExtensions
+    {
+        /// <summary>
+        /// Checks if a database lock has been acquired for the specified lock key.
+        /// </summary>
+        /// <param name="context">The extended execution context.</param>
+        /// <param name="lockKey">The lock key.</param>
+        /// <returns>True if the lock has been acquired, false otherwise.</returns>
+        public static bool DbLockAcquired(this IExtendedExecutionContext context, string lockKey)
+        {
+            return context.SharedVariables.GetParameterValue<bool>(GetFullLockKey(lockKey));
+        }
+
+        /// <summary>
+        /// Checks to see if a lock has already been acquired. Acquires a lock for the specified lock key.
+        /// </summary>
+        /// <param name="context">The extended execution context.</param>
+        /// <param name="lockKey">The lock key.</param>
+        /// <returns>True if the lock has already been acquired, false otherwise.</returns>
+        public static bool AcquireLock(this IExtendedExecutionContext context, string lockKey)
+        {
+            if (context.DbLockAcquired(lockKey))
+            {
+                return false;
+            }
+            context.SystemOrganizationService.AcquireLock(lockKey, context);
+            context.SetDbLockAcquired(lockKey);
+            return true;
+        }
+
+        /// <summary>
+        /// Sets the database lock as acquired for the specified lock key.
+        /// </summary>
+        /// <param name="context">The extended execution context.</param>
+        /// <param name="lockKey">The lock key.</param>
+        /// <param name="acquired">True if the lock is acquired, false otherwise.</param>
+        public static void SetDbLockAcquired(this IExtendedExecutionContext context, string lockKey, bool acquired = true)
+        {
+            if (!context.IsInTransaction)
+            {
+                throw new InvalidPluginExecutionException("A lock can only be called within a transaction, which is not possible in pre-validation!");
+            }
+            context.SharedVariables[GetFullLockKey(lockKey)] = acquired;
+        }
+
+        private static string GetFullLockKey(string lockKey)
+        {
+            return nameof(DbLockAcquired) + "_" + lockKey;
+        }
+    }
 }
