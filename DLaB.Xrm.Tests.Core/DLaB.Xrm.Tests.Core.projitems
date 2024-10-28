@@ -13,7 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionsEntityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FakeContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OrganizationServiceExtensionTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Plugin\ExtendedExecutionContextTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtendedExecutionContextTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\ExtensionsTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\RegisteredEventBuilderTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadOnlyCachedServiceTests.cs" />
