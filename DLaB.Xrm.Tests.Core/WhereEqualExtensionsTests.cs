@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using DLaB.Xrm.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk.Query;
@@ -21,14 +22,14 @@ namespace DLaB.Xrm.Tests.Core
                 Contact.Fields.FirstName, "Or'd Twice"
             );
 
-            Assert.AreEqual(@"SELECT 
+            AssertEqualString(@"SELECT 
 FROM contact
 WHERE
 ( ( ( contact.firstname = 'Test' ) 
  Or ( contact.firstname = 'Or'd' ) 
  Or ( contact.firstname = 'Or'd Twice' ) 
 ) 
-)", sut.GetSqlStatement().Trim());
+)", sut);
         }
 
         [TestMethod]
@@ -44,13 +45,13 @@ WHERE
                 Contact.Fields.LastName, "Or'd2"
             );
 
-            Assert.AreEqual(@"SELECT 
+            AssertEqualString(@"SELECT 
 FROM contact
 WHERE
 ( ( ( contact.firstname = 'Test' And contact.lastname = 'Test2' ) 
  Or ( contact.firstname = 'Or'd' And contact.lastname = 'Or'd2' ) 
 ) 
-)", sut.GetSqlStatement().Trim());
+)", sut);
         }
 
         [TestMethod]
@@ -68,14 +69,14 @@ WHERE
                 Contact.Fields.LastName, "Or'd2"
             );
 
-            Assert.AreEqual(@"SELECT 
+            AssertEqualString(@"SELECT 
 FROM contact
 WHERE
 ( ( contact.statecode = 0 ) 
 And ( ( contact.firstname = 'Test' And contact.lastname = 'Test2' ) 
  Or ( contact.firstname = 'Or'd' And contact.lastname = 'Or'd2' ) 
 ) 
-)", sut.GetSqlStatement().Trim());
+)", sut);
         }
 
         [TestMethod]
@@ -91,14 +92,14 @@ And ( ( contact.firstname = 'Test' And contact.lastname = 'Test2' )
                 Contact.Fields.FirstName, "Or'd"
             );
 
-            Assert.AreEqual(@"SELECT 
+            AssertEqualString(@"SELECT 
 FROM contact
 WHERE
 ( ( contact.statecode = 0 ) 
 And ( ( contact.firstname = 'Test' ) 
  Or ( contact.firstname = 'Or'd' ) 
 ) 
-)", sut.GetSqlStatement().Trim());
+)", sut);
         }
 
         [TestMethod]
@@ -174,14 +175,21 @@ And ( ( contact.firstname = 'Test' )
                 Contact.Fields.LastName, "Or'd2"
             );
 
-            Assert.AreEqual(@"SELECT 
+            AssertEqualString(@"SELECT 
 FROM contact
 WHERE
 ( ( contact.statecode = 0 And contact.firstname = 'Test' ) 
 And ( ( contact.lastname = 'Test2' ) 
  Or ( contact.firstname = 'Or'd' And contact.lastname = 'Or'd2' ) 
 ) 
-)", sut.GetSqlStatement().Trim());
+)", sut);
+        }
+
+        [DebuggerHidden]
+        private static void AssertEqualString(string expected, QueryExpression actual)
+        {
+            Assert.AreEqual(expected.Replace(@"
+", Environment.NewLine), actual.GetSqlStatement().Trim());
         }
     }
 }
