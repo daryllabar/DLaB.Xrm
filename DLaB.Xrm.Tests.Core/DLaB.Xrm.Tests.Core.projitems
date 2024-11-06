@@ -20,5 +20,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)RequirementValidatorComparisonTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RequirementValidatorTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IocContainerTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WhereEqualExtensionsTests.cs" />
   </ItemGroup>
 </Project>

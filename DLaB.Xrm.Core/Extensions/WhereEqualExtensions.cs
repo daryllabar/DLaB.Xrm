@@ -188,38 +188,55 @@ namespace Source.DLaB.Xrm
                 return filterExpression;
             }
 
-            // Get Indexes of all ors and ConditionExpressions
+            // Get Indexes of all logical operators and ConditionExpressions
             var indexes = Enumerable.Range(0, length).ToList();
-            var ors = indexes.Where(
+            var operators = indexes.Where(
                     i => columnNameAndValuePairs.ItemAtIndexIsType(i, typeof(LogicalOperator))).
                     OrderBy(i => i).ToArray();
             var conditions = indexes.Where(
                     i => columnNameAndValuePairs.ItemAtIndexIsType(i, typeof(ConditionExpression))).
                     OrderBy(i => i).ToArray();
 
-            bool hasOr = ors.Length > 0;
-            if ((length - ors.Length - conditions.Length) % 2 != 0)
+            bool hasOperator = operators.Length > 0;
+            if ((length - operators.Length - conditions.Length) % 2 != 0)
             {
                 throw new ArgumentException("Each Column Name must have a value after it.  Invalid " +
                     "columnNameAndValuePairs length");
             }
 
-            var orIndex = 0;
+            var logicalIndex = 0;
             var conditionIndex = 0;
-            var orFilter = GetOrFilter(filterExpression, ors);
-            var currentFilter = hasOr ? orFilter!.AddFilter(LogicalOperator.And) : filterExpression;
+            var operatorFilter = GetLogicalOperatorFilter(filterExpression, operators, columnNameAndValuePairs);
+            var currentFilter = hasOperator
+                ? operatorFilter.AddFilter(LogicalOperator.And)
+                : filterExpression;
 
             for (var i = 0; i < length; i += 2)
             {
-                if (hasOr && ors.Length > orIndex && ors[orIndex] == i)
+                if (hasOperator && operators.Length > logicalIndex && operators[logicalIndex] == i)
                 {
                     i++; // Skip LogicalOperator
-                    orIndex++;
-                    currentFilter = orFilter!.AddFilter(LogicalOperator.And); // Create new And filter, adding to Or
+                    var @operator = (LogicalOperator)columnNameAndValuePairs[operators[logicalIndex++]]!;
+                    if (@operator == LogicalOperator.And)
+                    {
+                        if (operators.Length == logicalIndex)
+                        {
+                            throw new ArgumentException("LogicalOperator.And can not be the last operator in the list!");
+                        }
+
+                        if ((LogicalOperator)columnNameAndValuePairs[operators[logicalIndex]]! == LogicalOperator.And)
+                        {
+                            throw new ArgumentException("LogicalOperator.And can not be followed by another LogicalOperator.And!");
+                        }
+
+                        operatorFilter = operatorFilter.AddFilter(LogicalOperator.Or);
+                    }
+                    currentFilter = operatorFilter.AddFilter(LogicalOperator.And); // Create new And filter, adding to Or
                 }
 
                 if (conditions.Length > conditionIndex && conditions[conditionIndex] == i)
                 {
+                    // Handle ConditionExpression
                     conditionIndex++;
                     var ce = (ConditionExpression)columnNameAndValuePairs[i]!;
                     if (ce.Operator == ConditionOperator.On && ce.Values.Any())
@@ -238,12 +255,12 @@ namespace Source.DLaB.Xrm
                 }
                 else
                 {
+                    // handle Column Name and Value Pair
                     var name = columnNameAndValuePairs[i];
                     if (name == null)
                     {
                         throw new ArgumentNullException(nameof(columnNameAndValuePairs), "Column Name was null!");
                     }
-                    // Non Condition Expression
                     AddNameValuePairCondition(currentFilter,
                         (string)columnNameAndValuePairs[i]!, columnNameAndValuePairs[i + 1]);
                 }
@@ -294,42 +311,41 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-        /// Helper function to get the "or" filter based on the FilterExpression.  If it already is and "or", just return it.
+        /// Helper function to get the correct filter based on the FilterExpression and logical Operator.  If it already matches, just return it.
         /// Else, return a new child or filter
         /// </summary>
-        /// <param name="filterExpression"></param>
-        /// <param name="ors"></param>
         /// <returns></returns>
-        private static FilterExpression? GetOrFilter(FilterExpression filterExpression, int[] ors)
+        private static FilterExpression GetLogicalOperatorFilter(FilterExpression filterExpression, int[] logicalOperators, object?[] columnNameAndValuePairs)
         {
-            FilterExpression? orFilter = null;
-            if (ors.Length > 0)
+            var logicalFilter = filterExpression;
+            if (logicalOperators.Length > 0)
             {
-                if (ors[0] == 0)
+                if (logicalOperators[0] == 0)
                 {
                     throw new ArgumentException("WhereEqual statement can not start with LogicalOperator value");
                 }
 
-                for (int i = 0; i < ors.Length - 1; i++)
+                for (var i = 0; i < logicalOperators.Length - 1; i++)
                 {
                     // Check to ensure the index of the current plus 1 doesn't equal the index of the next 
-                    if (ors[i] + 1 == ors[i + 1])
+                    if (logicalOperators[i] + 1 == logicalOperators[i + 1])
                     {
                         throw new ArgumentException("All LogicalOperator values must have at least one column value separating them");
                     }
                 }
-
-                if (filterExpression.FilterOperator == LogicalOperator.Or)
+                
+                var @operator = (LogicalOperator)columnNameAndValuePairs[logicalOperators[0]]!;
+                if (filterExpression.FilterOperator == @operator)
                 {
-                    orFilter = filterExpression;
+                    logicalFilter = filterExpression;
                 }
                 else
                 {
-                    orFilter = new FilterExpression(LogicalOperator.Or);
-                    filterExpression.AddFilter(orFilter);
+                    logicalFilter = new FilterExpression(@operator);
+                    filterExpression.AddFilter(logicalFilter);
                 }
             }
-            return orFilter;
+            return logicalFilter;
         }
 
         #endregion FilterExpression

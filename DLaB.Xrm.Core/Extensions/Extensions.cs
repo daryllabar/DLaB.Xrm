@@ -1004,7 +1004,7 @@ namespace Source.DLaB.Xrm
 
         /// <summary>
         /// Adds the condition to the Filter Expression, and if the current filter expression's logical operator
-        /// is an Or, it will move all of the current conditions into a child filter and create a new
+        /// is an Or, it will move all the current conditions into a child filter and create a new
         /// top level and filter
         /// </summary>
         /// <param name="criteria"></param>
