@@ -196,7 +196,25 @@ And ( ( contact.lastname = 'Test2' )
             catch (ArgumentException ex)
             {
                 // Expected Argument Exception
-                Assert.AreEqual("LogicalOperator.And can not be the last operator in the list!", ex.Message);
+                Assert.AreEqual("A LogicalOperator.And cannot be the last operator in the list.  All \"And\" LogicalOperators must eventually be followed by an \"Or\" LogicalOperator.", ex.Message);
+            }
+
+            try
+            {
+                var qe = new QueryExpression(Contact.EntityLogicalName);
+                Sut.WhereEqual(qe,
+                    Contact.Fields.StateCode, (int)ContactState.Active,
+                    LogicalOperator.Or,
+                    Contact.Fields.FirstName, "Test",
+                    LogicalOperator.And,
+                    Contact.Fields.LastName, "Test2"
+                );
+                Assert.Fail("Expected Exception to be thrown");
+            }
+            catch (ArgumentException ex)
+            {
+                // Expected Argument Exception
+                Assert.AreEqual("A LogicalOperator.And cannot be the last operator in the list.  All \"And\" LogicalOperators must eventually be followed by an \"Or\" LogicalOperator.", ex.Message);
             }
 
             try
@@ -235,7 +253,7 @@ And ( ( contact.lastname = 'Test2' )
             catch (ArgumentException ex)
             {
                 // Expected Argument Exception
-                Assert.AreEqual("LogicalOperator.And can not be the last operator in the list!", ex.Message);
+                Assert.AreEqual("A LogicalOperator.And cannot be the last operator in the list.  All \"And\" LogicalOperators must eventually be followed by an \"Or\" LogicalOperator.", ex.Message);
             }
         }
 

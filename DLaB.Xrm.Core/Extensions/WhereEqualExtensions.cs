@@ -221,7 +221,7 @@ namespace Source.DLaB.Xrm
                     {
                         if (operators.Length == logicalIndex)
                         {
-                            throw new ArgumentException("LogicalOperator.And can not be the last operator in the list!");
+                            throw new ArgumentException("A LogicalOperator.And cannot be the last operator in the list.  All \"And\" LogicalOperators must eventually be followed by an \"Or\" LogicalOperator.");
                         }
 
                         if ((LogicalOperator)columnNameAndValuePairs[operators[logicalIndex]]! == LogicalOperator.And)
