@@ -261,14 +261,22 @@ namespace Source.DLaB.Xrm.Plugin
         }
 
         /// <summary>
-        /// Allows for Injecting the Service Provider for the Plugin Execution.
+        /// Allows for Injecting the Service Provider for the Plugin Execution via the IIoCServiceProviderBuilder.  Sets the created injected service via the IIoCServiceProviderBuilder 
         /// </summary>
         /// <param name="serviceProvider">The Service Provider from Dataverse.</param>
         /// <returns></returns>
         protected virtual IServiceProvider InjectServiceProvider(IServiceProvider serviceProvider)
         {
             // The dataverse serviceProvider will not have an IIoCServiceProviderBuilder, so the default Container.BuildServiceProvider will be used, but tests can inject their own builder that overrides registrations.
-            return serviceProvider.Get<IIocServiceProviderBuilder>()?.BuildServiceProvider(serviceProvider, Container) ?? Container.BuildServiceProvider(serviceProvider);
+            var serviceProviderBuilder = serviceProvider.Get<IIocServiceProviderBuilder>();
+            if (serviceProviderBuilder == null)
+            {
+                return Container.BuildServiceProvider(serviceProvider);
+            }
+
+            var injectedProvider = serviceProviderBuilder.BuildServiceProvider(serviceProvider, Container);
+            serviceProviderBuilder.BuiltServiceProviders.Add(injectedProvider);
+            return injectedProvider;
         }
 
         private static void AssertContextIsNotNull(T context)

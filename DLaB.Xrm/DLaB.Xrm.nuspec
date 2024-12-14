@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DLaB.Xrm</id>
-    <version>5.0.0.12</version>
+    <version>5.0.0.14</version>
     <authors>Daryl LaBar</authors>
     <owners>Daryl LaBar</owners>
     <license type="expression">MIT</license>
