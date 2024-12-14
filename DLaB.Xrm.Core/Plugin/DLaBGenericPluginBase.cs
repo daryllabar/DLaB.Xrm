@@ -274,9 +274,7 @@ namespace Source.DLaB.Xrm.Plugin
                 return Container.BuildServiceProvider(serviceProvider);
             }
 
-            var injectedProvider = serviceProviderBuilder.BuildServiceProvider(serviceProvider, Container);
-            serviceProviderBuilder.BuiltServiceProviders.Add(injectedProvider);
-            return injectedProvider;
+            return serviceProviderBuilder.BuildServiceProvider(serviceProvider, Container);
         }
 
         private static void AssertContextIsNotNull(T context)

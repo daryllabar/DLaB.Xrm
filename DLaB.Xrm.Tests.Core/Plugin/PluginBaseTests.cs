@@ -70,7 +70,9 @@ namespace DLaB.Xrm.Tests.Core.Plugin
         public IServiceProvider BuildServiceProvider(IServiceProvider provider, IIocContainer container)
         {
             container.AddSingleton(provider.Get<ITracingService>());
-            return container.BuildServiceProvider(provider);
+            var newProvider = container.BuildServiceProvider(provider);
+            BuiltServiceProviders.Add(newProvider);
+            return newProvider;
         }
     }
 }
