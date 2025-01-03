@@ -31,6 +31,9 @@ namespace Source.DLaB.Xrm.Plugin
         }
     }
 
+    /// <summary>
+    /// Resolves the Wrapped Lazy creation of different Organization Services
+    /// </summary>
     public interface IOrganizationServicesWrapper
     {   
         /// <summary>
