@@ -267,7 +267,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns></returns>
         protected virtual IServiceProvider InjectServiceProvider(IServiceProvider serviceProvider)
         {
-            // The dataverse serviceProvider will not have an IIoCServiceProviderBuilder, so the default Container.BuildServiceProvider will be used, but tests can inject their own builder that overrides registrations.
+            // The default dataverse serviceProvider will not have an IIoCServiceProviderBuilder, so the default Container.BuildServiceProvider will be used, but tests can inject their own builder that overrides registrations.
             var serviceProviderBuilder = serviceProvider.Get<IIocServiceProviderBuilder>();
             if (serviceProviderBuilder == null)
             {

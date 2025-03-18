@@ -30,11 +30,10 @@ namespace DLaB.Xrm.Tests.Core.Plugin
                 .WithFirstRegisteredEvent(plugin)
                 .Build();
             var serviceProvider = new ServiceProviderBuilder(null, context, new DebugLogger())
-                .WithService<IIocServiceProviderBuilder>(new TestIocServiceProviderBuilder())
                 .Build();
 
             plugin.Execute(serviceProvider);
-            var traces = serviceProvider.GetLatestIocService().GetFake<FakeTraceService>().Traces;
+            var traces = serviceProvider.GetFake<FakeTraceService>().Traces;
             
             Assert.IsTrue(traces.Any(t => t.Trace == TestPlugin.Traces.Executed));
         }
@@ -53,6 +52,12 @@ namespace DLaB.Xrm.Tests.Core.Plugin
         protected override void ExecuteInternal(IExtendedPluginContext context)
         {
             context.Trace(Traces.Executed);
+
+            var traceHistory = context.GetRequiredService<Source.DLaB.Xrm.IHistoricalTracingService>().GetTraceHistory();
+            if (!traceHistory.Contains(Traces.Executed))
+            {
+                throw new Exception("Unexpected Trace History: " + traceHistory);
+            }
         }
 
         protected override IEnumerable<RegisteredEvent> CreateEvents()
@@ -69,7 +74,7 @@ namespace DLaB.Xrm.Tests.Core.Plugin
 
         public IServiceProvider BuildServiceProvider(IServiceProvider provider, IIocContainer container)
         {
-            container.AddSingleton(provider.Get<ITracingService>());
+            container.AddSingleton<ITracingService>(provider.Get<ExtendedTracingService>());
             var newProvider = container.BuildServiceProvider(provider);
             BuiltServiceProviders.Add(newProvider);
             return newProvider;
