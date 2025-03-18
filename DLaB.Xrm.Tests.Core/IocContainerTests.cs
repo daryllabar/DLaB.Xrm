@@ -130,6 +130,21 @@ namespace DLaB.Xrm.Tests.Core
         }
 
         [TestMethod]
+        public void MultipleInterfaceRegistrations_Should_ShareInstance()
+        {
+            _sut.AddScoped<FirstExample>()
+                .AddScoped<IFirst>(p => p.GetRequiredService<FirstExample>())
+                .AddScoped<IExample>(p => p.GetRequiredService<FirstExample>());
+
+            var provider = _sut.BuildServiceProvider();
+            var firstExample = provider.Get<FirstExample>();
+            Assert.IsTrue(ReferenceEquals(firstExample, provider.Get<FirstExample>()));
+            Assert.IsTrue(ReferenceEquals(firstExample, provider.Get<IFirst>()));
+            Assert.IsTrue(ReferenceEquals(firstExample, provider.Get<IExample>()));
+        }
+
+
+        [TestMethod]
         public void NestedLazyType_Should_Pop()
         {
             _sut.AddScoped<IFirst, First>();
@@ -260,5 +275,10 @@ namespace DLaB.Xrm.Tests.Core
         {
 
         }
+    }
+
+    public class FirstExample : IFirst, IExample
+    {
+        public string Value { get; set; }
     }
 }

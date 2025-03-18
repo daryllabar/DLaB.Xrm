@@ -1,5 +1,4 @@
-﻿using Microsoft.Xrm.Sdk.Extensions;
-using System;
+﻿using System;
 using System.Activities;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM

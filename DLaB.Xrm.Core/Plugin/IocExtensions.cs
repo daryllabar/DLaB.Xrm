@@ -54,11 +54,29 @@ namespace Source.DLaB.Xrm.Plugin
 
             // Order of registrations does not matter. 
             container.RegisterDLaBDefaults()
+                // ExtendedTracingService
+                .AddScoped(s =>
+                    {
+                        var defaultTracingService = s.Get<WrappedServiceProvider>()?.ServiceProvider?.Get<ITracingService>();
+                        if (defaultTracingService == null)
+                        {
+                            throw new Exception("When RegisterDataversePluginDefaults is used, the wrapped Service Provider must provide an ITracingService!");
+                        }
+                        return new ExtendedTracingService(defaultTracingService);
+                    }
+                )
+
                 // ConfigWrapper
                 .AddSingleton(configWrapper)
 
                 // IExtendedPluginContext
                 .AddScoped<IExtendedPluginContext, DLaBExtendedPluginContextBase>()
+
+                // IHistoricalTracingService
+                .AddScoped<IHistoricalTracingService>(s => s.GetRequiredService<ExtendedTracingService>())
+
+                // IMaxLengthTracingService
+                .AddScoped<IMaxLengthTracingService>(s => s.GetRequiredService<ExtendedTracingService>())
 
                 // IOrganizationService
                 .AddScoped<IOrganizationService>(s =>
@@ -75,15 +93,7 @@ namespace Source.DLaB.Xrm.Plugin
                 })
 
                 // ITracingService
-                .AddScoped<ITracingService>(s =>
-                {
-                    var defaultTracingService = s.Get<WrappedServiceProvider>()?.ServiceProvider?.Get<ITracingService>();
-                    if(defaultTracingService == null)
-                    {
-                        throw new Exception("When RegisterDataversePluginDefaults is used, the wrapped Service Provider must provide an ITracingService!");
-                    }
-                    return new ExtendedTracingService(defaultTracingService);
-                })
+                .AddScoped<ITracingService>(s => s.GetRequiredService<ExtendedTracingService>())
 
                 // OrganizationServicesWrapper
                 .AddScoped(s =>
