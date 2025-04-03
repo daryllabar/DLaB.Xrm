@@ -9,7 +9,6 @@ using DLaB.Xrm.Test.Core.Builders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using Source.DLaB.Xrm;
 using OrganizationServiceBuilder = DLaB.Xrm.Test.Core.Builders.OrganizationServiceBuilder;
 
 namespace DLaB.Xrm.Tests.Core
@@ -21,8 +20,8 @@ namespace DLaB.Xrm.Tests.Core
         public void TestAcquireLock_WithEmail()
         {
             TestInitializer.InitializeTestSettings();
-            ConditionExpression condition = null;
-            Email updatedEntity = null;
+            ConditionExpression? condition = null;
+            Email? updatedEntity = null;
             var service = (IOrganizationService)TestBase.GetOrganizationService();
             var email = new Email();
             email.Id = service.Create(email);
@@ -42,18 +41,18 @@ namespace DLaB.Xrm.Tests.Core
 
             service.AcquireLock("notify@me.com");
 
-            var date = (DateTime)condition.Values[0];
+            var date = (DateTime)(condition?.Values[0] ?? DateTime.MinValue);
             Assert.IsTrue(DateTime.UtcNow.AddDays(-366) < date);
             Assert.IsTrue(date < DateTime.UtcNow);
-            Assert.IsTrue(updatedEntity.Contains(Email.Fields.TransactionCurrencyId));
-            Assert.IsNull(updatedEntity.TransactionCurrencyId);
+            Assert.IsTrue(updatedEntity?.Contains(Email.Fields.TransactionCurrencyId));
+            Assert.IsNull(updatedEntity?.TransactionCurrencyId);
         }
 
         [TestMethod]
         public void TestAcquireLock_FallBackToBusinessUnit()
         {
             TestInitializer.InitializeTestSettings();
-            BusinessUnit updatedEntity = null;
+            BusinessUnit? updatedEntity = null;
             var service = (IOrganizationService)TestBase.GetOrganizationService();
             var bu = service.GetFirst<BusinessUnit>();
             bu.Address2_Fax = "123-456-7890";
@@ -66,7 +65,7 @@ namespace DLaB.Xrm.Tests.Core
 
             service.AcquireLock("notify@me.com");
 
-            Assert.AreEqual(bu.Address2_Fax, updatedEntity.Address2_Fax);
+            Assert.AreEqual(bu.Address2_Fax, updatedEntity?.Address2_Fax);
         }
 
         #region AcquireLock_Should_UpdateSpecificEmail
@@ -105,7 +104,7 @@ namespace DLaB.Xrm.Tests.Core
 
             protected override void Test(IOrganizationService service)
             {
-                Email updatedEmail = null;
+                Email? updatedEmail = null;
                 service = new OrganizationServiceBuilder(service)
                     .WithFakeUpdate((_, e) =>
                     {

@@ -45,7 +45,7 @@ namespace DLaB.Xrm.Tests.Core.Plugin
         {
             public const string Executed = "Test Plugin Executed!";
         }
-        public TestPlugin(string unsecureConfig, string secureConfig, IIocContainer container = null) : base(unsecureConfig, secureConfig, container)
+        public TestPlugin(string? unsecureConfig, string? secureConfig, IIocContainer? container = null) : base(unsecureConfig, secureConfig, container)
         {
         }
 

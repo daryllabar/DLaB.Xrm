@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using Microsoft.Xrm.Sdk;
 
@@ -113,14 +112,14 @@ namespace Source.DLaB.Xrm.Exceptions
 
         #endregion Constructors
 
-        private static string CreateMessage(OptionSetValue undefinedEnumValue, string? message = null)
+        private static string CreateMessage(OptionSetValue? undefinedEnumValue, string? message = null)
         {
             var enumType = typeof(TEnum);
-            if (!IsEnum(enumType, ref message)) { return message; }
+            if (!IsEnum(enumType, ref message)) { return message!; }
 
             return undefinedEnumValue == null 
                 ? $"{message}OptionSetValue was null for enum type {enumType.FullName}!" 
-                : FormatMessage(message, enumType, (TEnum)(object)undefinedEnumValue.Value, undefinedEnumValue.Value);
+                : FormatMessage(message!, enumType, (TEnum)(object)undefinedEnumValue.Value, undefinedEnumValue.Value);
         }
     }
 }

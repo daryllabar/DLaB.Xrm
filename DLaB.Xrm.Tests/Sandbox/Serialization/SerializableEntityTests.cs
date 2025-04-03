@@ -69,7 +69,7 @@ namespace DLaB.Xrm.Tests.Sandbox.Serialization
         public static string ToXml<T>(T objToXml, bool includeNameSpace = true)
         {
             string buffer;
-            var xmlSerializer = new XmlSerializer(objToXml.GetType());
+            var xmlSerializer = new XmlSerializer(objToXml?.GetType()!);
             using (var memStream = new MemoryStream())
             using (var stWriter = new StreamWriter(memStream))
             {
@@ -138,7 +138,7 @@ namespace DLaB.Xrm.Tests.Sandbox.Serialization
             //
             // Assert
             //
-            Assert.AreEqual(xrmXml.SubstringByString("<Attributes ", "</Attributes"), xml.SubstringByString("<Attributes ", "</Attributes").Replace(@" z:Size=""2""", string.Empty));
+            Assert.AreEqual(xrmXml.SubstringByString("<Attributes ", "</Attributes"), xml.SubstringByString("<Attributes ", "</Attributes")?.Replace(@" z:Size=""2""", string.Empty));
             var sandboxNamespace = @"=""http://schemas.datacontract.org/2004/07/DLaB.Xrm.Sandbox.Serialization""";
             Assert.IsFalse(xml.Contains(sandboxNamespace));
         }

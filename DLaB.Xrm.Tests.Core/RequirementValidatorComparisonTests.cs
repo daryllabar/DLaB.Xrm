@@ -236,7 +236,7 @@ namespace DLaB.Xrm.Tests.Core
             return $"{a} and {b}";
         }
 
-        private static FakeContext GetContext(Contact root, Contact preImage)
+        private static FakeContext GetContext(Contact root, Contact? preImage)
         {
             var context = new FakeContext
             {

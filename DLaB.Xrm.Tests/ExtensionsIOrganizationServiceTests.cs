@@ -57,13 +57,11 @@ namespace Core.DLaB.Xrm.Tests
 
             private static void TestNotExists(IOrganizationService service, KeyAttributeCollection keys)
             {
-                Contact contact;
-                Entity entity;
-                contact = service.GetEntityOrDefault<Contact>(keys);
+                var contact = service.GetEntityOrDefault<Contact>(keys);
                 Assert.IsNull(contact);
 
                 // Test NonGeneric
-                entity = service.GetEntityOrDefault(Contact.EntityLogicalName, keys);
+                var entity = service.GetEntityOrDefault(Contact.EntityLogicalName, keys);
                 Assert.IsNull(entity);
             }
 
@@ -260,7 +258,7 @@ namespace Core.DLaB.Xrm.Tests
         {
             public TestUpdater(Dictionary<Guid, Contact> dict) : base(dict) { }
 
-            public List<string> MostRecentUnchangedAttributes { get; private set; }
+            public List<string> MostRecentUnchangedAttributes { get; private set; } = new List<string>();
 
             public override void PreMinimalUpdate(Contact entity, Contact minimalChangesEntity, List<string> unchangedAttributes)
             {

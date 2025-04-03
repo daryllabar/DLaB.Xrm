@@ -37,17 +37,17 @@ namespace Core.DLaB.Xrm.Tests
         public override Guid Id { get; set; }
 
         [AttributeLogicalName("subject")]
-        public string Subject { get; set; }
+        public string Subject { get; set; } = string.Empty;
     }
 
     public class MyConfig : IEntityHelperConfig
     {
-        public string GetIrregularIdAttributeName(string logicalName)
+        public string? GetIrregularIdAttributeName(string logicalName)
         {
             return logicalName == "customactivity" ? "activityid" : null;
         }
 
-        public PrimaryFieldInfo GetIrregularPrimaryFieldInfo(string logicalName, PrimaryFieldInfo defaultInfo = null)
+        public PrimaryFieldInfo? GetIrregularPrimaryFieldInfo(string logicalName, PrimaryFieldInfo? defaultInfo = null)
         {
             if (logicalName == "customactivity")
             {

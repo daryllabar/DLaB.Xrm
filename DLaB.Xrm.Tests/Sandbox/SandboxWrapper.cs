@@ -15,24 +15,24 @@ namespace Core.DLaB.Xrm.Tests.Sandbox
 {
     public static class SandboxWrapper
     {
-        public static T Instantiate<T>(object[] constructorArguments = null)
+        public static T Instantiate<T>(object[]? constructorArguments = null)
         {
             return new SandboxWrapper<T>().Instantiate(constructorArguments);
         }
 
-        public static T InstantiatePlugin<T>(string unsecureConfig = null, string secureConfig = null)
+        public static T InstantiatePlugin<T>(string? unsecureConfig = null, string? secureConfig = null)
         {
-            object[] args = null;
+            object?[]? args = null;
             if (secureConfig == null)
             {
                 if (unsecureConfig != null)
                 {
-                    args = new object[] {unsecureConfig};
+                    args = new object?[] {unsecureConfig};
                 }
             }
             else
             {
-                args = new object[]{unsecureConfig, secureConfig};
+                args = new object?[]{unsecureConfig, secureConfig};
             }
 
             return new SandboxWrapper<T>().Instantiate(args);
@@ -45,9 +45,9 @@ namespace Core.DLaB.Xrm.Tests.Sandbox
         /// <summary>
         /// The Sandbox AppDomain to execute the plugin
         /// </summary>
-        public AppDomain SandboxedAppDomain { get; private set; }
+        public AppDomain SandboxedAppDomain { get; private set; } = null!;
 
-        public T Instantiate(object[] constructorArguments = null)
+        public T Instantiate(object?[]? constructorArguments = null)
         {
             /*
              * Sandboxed plug-ins and custom workflow activities can access the network through the HTTP and HTTPS protocols. This capability provides 
@@ -59,7 +59,7 @@ namespace Core.DLaB.Xrm.Tests.Sandbox
                 * Anonymous authentication is supported and recommended. There is no provision for prompting the 
                   on user for credentials or saving those credentials.
              */
-            constructorArguments = constructorArguments ?? new object[] { };
+            constructorArguments = constructorArguments ?? new object?[] { };
             var type = typeof(T);
             var source = type.Assembly.Location;
             var sourceAssembly = Assembly.UnsafeLoadFrom(source);
@@ -96,7 +96,7 @@ namespace Core.DLaB.Xrm.Tests.Sandbox
             return Create(constructorArguments);
         }
 
-        private T Create(object[] constructorArguments)
+        private T Create(object?[] constructorArguments)
         {
             var type = typeof(T);
 
@@ -123,7 +123,7 @@ namespace Core.DLaB.Xrm.Tests.Sandbox
                 if (SandboxedAppDomain != null)
                 {
                     AppDomain.Unload(SandboxedAppDomain);
-                    SandboxedAppDomain = null;
+                    SandboxedAppDomain = null!;
                 }
             }
 

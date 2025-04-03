@@ -11,17 +11,17 @@ namespace DLaB.Xrm.Test.Core.Builders
 {
     public class ServiceProviderBuilder : ServiceProviderBuilderBase<ServiceProviderBuilder>
     {
-        public ServiceProviderBuilder() : this(null, new FakePluginExecutionContext(), (ITestLogger)null)
+        public ServiceProviderBuilder() : this(null, new FakePluginExecutionContext(), (ITestLogger?)null)
         {
             
         }
 
-        public ServiceProviderBuilder(IOrganizationService service, IPluginExecutionContext context, ITestLogger logger) : base(service, context, logger)
+        public ServiceProviderBuilder(IOrganizationService? service, IPluginExecutionContext context, ITestLogger? logger) : base(service, context, logger)
         {
             
         }
 
-        public ServiceProviderBuilder(IOrganizationService service, IPluginExecutionContext context, ITracingService trace) : base(service, context, trace)
+        public ServiceProviderBuilder(IOrganizationService? service, IPluginExecutionContext context, ITracingService? trace) : base(service, context, trace)
         {
 
         }

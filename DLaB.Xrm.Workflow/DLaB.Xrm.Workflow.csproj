@@ -9,6 +9,7 @@
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <CodeAnalysisRuleSet>..\DLaB.Xrm.ruleset</CodeAnalysisRuleSet>
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <None Update="DLaB.Xrm.Workflow.Source.nuspec">
@@ -16,10 +17,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DLaB.Common.Source" Version="1.5.0.1" />
+    <PackageReference Include="DLaB.Common.Source" Version="1.6.0.2" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
-    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.56" />
-    <PackageReference Include="Microsoft.CrmSdk.Workflow" Version="9.0.2.56" />
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.59" />
+    <PackageReference Include="Microsoft.CrmSdk.Workflow" Version="9.0.2.59" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Buffers" Version="4.5.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />

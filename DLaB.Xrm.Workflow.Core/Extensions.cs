@@ -161,7 +161,7 @@ namespace Source.DLaB.Xrm.Workflow
         /// <typeparam name="T"></typeparam>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static T GetPreEntity<T>(this IWorkflowContext context) where T : Entity
+        public static T? GetPreEntity<T>(this IWorkflowContext context) where T : Entity
         {
             return context.PreEntityImages.GetEntity<T>(DLaBExtendedWorkflowContext.WorkflowImageNames.PreImage);
         }
@@ -173,7 +173,7 @@ namespace Source.DLaB.Xrm.Workflow
         /// <typeparam name="T"></typeparam>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static T GetPostEntity<T>(this IWorkflowContext context) where T : Entity
+        public static T? GetPostEntity<T>(this IWorkflowContext context) where T : Entity
         {
             return context.PreEntityImages.GetEntity<T>(DLaBExtendedWorkflowContext.WorkflowImageNames.PostImage);
         }

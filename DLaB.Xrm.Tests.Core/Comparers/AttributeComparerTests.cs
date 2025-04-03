@@ -15,7 +15,7 @@ namespace DLaB.Xrm.Tests.Core.Comparers
     [TestClass]
     public class AttributeComparerTests
     {
-        private static readonly object[] EntityReferences =  new object[]
+        private static readonly object?[] EntityReferences =  new object?[]
         {
             null,
             new EntityReference(),
@@ -26,7 +26,7 @@ namespace DLaB.Xrm.Tests.Core.Comparers
             new EntityReference("contact", "telephone1", "800-867-5309"),
         };
 
-        private static readonly object[] Dictionaries =
+        private static readonly object?[] Dictionaries =
         {
             null,
             new Dictionary<string, string> { { "A", "A" }, { "B", "B" }, },
@@ -34,21 +34,21 @@ namespace DLaB.Xrm.Tests.Core.Comparers
             new Dictionary<string, string> { { "A", "A" }, { "B", "A" }, },
         };
 
-        private static readonly object[] Bytes =
+        private static readonly object?[] Bytes =
         {
             null,
             new byte[] { 0, 1, 2 },
             new byte[] { 1, 2, 3 },
         };
 
-        private static readonly object[] Enumerables =
+        private static readonly object?[] Enumerables =
         {
             null,
             new List<OptionSetValue> { new OptionSetValue(1), new OptionSetValue(2) },
             new List<OptionSetValue> { new OptionSetValue(2), new OptionSetValue(3) },
         };
 
-        private static readonly object[] OptionSets =
+        private static readonly object?[] OptionSets =
         {
             null,
             new OptionSetValue(),
@@ -56,7 +56,7 @@ namespace DLaB.Xrm.Tests.Core.Comparers
             new OptionSetValue(2),
         };
 
-        private static readonly object[] Moneys =
+        private static readonly object?[] Moneys =
         {
             null,
             new Money(),
@@ -101,7 +101,7 @@ namespace DLaB.Xrm.Tests.Core.Comparers
             TestValues(Moneys);
         }
 
-        private void TestValues(object[] values)
+        private void TestValues(object?[] values)
         {
             Test.TestInitializer.InitializeTestSettings();
             var service = TestBase.GetOrganizationService();

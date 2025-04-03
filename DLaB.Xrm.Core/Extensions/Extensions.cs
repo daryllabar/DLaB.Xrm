@@ -623,7 +623,7 @@ namespace Source.DLaB.Xrm
         {
             var name = property.Name.ToLower();
             if (name == "id"
-                || name.Substring(name.Length - 1) == "1" && name.StartsWith(typeof(T).GetClassAttribute<EntityLogicalNameAttribute>().LogicalName)) // If an attribute is the same value as the name of the entity, it is created with a 1 post fix to allow for it to compile
+                || name.Substring(name.Length - 1) == "1" && name.StartsWith(typeof(T).GetClassAttribute<EntityLogicalNameAttribute>()!.LogicalName)) // If an attribute is the same value as the name of the entity, it is created with a 1 post fix to allow for it to compile
             {
                 var attribute = typeof(T).GetProperty(property.Name)?.GetCustomAttributes<AttributeLogicalNameAttribute>().FirstOrDefault();
                 if (attribute == null)

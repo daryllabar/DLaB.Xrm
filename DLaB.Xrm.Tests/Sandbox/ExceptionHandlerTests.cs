@@ -33,7 +33,7 @@ namespace DLaB.Xrm.Tests.Sandbox
             {
                 if (ex.GetType() != typeof (Exception))
                 {
-                    Assert.Fail("Exception Contained a Custom Exception Type");
+                    Assert.Fail("Exception Contained a Custom Exception Type: " + ex);
                 }
 
                 ex = ex.InnerException;

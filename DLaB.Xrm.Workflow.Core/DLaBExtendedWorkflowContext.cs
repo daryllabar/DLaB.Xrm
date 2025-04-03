@@ -31,7 +31,7 @@ namespace Source.DLaB.Xrm.Workflow
 
         #region IExtendedExecutionContext Implementation
 
-        private IWorkflowContext _workflowContext;
+        private IWorkflowContext? _workflowContext;
         private readonly OrganizationServicesWrapper _orgServices;
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Source.DLaB.Xrm.Workflow
         /// <summary>
         /// The WorkflowContext for the workflow
         /// </summary>
-        public IWorkflowContext WorkflowContext => _workflowContext ?? (_workflowContext = ServiceProvider.Get<IWorkflowContext>());
+        public IWorkflowContext WorkflowContext => _workflowContext ??= ServiceProvider.Get<IWorkflowContext>();
 
         public int Mode => WorkflowContext.Mode;
 

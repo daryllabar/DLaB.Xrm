@@ -8,7 +8,7 @@ namespace DLaB.Xrm.Tests.Core
     [TestClass]
     public class IocContainerTests
     {
-        private IocContainer _sut;
+        private IocContainer _sut = null!;
 
         [TestInitialize]
         public void Initialize()
@@ -98,7 +98,7 @@ namespace DLaB.Xrm.Tests.Core
         /// <summary>
         /// Ensures that the exception of the given type was thrown (optionally with the given message) when the given action is performed.
         /// </summary>
-        protected void ExpectException<TException>(Action action, string message = null) where TException : Exception
+        protected void ExpectException<TException>(Action action, string? message = null) where TException : Exception
         {
             try
             {
@@ -156,7 +156,7 @@ namespace DLaB.Xrm.Tests.Core
         [TestMethod]
         public void NullFactory_Should_ErrorWithFactoryType()
         {
-            _sut.AddSingleton(_ => (IExample)null);
+            _sut.AddSingleton(_ => (IExample?)null);
             var provider = _sut.BuildServiceProvider();
             ExpectException<InvalidOperationException>(() =>
             {
@@ -237,8 +237,8 @@ namespace DLaB.Xrm.Tests.Core
 
     public class Father
     {
-        public Grandpa Parent { get; }
-        public Father(Grandpa parent)
+        public Grandpa? Parent { get; }
+        public Father(Grandpa? parent)
         {
             Parent = parent;
         }
@@ -246,17 +246,17 @@ namespace DLaB.Xrm.Tests.Core
 
     public class Example2 : IExample
     {
-        public string Value { get; set; }
+        public string? Value { get; set; }
     }
 
     public class Example : IExample
     {
-        public string Value { get; set; }
+        public string? Value { get; set; }
     }
 
     public interface IExample
     {
-        string Value { get; set; }
+        string? Value { get; set; }
     }
 
     public class First : IFirst
@@ -279,6 +279,6 @@ namespace DLaB.Xrm.Tests.Core
 
     public class FirstExample : IFirst, IExample
     {
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
     }
 }

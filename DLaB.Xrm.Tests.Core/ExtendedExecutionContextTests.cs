@@ -14,7 +14,7 @@ namespace DLaB.Xrm.Tests.Core.Plugin
     [TestClass]
     public class ExtendedExecutionContextTests
     {
-        private IOrganizationService _service;
+        private IOrganizationService _service = null!;
 
         [TestInitialize]
         public void TestInitialize()

@@ -3087,7 +3087,7 @@ namespace Source.DLaB.Xrm.CrmSdk
         /// <returns></returns>
         public static string GetErrorMessage(int hResult)
         {
-            var errorMessage = ErrorMessages[hResult] as string;
+            var errorMessage = (string)ErrorMessages[hResult]!;
             if (string.IsNullOrEmpty(errorMessage))
             {
                 errorMessage = "Server was unable to process request.";

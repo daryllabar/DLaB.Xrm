@@ -366,13 +366,13 @@ namespace DLaB.Xrm.Tests.Core
 
         #endregion Missing PreImage Should Throw
 
-        private void TestSkip(RequirementValidator sut, Entity target, Entity preImage, string trace = null)
+        private void TestSkip(RequirementValidator sut, Entity target, Entity preImage, string? trace = null)
         {
             TestSkip(sut, target, preImage, trace, MessageType.Create);
             TestSkip(sut, target, preImage, trace, MessageType.Update);
         }
 
-        private static void TestSkip(RequirementValidator sut, Entity target, Entity preImage, string trace, MessageType message)
+        private static void TestSkip(RequirementValidator sut, Entity target, Entity preImage, string? trace, MessageType message)
         {
             var context = new FakeContext
             {

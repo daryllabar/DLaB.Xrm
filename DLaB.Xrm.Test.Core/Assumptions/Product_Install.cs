@@ -10,7 +10,7 @@ namespace DLaB.Xrm.Test.Assumptions
     // ReSharper disable once InconsistentNaming
     public class Product_Install : EntityDataAssumptionBaseAttribute, IAssumptionEntityType<Product_Install, Product>
     {
-        protected override Entity RetrieveEntity(IOrganizationService service)
+        protected override Entity? RetrieveEntity(IOrganizationService service)
         {
             return service.GetFirstOrDefault<Product>(p => new
             {

@@ -16,7 +16,7 @@ namespace Source.DLaB.Xrm.Workflow
             _context = context;
         }
 
-        public object GetService(Type serviceType)
+        public object? GetService(Type serviceType)
         {
             return typeof(CodeActivityContext) == serviceType
                 ? _context

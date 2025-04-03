@@ -38,7 +38,7 @@ namespace Core.DLaB.Xrm.Tests
     public class TestColumnSetEntity : Entity
     {
         [AttributeLogicalName("testcolumnsetentity")]
-        public string TestColumnSetEntity1 { get; set; }
+        public string TestColumnSetEntity1 { get; set; } = string.Empty;
 
         [Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("testcolumnsetentityid")]
         public override System.Guid Id { get; set; }
