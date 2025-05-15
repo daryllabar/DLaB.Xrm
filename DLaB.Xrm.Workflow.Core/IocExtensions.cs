@@ -33,7 +33,7 @@ namespace Source.DLaB.Xrm.Workflow
         /// <param name="container">The IoC container.</param>
         /// <param name="codeActivity">The Code Activity</param>
         /// <returns>The IoC container.</returns>
-        public static IIocContainer RegisterDataverseWorkflowDefaults(this IIocContainer container, CodeActivity codeActivity)
+        public static IIocContainer RegisterDataverseWorkflowDefaults(this IIocContainer container, CodeActivity? codeActivity = null)
         {
             container.RegisterDataversePluginDefaults()
                 // CodeActivity

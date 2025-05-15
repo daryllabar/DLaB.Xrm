@@ -68,9 +68,9 @@ namespace Source.DLaB.Xrm.Workflow
                 return container.RegisterDataverseWorkflowDefaults(this);
             }
 
-            if (!typeof(IPluginServicesRegistrationRecorder).IsAssignableFrom(attribute.Recorder))
+            if (!typeof(IWorkflowServicesRegistrationRecorder).IsAssignableFrom(attribute.Recorder))
             {
-                throw new InvalidOperationException("The type in attribute.Recorder must implement IPluginServicesRegistrationRecorder.");
+                throw new InvalidOperationException("The type in attribute.Recorder must implement IWorkflowServicesRegistrationRecorder.");
             }
 
             var recorder = (IWorkflowServicesRegistrationRecorder)Activator.CreateInstance(attribute.Recorder)!;
