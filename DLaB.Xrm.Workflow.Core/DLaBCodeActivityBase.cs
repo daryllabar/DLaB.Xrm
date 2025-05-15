@@ -1,6 +1,6 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Activities;
+using System.Linq;
 using System.Threading;
 using Microsoft.Xrm.Sdk.Extensions;
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
@@ -41,13 +41,14 @@ namespace Source.DLaB.Xrm.Workflow
 
         protected DLaBCodeActivityBase(IIocContainer? container = null)
         {
-            container = container ?? new IocContainer();
+            container ??= new IocContainer();
             _container = new Lazy<IIocContainer>(() => RegisterServices(container), LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
         /// <summary>
         /// Registers the services for the IocContainer for the custom code activity.
-        /// If a custom code activity requires it's own specific registrations, this should be overridden and more than likely, base.RegisterServices called first before stepping on the registrations with the custom code activity specific ones.
+        /// Searches for the WorkflowServicesRegistrationRecorderAttribute in the code activity assembly, and if not found, defaults to container.RegisterDataverseWorkflowDefaults(this)
+        /// If a custom code activity requires its own specific registrations, this should be overridden and more than likely, base.RegisterServices called first before stepping on the registrations with the custom code activity specific ones.
         /// This is called only once per custom code activity instance.
         /// </summary>
         /// <param name="container">The IocContainer instance.</param>
@@ -59,7 +60,21 @@ namespace Source.DLaB.Xrm.Workflow
                 throw new ArgumentNullException(nameof(container));
             }
 
-            return container.RegisterDataverseWorkflowDefaults(this);
+            var attribute = GetType().Assembly.GetCustomAttributes(typeof(WorkflowServicesRegistrationRecorderAttribute), false)
+                .OfType<WorkflowServicesRegistrationRecorderAttribute>().FirstOrDefault();
+
+            if (attribute == null)
+            {
+                return container.RegisterDataverseWorkflowDefaults(this);
+            }
+
+            if (!typeof(IPluginServicesRegistrationRecorder).IsAssignableFrom(attribute.Recorder))
+            {
+                throw new InvalidOperationException("The type in attribute.Recorder must implement IPluginServicesRegistrationRecorder.");
+            }
+
+            var recorder = (IWorkflowServicesRegistrationRecorder)Activator.CreateInstance(attribute.Recorder)!;
+            return recorder.RegisterWorkflowServices(container);
         }
 
         /// <inheritdoc />

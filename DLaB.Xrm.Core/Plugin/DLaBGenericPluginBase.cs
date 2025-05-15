@@ -88,7 +88,7 @@ namespace Source.DLaB.Xrm.Plugin
             SecureConfig = secureConfig;
             UnsecureConfig = unsecureConfig;
 
-            container = container ?? new IocContainer();
+            container ??= new IocContainer();
             // Because child classes should be able to override the registration, Lazy is used here so the initialization of the IIocContainer and subsequent call to RegisterServices
             // is delayed until after the base class is fully instantiated.
             _container = new Lazy<IIocContainer>(() => RegisterServices(container), LazyThreadSafetyMode.ExecutionAndPublication);
@@ -150,7 +150,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// This is called only once per plugin instance.
         /// This must be overriden if T is not IExtendedPluginContext
         /// </summary>
-        /// <param name="container"></param>
+        /// <param name="container">The IocContainer instance.</param>
         /// <exception cref="ArgumentNullException"></exception>
         protected virtual IIocContainer RegisterServices(IIocContainer container)
         {
@@ -399,7 +399,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// </summary>
         protected virtual bool IsPostContextTraced(T context) { return ContainsAnyIgnoreCase(SecureConfig, TracePostContext, TracePrePostContext); }
 
-        private bool ContainsAnyIgnoreCase(string? source, params string[] values)
+        private static bool ContainsAnyIgnoreCase(string? source, params string[] values)
         {
             return source != null
                 && values.Any(v => CultureInfo.InvariantCulture.CompareInfo.IndexOf(source, v, CompareOptions.IgnoreCase) >= 0);

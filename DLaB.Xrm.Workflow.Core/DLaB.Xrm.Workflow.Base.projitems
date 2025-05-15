@@ -15,7 +15,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)IExtendedWorkflowContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DLaBExtendedWorkflowContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IocExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IWorkflowServicesRegistrationRecorder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkflowCategory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WorkflowMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorkflowServicesRegistrationRecorderAttribute.cs" />
   </ItemGroup>
 </Project>
