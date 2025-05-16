@@ -65,7 +65,8 @@ namespace Source.DLaB.Xrm.Workflow
 
             if (attribute == null)
             {
-                return container.RegisterDataverseWorkflowDefaults(this);
+                return container.RegisterDataverseWorkflowDefaults(this)
+                    .AddSingleton<CodeActivity>(this);
             }
 
             if (!typeof(IWorkflowServicesRegistrationRecorder).IsAssignableFrom(attribute.Recorder))
@@ -74,7 +75,8 @@ namespace Source.DLaB.Xrm.Workflow
             }
 
             var recorder = (IWorkflowServicesRegistrationRecorder)Activator.CreateInstance(attribute.Recorder)!;
-            return recorder.RegisterWorkflowServices(container);
+            return recorder.RegisterWorkflowServices(container)
+                .AddSingleton<CodeActivity>(this);
         }
 
         /// <inheritdoc />

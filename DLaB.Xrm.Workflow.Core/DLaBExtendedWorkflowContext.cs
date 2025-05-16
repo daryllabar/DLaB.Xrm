@@ -65,7 +65,7 @@ namespace Source.DLaB.Xrm.Workflow
         /// <summary>
         /// The IOrganizationService of the workflow, using the System User
         /// </summary>
-        public IOrganizationService SystemOrganizationService => _orgServices.Cached.Value;
+        public IOrganizationService SystemOrganizationService => _orgServices.System.Value;
 
         /// <summary>
         /// The IOrganizationServiceFactory for the workflow

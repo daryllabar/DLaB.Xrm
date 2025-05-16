@@ -36,11 +36,14 @@ namespace Source.DLaB.Xrm.Workflow
         public static IIocContainer RegisterDataverseWorkflowDefaults(this IIocContainer container, CodeActivity? codeActivity = null)
         {
             container.RegisterDataversePluginDefaults()
-                // CodeActivity
-                .AddSingleton(codeActivity)
-
                 // IExtendedWorkflowContext
                 .AddScoped<IExtendedWorkflowContext, DLaBExtendedWorkflowContext>();
+
+            if (codeActivity != null)
+            {
+                // CodeActivity
+                container.AddSingleton(codeActivity);
+            }
 
             return container;
         }
