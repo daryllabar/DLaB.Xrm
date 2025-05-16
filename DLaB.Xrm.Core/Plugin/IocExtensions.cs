@@ -57,7 +57,7 @@ namespace Source.DLaB.Xrm.Plugin
                 // ExtendedTracingService
                 .AddScoped(s =>
                     {
-                        var defaultTracingService = s.Get<WrappedServiceProvider>()?.ServiceProvider?.Get<ITracingService>();
+                        var defaultTracingService = s.Get<WrappedServiceProvider>()?.ServiceProvider.Get<ITracingService>();
                         if (defaultTracingService == null)
                         {
                             throw new Exception("When RegisterDataversePluginDefaults is used, the wrapped Service Provider must provide an ITracingService!");
@@ -82,7 +82,8 @@ namespace Source.DLaB.Xrm.Plugin
                 .AddScoped<IOrganizationService>(s =>
                 {
                     var context = s.Get<IPluginExecutionContext>();
-                    return s.CreateExtendedOrganizationService(context.UserId);
+                    var settings = s.Get<ExtendedOrganizationServiceSettings>();
+                    return s.CreateExtendedOrganizationService(context.UserId, settings);
                 })
 
                 // IOrganizationServicesWrapper
@@ -97,15 +98,16 @@ namespace Source.DLaB.Xrm.Plugin
 
                 // OrganizationServicesWrapper
                 .AddScoped(s =>
-                { 
-                    var admin = new Lazy<IOrganizationService>(() => s.CreateExtendedOrganizationService(null));
+                {
+                    var settings = s.Get<ExtendedOrganizationServiceSettings>();
+                    var admin = new Lazy<IOrganizationService>(() => s.CreateExtendedOrganizationService(null, settings));
                     return new OrganizationServicesWrapper(
                         // Standard
                         s.Get<Lazy<IOrganizationService>>(), 
                         // Admin
                         admin,
                         // InitiatingUser
-                        new Lazy<IOrganizationService>(() => s.CreateExtendedOrganizationService(s.Get<IPluginExecutionContext>().InitiatingUserId)),
+                        new Lazy<IOrganizationService>(() => s.CreateExtendedOrganizationService(s.Get<IPluginExecutionContext>().InitiatingUserId, settings)),
                         // Cached
                         new Lazy<IOrganizationService>(() => new ReadOnlyCachedService(admin.Value)));
                 })
