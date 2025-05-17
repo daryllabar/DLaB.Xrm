@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	  <DebugType>embedded</DebugType>
-	  <FileVersion>5.1.0.1</FileVersion>
-	  <Version>5.1.0.1</Version>
+	  <FileVersion>5.1.0.3</FileVersion>
+	  <Version>5.1.0.3</Version>
 	  <SignAssembly>true</SignAssembly>
 		<TargetFrameworks>net462;net472;net48;net6.0</TargetFrameworks>
     <OutputType>Library</OutputType>
