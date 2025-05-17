@@ -18,20 +18,9 @@ namespace Source.DLaB.Xrm.Workflow
 #endif
 {
     /// <summary>
-    /// Non-Generic Base Class for Custom Workflow Activities
+    /// Base Class for Custom Workflow Activities
     /// </summary>
-    public abstract class DLaBCodeActivityBase : DLaBCodeActivityBase<DLaBExtendedWorkflowContext>
-    {
-        protected DLaBCodeActivityBase(IIocContainer? container = null): base(container)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Generic Base Class for Custom Workflow Activities
-    /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    public abstract class DLaBCodeActivityBase<TContext> : CodeActivity, IContainerWrapper where TContext : IExtendedWorkflowContext
+    public abstract class DLaBCodeActivityBase : CodeActivity, IContainerWrapper
     {
         private readonly Lazy<IIocContainer> _container;
         /// <summary>
@@ -83,7 +72,7 @@ namespace Source.DLaB.Xrm.Workflow
         protected override void Execute(CodeActivityContext codeActivityContext)
         {
             var serviceProvider = Container.BuilderServiceProvider(codeActivityContext);
-            var context = serviceProvider.Get<TContext>();
+            var context = serviceProvider.Get<IExtendedWorkflowContext>();
 
             PreExecute(context, serviceProvider);
 
@@ -113,7 +102,7 @@ namespace Source.DLaB.Xrm.Workflow
         /// </summary>
         /// <param name="context">The Context.</param>
         /// <param name="serviceProvider">The IServiceProvider instance.</param>
-        protected abstract void Execute(TContext context, IServiceProvider serviceProvider);
+        protected abstract void Execute(IExtendedWorkflowContext context, IServiceProvider serviceProvider);
 
         /// <summary>
         /// Method that gets called when an exception occurs in the Execute method.  Return true if the exception should be rethrown.
@@ -123,7 +112,7 @@ namespace Source.DLaB.Xrm.Workflow
         /// <param name="context">The IExtendedWorkflowContext instance.</param>
         /// <param name="serviceProvider">The IServiceProvider instance.</param>
         /// <returns>True if the exception should be rethrown, otherwise false.</returns>
-        protected virtual bool ExecuteExceptionHandler(Exception ex, TContext context, IServiceProvider serviceProvider)
+        protected virtual bool ExecuteExceptionHandler(Exception ex, IExtendedWorkflowContext context, IServiceProvider serviceProvider)
         {
             context.LogException(ex);
             // Unexpected Exception occurred, log exception then wrap and throw new exception
@@ -146,6 +135,6 @@ namespace Source.DLaB.Xrm.Workflow
         /// </summary>
         /// <param name="context">The IExtendedWorkflowContext instance.</param>
         /// <param name="serviceProvider">The IServiceProvider instance.</param>
-        protected virtual void PostExecute(TContext context, IServiceProvider serviceProvider) { }
+        protected virtual void PostExecute(IExtendedWorkflowContext context, IServiceProvider serviceProvider) { }
     }
 }
