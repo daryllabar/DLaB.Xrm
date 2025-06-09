@@ -81,7 +81,7 @@ namespace Source.DLaB.Xrm.Plugin
                 // IOrganizationService
                 .AddScoped<IOrganizationService>(s =>
                 {
-                    var context = s.Get<IPluginExecutionContext>();
+                    var context = s.Get<IExecutionContext>();
                     var settings = s.Get<ExtendedOrganizationServiceSettings>();
                     return s.CreateExtendedOrganizationService(context.UserId, settings);
                 })
@@ -107,7 +107,7 @@ namespace Source.DLaB.Xrm.Plugin
                         // Admin
                         admin,
                         // InitiatingUser
-                        new Lazy<IOrganizationService>(() => s.CreateExtendedOrganizationService(s.Get<IPluginExecutionContext>().InitiatingUserId, settings)),
+                        new Lazy<IOrganizationService>(() => s.CreateExtendedOrganizationService(s.Get<IExecutionContext>().InitiatingUserId, settings)),
                         // Cached
                         new Lazy<IOrganizationService>(() => new ReadOnlyCachedService(admin.Value)));
                 })
