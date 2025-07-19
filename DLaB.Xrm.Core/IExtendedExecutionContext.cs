@@ -53,6 +53,11 @@ namespace Source.DLaB.Xrm
         ITracingService TracingService { get; }
 
         /// <summary>
+        /// The Managed Identity Service of the plugin, used to retrieve tokens for Azure resources.
+        /// </summary>
+        IManagedIdentityService ManagedIdentityService { get; }
+
+        /// <summary>
         /// Logs the exception.
         /// </summary>
         /// <param name="ex">The exception.</param>

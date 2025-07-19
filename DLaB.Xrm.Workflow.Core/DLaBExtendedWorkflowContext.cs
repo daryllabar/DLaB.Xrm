@@ -77,6 +77,9 @@ namespace Source.DLaB.Xrm.Workflow
         /// </summary>
         public ITracingService TracingService => ServiceProvider.Get<ITracingService>();
 
+        private readonly IManagedIdentityService _managedIdentityService;
+        public IManagedIdentityService ManagedIdentityService => _managedIdentityService;
+
         #endregion IExtendedExecutionContext Implementation
 
         #region IWorkflowContext Implmentation
@@ -195,6 +198,7 @@ namespace Source.DLaB.Xrm.Workflow
             CodeActivityContext = executionContext;
             CodeActivityTypeName = codeActivity.GetType().FullName;
             _orgServices = serviceProvider.Get<OrganizationServicesWrapper>();
+            _managedIdentityService = (IManagedIdentityService)serviceProvider.GetService(typeof(IManagedIdentityService));
         }
 
         #endregion Constructors

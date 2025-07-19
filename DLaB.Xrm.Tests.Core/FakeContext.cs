@@ -70,6 +70,7 @@ namespace DLaB.Xrm.Tests.Core
         public IOrganizationService SystemOrganizationService { get; set; } = null!;
         public FakeTraceService FakeTraceService { get; set; } = new FakeTraceService(new DebugLogger());
         public ITracingService TracingService => FakeTraceService;
+        public IManagedIdentityService ManagedIdentityService { get; set; } = null!;
 
 
         public void LogException(Exception ex)

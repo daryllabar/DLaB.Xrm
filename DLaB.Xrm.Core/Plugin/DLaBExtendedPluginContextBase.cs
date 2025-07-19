@@ -126,6 +126,8 @@ namespace Source.DLaB.Xrm.Plugin
         public IOrganizationService SystemOrganizationService => _organizationServices.System.Value;
         /// <inheritdoc />
         public ITracingService TracingService => ServiceProvider.Get<ITracingService>();
+        /// <inheritdoc />
+        public IManagedIdentityService ManagedIdentityService => ServiceProvider.Get<IManagedIdentityService>();
 
         #endregion IExtendedPluginContext Properties
 
@@ -177,7 +179,7 @@ namespace Source.DLaB.Xrm.Plugin
         private DLaBExtendedPluginContextBase(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            PluginExecutionContext = serviceProvider.Get<IPluginExecutionContext>();
+            PluginExecutionContext = serviceProvider.Get<IPluginExecutionContext>();           
             _organizationServices = serviceProvider.Get<OrganizationServicesWrapper>();
         }
 
