@@ -77,10 +77,14 @@ namespace Source.DLaB.Xrm.Workflow
         /// </summary>
         public ITracingService TracingService => ServiceProvider.Get<ITracingService>();
 
-        private readonly IManagedIdentityService _managedIdentityService;
-        public IManagedIdentityService ManagedIdentityService => _managedIdentityService;
+        #if !(XRM_2013 || XRM_2015 || XRM_2016)
+        /// <summary>
+        /// The ManagedIdentityService for the workflow
+        /// </summary>
+        public IManagedIdentityService ManagedIdentityService => ServiceProvider.Get<IManagedIdentityService>();
+        #endif
 
-        #endregion IExtendedExecutionContext Implementation
+#endregion IExtendedExecutionContext Implementation
 
         #region IWorkflowContext Implmentation
 

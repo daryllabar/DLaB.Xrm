@@ -70,8 +70,9 @@ namespace DLaB.Xrm.Tests.Core
         public IOrganizationService SystemOrganizationService { get; set; } = null!;
         public FakeTraceService FakeTraceService { get; set; } = new FakeTraceService(new DebugLogger());
         public ITracingService TracingService => FakeTraceService;
+        #if !(XRM_2013 || XRM_2015 || XRM_2016)
         public IManagedIdentityService ManagedIdentityService { get; set; } = null!;
-
+        #endif
 
         public void LogException(Exception ex)
         {

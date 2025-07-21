@@ -126,12 +126,14 @@ namespace Source.DLaB.Xrm.Plugin
         public IOrganizationService SystemOrganizationService => _organizationServices.System.Value;
         /// <inheritdoc />
         public ITracingService TracingService => ServiceProvider.Get<ITracingService>();
+        #if !(XRM_2013 || XRM_2015 || XRM_2016)
         /// <inheritdoc />
         public IManagedIdentityService ManagedIdentityService => ServiceProvider.Get<IManagedIdentityService>();
+        #endif
 
-        #endregion IExtendedPluginContext Properties
+#endregion IExtendedPluginContext Properties
 
-        #endregion Properties
+#endregion Properties
 
         #region ImageNames struct
 
@@ -179,7 +181,7 @@ namespace Source.DLaB.Xrm.Plugin
         private DLaBExtendedPluginContextBase(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            PluginExecutionContext = serviceProvider.Get<IPluginExecutionContext>();           
+            PluginExecutionContext = serviceProvider.Get<IPluginExecutionContext>();
             _organizationServices = serviceProvider.Get<OrganizationServicesWrapper>();
         }
 

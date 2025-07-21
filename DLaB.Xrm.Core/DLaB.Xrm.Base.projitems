@@ -47,7 +47,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\HasConditionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\HasConditionInWithValuesExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)extensions\ManagedIdentityServiceExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\OrganizationServiceExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\OptimisticConcurrencyExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\OrganizationServiceFileColumnExtensions.cs" />
