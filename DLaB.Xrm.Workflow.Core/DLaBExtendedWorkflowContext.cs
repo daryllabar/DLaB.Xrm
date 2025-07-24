@@ -92,7 +92,7 @@ namespace Source.DLaB.Xrm.Workflow
         /// The WorkflowContext for the workflow
         /// </summary>
         public IWorkflowContext WorkflowContext => _workflowContext ??= ServiceProvider.Get<IWorkflowContext>();
-
+        
         public int Mode => WorkflowContext.Mode;
 
         public int IsolationMode => WorkflowContext.IsolationMode;
@@ -152,7 +152,7 @@ namespace Source.DLaB.Xrm.Workflow
         public IWorkflowContext ParentContext => WorkflowContext.ParentContext;
 
         public WorkflowCategory WorkflowCategoryEnum => (WorkflowCategory) WorkflowContext.WorkflowCategory;
-
+        
         public WorkflowMode WorkflowModeEnum => (WorkflowMode) WorkflowContext.WorkflowMode;
 
         #endregion IWorkflowContext Implmentation
@@ -202,7 +202,6 @@ namespace Source.DLaB.Xrm.Workflow
             CodeActivityContext = executionContext;
             CodeActivityTypeName = codeActivity.GetType().FullName;
             _orgServices = serviceProvider.Get<OrganizationServicesWrapper>();
-            _managedIdentityService = (IManagedIdentityService)serviceProvider.GetService(typeof(IManagedIdentityService));
         }
 
         #endregion Constructors
