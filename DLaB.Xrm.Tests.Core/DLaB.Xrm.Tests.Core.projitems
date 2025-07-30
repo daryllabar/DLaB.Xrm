@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\AttributeComparerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionsEntityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FakeContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FetchExpressionExtensionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OrganizationServiceExtensionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtendedExecutionContextTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin\ExtensionsTests.cs" />

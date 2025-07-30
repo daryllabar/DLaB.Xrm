@@ -659,7 +659,7 @@ namespace Source.DLaB.Xrm
         /// <param name="service">The service.</param>
         /// <param name="qe">The query expression.</param>
         /// <returns></returns>
-        public static Entity GetFirst(this IOrganizationService service, QueryExpression qe)
+        public static Entity GetFirst(this IOrganizationService service, QueryBase qe)
         {
             var entity = service.GetFirstOrDefault(qe);
             AssertExists(entity, qe);
@@ -673,7 +673,7 @@ namespace Source.DLaB.Xrm
         /// <param name="service">The service.</param>
         /// <param name="qe">The query expression.</param>
         /// <returns></returns>
-        public static T GetFirst<T>(this IOrganizationService service, QueryExpression qe) where T : Entity
+        public static T GetFirst<T>(this IOrganizationService service, QueryBase qe) where T : Entity
         {
             var entity = service.GetFirstOrDefault<T>(qe);
             AssertExists(entity, qe);
@@ -695,13 +695,22 @@ namespace Source.DLaB.Xrm
         }
 
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-        private static void AssertExists<T>(T? entity, QueryExpression qe) where T : Entity
+        private static void AssertExists<T>(T? entity, QueryBase qb) where T : Entity
         {
-            if (entity == null)
+            if (entity != null)
             {
-                throw new InvalidOperationException("No " + EntityHelper.GetEntityLogicalName<T>() + " found for query " +
-                                                    qe.GetSqlStatement());
+                return;
             }
+
+            var query = qb switch
+            {
+                QueryExpression qe => $"query {qe.GetSqlStatement()}",
+                FetchExpression fe => $"query {fe.Query}",
+                QueryByAttribute ba => $" {ba.EntityName} with attributes {string.Join(", ", ba.Attributes)} and values {string.Join(", ", ba.Values)} and Columns {string.Join(", ", ba.ColumnSet.Columns)}",
+                _ => $"query {qb.GetType().FullName}"
+            };
+
+            throw new InvalidOperationException($"No {EntityHelper.GetEntityLogicalName<T>()} found for " + query);
         }
 
         #endregion GetFirst
@@ -718,19 +727,6 @@ namespace Source.DLaB.Xrm
         {
             query.First();
             return service.RetrieveMultiple(query).Entities.FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Gets the first entity that is returned by the fetch expression.  Null is returned if none are found.
-        /// </summary>
-        /// <typeparam name="T">The Entity Type.</typeparam>
-        /// <param name="service">The service.</param>
-        /// <param name="fe">The fetch expression.</param>
-        /// <returns></returns>
-        public static T? GetFirstOrDefault<T>(this IOrganizationService service, FetchExpression fe) where T : Entity
-        {
-            var entity = service.RetrieveMultiple(fe).Entities.FirstOrDefault();
-            return entity?.AsEntity<T>();
         }
 
         /// <summary>

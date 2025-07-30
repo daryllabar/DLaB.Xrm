@@ -949,9 +949,39 @@ namespace Source.DLaB.Xrm
             return xml.SelectSingleNode("/fetch/entity/@name")?.Value;
         }
 
-#endregion FetchExpression
+        public static void SetFetchTopX(this FetchExpression fe, int count)
+        {
+            var firstIndex = fe.Query.IndexOf(">", StringComparison.Ordinal);
+            if (firstIndex < 0)
+            {
+                throw new ArgumentException("FetchExpression Query does not contain a valid fetch element", nameof(fe));
+            }
+            var fetchTag = fe.Query.Substring(0, firstIndex);
+            var topIndex = fetchTag.IndexOf("top", StringComparison.OrdinalIgnoreCase);
+            if (topIndex > 0)
+            {
+                var start = fetchTag.IndexOfAny(new[] { '\'', '"' }, topIndex);
+                if (start < 0)
+                {
+                    throw new ArgumentException("FetchExpression Query does not contain a valid start to the top element", nameof(fe));
+                }
+                var end = fetchTag.IndexOfAny(new[] { '\'', '"' }, start);
+                if (end < 0)
+                {
+                    throw new ArgumentException("FetchExpression Query does not contain a valid end to the top element", nameof(fe));
+                }
+                fe.Query = fe.Query.Substring(0, start + 1) + "1" + fe.Query.Substring(end, end - start - 1);
+            }
+            else
+            {
+                var top = " top=\"" + count + "\"";
+                fe.Query = fe.Query.Insert(firstIndex, top);
+            }
+        }
 
-#region FilterExpression
+        #endregion FetchExpression
+
+        #region FilterExpression
 
         /// <summary>
         /// Depending on the Type of T, adds the correct is active criteria Statement
@@ -1647,6 +1677,11 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static QueryBase First(this QueryBase query)
         {
+            if (query is FetchExpression fe)
+            {
+                fe.SetFetchTopX(1);
+                return query;
+            }
             var p = GetPageInfo(query);
             p.Count = 1;
             p.PageNumber = 1;
@@ -1657,7 +1692,7 @@ namespace Source.DLaB.Xrm
         private static PagingInfo GetPageInfo<T>(T qb) where T : QueryBase
         {
             PagingInfo p;
-            switch ((QueryBase)qb)
+            switch (qb)
             {
                 case QueryExpression qe:
                     p = qe.PageInfo;
