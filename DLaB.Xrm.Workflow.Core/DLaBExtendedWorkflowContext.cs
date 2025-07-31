@@ -77,7 +77,14 @@ namespace Source.DLaB.Xrm.Workflow
         /// </summary>
         public ITracingService TracingService => ServiceProvider.Get<ITracingService>();
 
-        #endregion IExtendedExecutionContext Implementation
+        #if !(XRM_2013 || XRM_2015 || XRM_2016)
+        /// <summary>
+        /// The ManagedIdentityService for the workflow
+        /// </summary>
+        public IManagedIdentityService ManagedIdentityService => ServiceProvider.Get<IManagedIdentityService>();
+        #endif
+
+#endregion IExtendedExecutionContext Implementation
 
         #region IWorkflowContext Implmentation
 
@@ -85,7 +92,7 @@ namespace Source.DLaB.Xrm.Workflow
         /// The WorkflowContext for the workflow
         /// </summary>
         public IWorkflowContext WorkflowContext => _workflowContext ??= ServiceProvider.Get<IWorkflowContext>();
-
+        
         public int Mode => WorkflowContext.Mode;
 
         public int IsolationMode => WorkflowContext.IsolationMode;
@@ -145,7 +152,7 @@ namespace Source.DLaB.Xrm.Workflow
         public IWorkflowContext ParentContext => WorkflowContext.ParentContext;
 
         public WorkflowCategory WorkflowCategoryEnum => (WorkflowCategory) WorkflowContext.WorkflowCategory;
-
+        
         public WorkflowMode WorkflowModeEnum => (WorkflowMode) WorkflowContext.WorkflowMode;
 
         #endregion IWorkflowContext Implmentation

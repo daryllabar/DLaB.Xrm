@@ -30,6 +30,11 @@ namespace Source.DLaB.Xrm.Plugin
         IServiceProvider ServiceProvider { get; }
 
         /// <summary>
+        /// Managed Identity Service for things not accounted for in the base class.
+        /// </summary>
+        new IManagedIdentityService ManagedIdentityService { get; }
+
+        /// <summary>
         /// Gets the isolation mode of the plugin assembly.
         /// </summary>
         /// <value>
