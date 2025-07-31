@@ -25,5 +25,13 @@ namespace DLaB.Xrm.Tests.Core
             fe.SetFetchTopX(10);
             Assert.AreEqual("<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' top=\"10\"><entity name='account'><attribute name='name' /></entity></fetch>", fe.Query, "Top was not added to FetchExpression");
         }
+
+        [TestMethod]
+        public void SetFetchTopX_WithTop_Should_Update()
+        {
+            var fe = new FetchExpression("<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' top='1'><entity name='account'><attribute name='name' /></entity></fetch>");
+            fe.SetFetchTopX(10);
+            Assert.AreEqual("<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' top='10'><entity name='account'><attribute name='name' /></entity></fetch>", fe.Query, "Top was not added to FetchExpression");
+        }
     }
 }

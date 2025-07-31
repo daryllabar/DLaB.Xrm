@@ -965,12 +965,12 @@ namespace Source.DLaB.Xrm
                 {
                     throw new ArgumentException("FetchExpression Query does not contain a valid start to the top element", nameof(fe));
                 }
-                var end = fetchTag.IndexOfAny(new[] { '\'', '"' }, start);
+                var end = fetchTag.IndexOfAny(new[] { '\'', '"' }, ++start);
                 if (end < 0)
                 {
                     throw new ArgumentException("FetchExpression Query does not contain a valid end to the top element", nameof(fe));
                 }
-                fe.Query = fe.Query.Substring(0, start + 1) + "1" + fe.Query.Substring(end, end - start - 1);
+                fe.Query = fe.Query.Substring(0, start) + count + fe.Query.Substring(end);
             }
             else
             {
