@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DLaB.Xrm.Workflow.Source</id>
-    <version>4.0.0.15</version>
+    <version>4.0.0.16</version>
     <authors>Daryl LaBar</authors>
     <owners>Daryl LaBar</owners>
     <license type="expression">MIT</license>
@@ -15,8 +15,7 @@
     <tags>Dynamics CRM Workflow XRM</tags>
     <dependencies>
       <group>
-        <dependency id="DLaB.Common.Source" version="1.5.*" include="all" />
-        <dependency id="DLaB.Xrm.Source" version="4.*" include="all" />
+        <dependency id="DLaB.Xrm.Source" version="5.*" include="all" />
       </group>
     </dependencies>
     <frameworkAssemblies>
