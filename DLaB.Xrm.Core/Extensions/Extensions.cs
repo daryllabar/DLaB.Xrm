@@ -949,6 +949,12 @@ namespace Source.DLaB.Xrm
             return xml.SelectSingleNode("/fetch/entity/@name")?.Value;
         }
 
+        /// <summary>
+        /// Sets the top X number of records to return from the FetchExpression.
+        /// </summary>
+        /// <param name="fe">The Fetch Expression.</param>
+        /// <param name="count">The count to set.</param>
+        /// <exception cref="ArgumentException"></exception>
         public static void SetFetchTopX(this FetchExpression fe, int count)
         {
             var firstIndex = fe.Query.IndexOf(">", StringComparison.Ordinal);

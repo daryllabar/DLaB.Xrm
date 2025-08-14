@@ -11,7 +11,9 @@ namespace Source.DLaB.Xrm.Exceptions
     /// <summary>
     /// Thrown when an Entity is expected to contain an Attribute, but the attribute isn't found
     /// </summary>
+#if !NET
     [Serializable]
+#endif
     public class MissingAttributeException : Exception
     {
         #region Constructors
@@ -53,7 +55,7 @@ namespace Source.DLaB.Xrm.Exceptions
         {
 
         }
-
+#if !NET
         /// <summary>
         /// Without this constructor, deserialization will fail
         /// </summary>
@@ -63,7 +65,7 @@ namespace Source.DLaB.Xrm.Exceptions
             : base(info, context)
         {
         }
-
+#endif
         #endregion Constructors
     }
 }

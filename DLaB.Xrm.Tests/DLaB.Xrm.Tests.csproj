@@ -43,7 +43,7 @@
     <Reference Include="System.Workflow.Runtime" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DLaB.Common.Source" Version="1.6.0.2" />
+    <PackageReference Include="DLaB.Common.Source" Version="1.6.0.3" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />

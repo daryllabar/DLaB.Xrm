@@ -1,16 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	  <DebugType>embedded</DebugType>
-	  <FileVersion>5.1.0.6</FileVersion>
-	  <Version>5.1.0.6</Version>
+	  <FileVersion>5.1.0.7</FileVersion>
+	  <Version>5.1.0.7</Version>
 	  <SignAssembly>true</SignAssembly>
-		<TargetFrameworks>net462;net472;net48;net6.0</TargetFrameworks>
+		<TargetFrameworks>net462;net472;net48;net8.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <CodeAnalysisRuleSet>..\DLaB.Xrm.ruleset</CodeAnalysisRuleSet>
     <AssemblyOriginatorKeyFile>DLaB.Xrm.Snk</AssemblyOriginatorKeyFile>
 		<Nullable>enable</Nullable>
   </PropertyGroup>
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0'">
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0'">
 		<ConditionalConstants>;DLAB_ASYNC</ConditionalConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' ">
@@ -42,7 +42,7 @@
 	-->
 	
   <ItemGroup>
-    <PackageReference Include="DLaB.Common" Version="1.6.0.2" />
+    <PackageReference Include="DLaB.Common" Version="1.6.0.3" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
     
 	<!--
@@ -65,8 +65,8 @@
 	<ItemGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'">
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.59" />
 	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-		<PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.2.3" />
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+		<PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.2.10" />
     <PackageReference Include="System.Runtime.Caching" Version="8.0.1" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
 	</ItemGroup> 
