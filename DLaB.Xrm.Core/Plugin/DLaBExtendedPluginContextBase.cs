@@ -126,14 +126,17 @@ namespace Source.DLaB.Xrm.Plugin
         public IOrganizationService SystemOrganizationService => _organizationServices.System.Value;
         /// <inheritdoc />
         public ITracingService TracingService => ServiceProvider.Get<ITracingService>();
-        #if !(XRM_2013 || XRM_2015 || XRM_2016)
-        /// <inheritdoc />
+
+        #endregion IExtendedPluginContext Properties
+
+        #endregion Properties
+
+#if !(XRM_2013 || XRM_2015 || XRM_2016)
+        /// <summary>
+        /// Interface to allow obtaining access tokens from managed identity.
+        /// </summary>
         public IManagedIdentityService ManagedIdentityService => ServiceProvider.Get<IManagedIdentityService>();
-        #endif
-
-#endregion IExtendedPluginContext Properties
-
-#endregion Properties
+#endif
 
         #region ImageNames struct
 

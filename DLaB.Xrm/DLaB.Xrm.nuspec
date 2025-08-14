@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DLaB.Xrm</id>
-    <version>5.1.0.7</version>
+    <version>5.1.0.11</version>
     <authors>Daryl LaBar</authors>
     <owners>Daryl LaBar</owners>
     <license type="expression">MIT</license>
@@ -15,19 +15,19 @@
     <tags>Dynamics CRM Plugin XRM</tags>
     <dependencies>
 			<group targetFramework=".NETFramework4.6.2">
-				<dependency id="DLaB.Common" version="1.6.0.2" include="all" />
+				<dependency id="DLaB.Common" version="1.6.0.3" include="all" />
 	      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.*" include="all" />
 			</group>
 			<group targetFramework=".NETFramework4.7.2">
-				<dependency id="DLaB.Common" version="1.6.0.2" include="all" />
+				<dependency id="DLaB.Common" version="1.6.0.3" include="all" />
 				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.*" include="all" />
 			</group>
 			<group targetFramework=".NETFramework4.8">
-				<dependency id="DLaB.Common" version="1.6.0.2" include="all" />
+				<dependency id="DLaB.Common" version="1.6.0.3" include="all" />
 				<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0.*" include="all" />
 			</group>
-	    <group targetFramework="NET6.0">
-				<dependency id="DLaB.Common" version="1.6.0.2" include="all" />
+	    <group targetFramework="NET8.0">
+				<dependency id="DLaB.Common" version="1.6.0.3" include="all" />
 				<dependency id="Microsoft.PowerPlatform.Dataverse.Client" version="1.*" include="all" />
 				<dependency id="System.Runtime.Caching" version="8.0.0" include="all" />
 		    <dependency id="System.Text.Json" version="8.0.5" include="all" />

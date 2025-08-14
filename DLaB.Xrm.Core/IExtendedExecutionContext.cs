@@ -51,12 +51,13 @@ namespace Source.DLaB.Xrm
         /// The ITracingService of the plugin.
         /// </summary>
         ITracingService TracingService { get; }
+#if !(XRM_2013 || XRM_2015 || XRM_2016)
 
         /// <summary>
         /// The Managed Identity Service of the plugin, used to retrieve tokens for Azure resources.
         /// </summary>
         IManagedIdentityService ManagedIdentityService { get; }
-
+#endif
         /// <summary>
         /// Logs the exception.
         /// </summary>

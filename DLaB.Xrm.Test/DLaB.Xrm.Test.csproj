@@ -76,7 +76,7 @@
 		<PackageReference Include="System.Text.Json" version="8.0.5" />
 		<PackageReference Include="System.Threading.Tasks.Extensions" version="4.5.4" />
 		<PackageReference Include="System.ValueTuple" version="4.5.0" />
-		<PackageReference Include="XrmUnitTest.09" version="3.4.0.17" />
+		<PackageReference Include="XrmUnitTest.09" version="3.4.0.18" />
 	</ItemGroup>
   <ItemGroup>
     <Content Include="Assumptions\Entity Xml\Product_Install.xml" />
