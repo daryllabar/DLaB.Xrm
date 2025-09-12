@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\AttributeComparerTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtensionsAddLinkTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionsEntityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FakeContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FetchExpressionExtensionTests.cs" />
@@ -22,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)RequirementValidatorComparisonTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RequirementValidatorTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IocContainerTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypedQueryExpressionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WhereEqualExtensionsTests.cs" />
   </ItemGroup>
 </Project>

@@ -171,7 +171,9 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public LinkEntity AddLink(string linkToEntityName, string linkAttributesName)
         {
-            return Query.AddLink(linkToEntityName, linkAttributesName, linkAttributesName);
+            var link = Query.AddLink(linkToEntityName, linkAttributesName, linkAttributesName);
+            link.EntityAlias = linkAttributesName;
+            return link;
         }
 
         /// <summary>
@@ -183,7 +185,9 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public LinkEntity AddLink(string linkToEntityName, string linkAttributesName, JoinOperator joinType)
         {
-            return Query.AddLink(linkToEntityName, linkAttributesName, linkAttributesName, joinType);
+            var link = Query.AddLink(linkToEntityName, linkAttributesName, linkAttributesName, joinType);
+            link.EntityAlias = linkAttributesName;
+            return link;
         }
 
         #endregion AddLink

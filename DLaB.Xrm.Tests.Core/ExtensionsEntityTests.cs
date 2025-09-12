@@ -12,7 +12,7 @@ using Source.DLaB.Xrm;
 namespace DLaB.Xrm.Tests.Core
 {
     [TestClass]
-    public class ExtensionsEntity
+    public class ExtensionsEntityTests
     {
 #if !NET
         [TestMethod]

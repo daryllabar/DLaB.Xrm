@@ -1,6 +1,7 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
@@ -18,7 +19,9 @@ namespace Source.DLaB.Xrm
 
         #region LinkEntity
 
-        #region AddChildLink:  All methods created due to possible bug - http://stackoverflow.com/questions/10722307/why-does-linkentity-addlink-initialize-the-linkfromentityname-with-its-own-lin
+        #region AddChildLink
+        //All methods created due to possible bug - http://stackoverflow.com/questions/10722307/why-does-linkentity-addlink-initialize-the-linkfromentityname-with-its-own-lin
+
         /// <summary>
         /// Adds the new LinkEntity as a child to this LinkEntity, rather than this LinkEntity's LinkFrom Entity
         /// Assumes that the linkFromAttributeName and the linkToAttributeName are the same
@@ -72,18 +75,11 @@ namespace Source.DLaB.Xrm
         public static LinkEntity AddChildLink(this LinkEntity link, string linkToEntityName,
             string linkFromAttributeName, string linkToAttributeName, JoinOperator joinType)
         {
-            var child = new LinkEntity(
-                link.LinkToEntityName, linkToEntityName,
-                linkFromAttributeName, linkToAttributeName, joinType)
-            {
-                EntityAlias = linkFromAttributeName
-            };
+            var child = new LinkEntity(link.LinkToEntityName, linkToEntityName, linkFromAttributeName, linkToAttributeName, joinType);
             link.LinkEntities.Add(child);
+            child.AddUniqueAlias(link, linkFromAttributeName);
             return child;
         }
-        #endregion AddChildLink
-
-        #region AddLink
 
         /// <summary>
         /// Assumes that the linkFromAttributeName and the linkToAttributeName are the same
@@ -94,9 +90,8 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static LinkEntity AddLink(this LinkEntity link, string linkToEntityName, string linkAttributesName)
         {
-            var childLink = link.AddLink(linkToEntityName, linkAttributesName, linkAttributesName);
-            childLink.EntityAlias = linkAttributesName;
-            return childLink;
+            return link.AddLink(linkToEntityName, linkAttributesName, linkAttributesName)
+                .AddUniqueAlias(link, linkAttributesName);
         }
 
         /// <summary>
@@ -109,9 +104,8 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static LinkEntity AddLink(this LinkEntity link, string linkToEntityName, string linkAttributesName, JoinOperator joinType)
         {
-            var childLink = link.AddLink(linkToEntityName, linkAttributesName, linkAttributesName, joinType);
-            childLink.EntityAlias = linkAttributesName;
-            return childLink;
+            return link.AddLink(linkToEntityName, linkAttributesName, linkAttributesName, joinType)
+                .AddUniqueAlias(link, linkAttributesName);
         }
 
         #endregion AddLink
@@ -255,6 +249,57 @@ namespace Source.DLaB.Xrm
 
         #endregion AddLink<T>
 
+        public static void UniquifyAliases(this LinkEntity? link)
+        {
+            ProcessLinks(link?.LinkEntities, new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
+        }
+
+        private static void ProcessLinks(IEnumerable<LinkEntity>? linkedEntities, Dictionary<string, int> aliasCounts)
+        {
+            if (linkedEntities == null)
+            {
+                return;
+            }
+
+            foreach (var child in linkedEntities)
+            {
+                if (!string.IsNullOrEmpty(child.EntityAlias))
+                {
+                    var baseAlias = child.EntityAlias;
+                    var alias = baseAlias;
+                    int count = 0;
+
+                    // Find a unique alias
+                    while (aliasCounts.ContainsKey(alias))
+                    {
+                        count++;
+                        alias = $"{baseAlias}_{count}";
+                    }
+
+                    // Set the unique alias if changed
+                    if (!alias.Equals(child.EntityAlias, StringComparison.OrdinalIgnoreCase))
+                    {
+                        child.EntityAlias = alias;
+                    }
+
+                    aliasCounts[alias] = 1;
+                }
+
+                // Recurse into child links
+                ProcessLinks(child.LinkEntities, aliasCounts);
+            }
+        }
+
+        /// <summary>
+        /// Associates the desired alias with the child link, ensuring that it and all accessible aliases are unique within the parent link's context
+        /// </summary>
+        private static LinkEntity AddUniqueAlias(this LinkEntity childLink, LinkEntity parent, string desiredAlias)
+        {
+            childLink.EntityAlias = desiredAlias;
+            UniquifyAliases(parent);
+            return childLink;
+        }
+
         #endregion LinkEntity
 
         #region QueryExpression
@@ -269,9 +314,8 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static LinkEntity AddLink(this QueryExpression qe, string linkToEntityName, string linkAttributesName)
         {
-            var link = qe.AddLink(linkToEntityName, linkAttributesName, linkAttributesName);
-            link.EntityAlias = linkAttributesName;
-            return link;
+            return qe.AddLink(linkToEntityName, linkAttributesName, linkAttributesName)
+                .AddUniqueAlias(qe, linkAttributesName);
         }
 
         /// <summary>
@@ -284,9 +328,8 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static LinkEntity AddLink(this QueryExpression qe, string linkToEntityName, string linkAttributesName, JoinOperator joinType)
         {
-            var link = qe.AddLink(linkToEntityName, linkAttributesName, linkAttributesName, joinType);
-            link.EntityAlias = linkAttributesName;
-            return link;
+            return qe.AddLink(linkToEntityName, linkAttributesName, linkAttributesName, joinType)
+                .AddUniqueAlias(qe, linkAttributesName);
         }
         #endregion AddLink
 
@@ -363,8 +406,8 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static LinkEntity AddLink<T>(this QueryExpression qe, string linkFromAttributeName, string linkToAttributeName) where T : Entity
         {
-            var link = qe.AddLink(EntityHelper.GetEntityLogicalName<T>(), linkFromAttributeName, linkToAttributeName);
-            link.EntityAlias = linkFromAttributeName;
+            var link = qe.AddLink(EntityHelper.GetEntityLogicalName<T>(), linkFromAttributeName, linkToAttributeName)
+                .AddUniqueAlias(qe, linkFromAttributeName);
             if (_activeOnly)
             {
                 link.LinkCriteria.ActiveOnly<T>();
@@ -384,9 +427,10 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static LinkEntity AddLink<T>(this QueryExpression qe, string linkFromAttributeName, string linkToAttributeName, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
         {
-            var link = qe.AddLink(EntityHelper.GetEntityLogicalName<T>(), linkFromAttributeName, linkToAttributeName);
+            var link = qe.AddLink(EntityHelper.GetEntityLogicalName<T>(), linkFromAttributeName, linkToAttributeName)
+                .AddUniqueAlias(qe, linkFromAttributeName);
             link.Columns.AddColumns(anonymousTypeInitializer);
-            link.EntityAlias = linkFromAttributeName;
+            
             if (_activeOnly)
             {
                 link.LinkCriteria.ActiveOnly<T>();
@@ -405,8 +449,8 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static LinkEntity AddLink<T>(this QueryExpression qe, string linkFromAttributeName, string linkToAttributeName, JoinOperator joinType) where T : Entity
         {
-            var link = qe.AddLink(EntityHelper.GetEntityLogicalName<T>(), linkFromAttributeName, linkToAttributeName, joinType);
-            link.EntityAlias = linkFromAttributeName;
+            var link = qe.AddLink(EntityHelper.GetEntityLogicalName<T>(), linkFromAttributeName, linkToAttributeName, joinType)
+                .AddUniqueAlias(qe, linkFromAttributeName);
             if (_activeOnly)
             {
                 link.LinkCriteria.ActiveOnly<T>();
@@ -427,9 +471,9 @@ namespace Source.DLaB.Xrm
         /// <returns></returns>
         public static LinkEntity AddLink<T>(this QueryExpression qe, string linkFromAttributeName, string linkToAttributeName, JoinOperator joinType, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
         {
-            var link = qe.AddLink(EntityHelper.GetEntityLogicalName<T>(), linkFromAttributeName, linkToAttributeName, joinType);
+            var link = qe.AddLink(EntityHelper.GetEntityLogicalName<T>(), linkFromAttributeName, linkToAttributeName, joinType)
+                .AddUniqueAlias(qe, linkFromAttributeName);
             link.Columns.AddColumns(anonymousTypeInitializer);
-            link.EntityAlias = linkFromAttributeName;
             if (_activeOnly)
             {
                 link.LinkCriteria.ActiveOnly<T>();
@@ -439,6 +483,21 @@ namespace Source.DLaB.Xrm
         #endregion Different Link Attribute Names
 
         #endregion AddLink<T>
+
+        /// <summary>
+        /// Associates the desired alias with the child link, ensuring that it and all accessible aliases are unique within the parent link's context
+        /// </summary>
+        private static LinkEntity AddUniqueAlias(this LinkEntity childLink, QueryExpression qe, string desiredAlias)
+        {
+            childLink.EntityAlias = desiredAlias;
+            UniquifyAliases(qe);
+            return childLink;
+        }
+
+        public static void UniquifyAliases(this QueryExpression? qe)
+        {
+            ProcessLinks(qe?.LinkEntities, new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
+        }
 
         #endregion QueryExpression
     }
