@@ -16,7 +16,7 @@ This file provides essential information for GitHub Copilot agents working on th
 - ~1,600 C# files across 7 projects
 - Multi-target framework: .NET Framework 4.6.2, 4.7.2, 4.8, and .NET 8.0
 - Uses MSTest for testing with 111+ test cases
-- Distributed as NuGet source packages (not compiled binaries)
+- Distributed as both NuGet source packages (not compiled binaries) and normal NuGet packages (DLLs). This is due to older versions of Microsoft Dataverse not allowing the referencing of additional assemblies, while newer versions do allow it.
 
 ## Build Instructions
 
