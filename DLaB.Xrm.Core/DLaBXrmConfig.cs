@@ -1,6 +1,10 @@
 ﻿#nullable enable
 using System;
+#if NET8_0_OR_GREATER
+using Microsoft.Extensions.Caching.Memory;
+#else
 using System.Runtime.Caching;
+#endif
 #if DLAB_UNROOT_COMMON_NAMESPACE
 using DLaB.Common;
 #else
@@ -49,7 +53,7 @@ namespace Source.DLaB.Xrm
         /// The default cache to use.
         /// </summary>
         /// <returns></returns>
-        MemoryCache GetCache();
+        ICacheWrapper GetCache();
     }
 
     /// <summary>
@@ -113,7 +117,13 @@ namespace Source.DLaB.Xrm
 
         private class DefaultConfig : IDLaBXrmConfig
         {
+#if NET8_0_OR_GREATER
+            private static readonly IMemoryCache Cache = new MemoryCache(new MemoryCacheOptions());
+            private static readonly ICacheWrapper CacheWrapper = new CacheWrapper(Cache);
+#else
             private static readonly MemoryCache Cache = new MemoryCache(typeof(DefaultConfig).FullName ?? "DLaB.Xrm.DefaultMemoryCache");
+            private static readonly ICacheWrapper CacheWrapper = new CacheWrapper(Cache);
+#endif
 
             public string? GetIrregularIdAttributeName(string logicalName)
             {
@@ -125,9 +135,9 @@ namespace Source.DLaB.Xrm
                 return null;
             }
 
-            public MemoryCache GetCache()
+            public ICacheWrapper GetCache()
             {
-                return Cache;
+                return CacheWrapper;
             }
         }
     }
