@@ -3,7 +3,6 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Linq;
-using System.Runtime.Caching;
 using Microsoft.Crm.Sdk.Messages;
 
 #if DLAB_UNROOT_NAMESPACE || DLAB_XRM
@@ -49,11 +48,11 @@ namespace Source.DLaB.Xrm
         /// </summary>
         protected virtual string ParamKvpSeparator => DefaultRequestParamKvpSeparator;
 
-        private MemoryCache? _cache;
+        private ICacheWrapper? _cache;
         /// <summary>
         /// Cache that is used to store the results of requests
         /// </summary>
-        public MemoryCache Cache => _cache ?? (_cache = GetCache());
+        public ICacheWrapper Cache => _cache ?? (_cache = GetCache());
 
         /// <summary>
         /// Constructor
@@ -67,7 +66,7 @@ namespace Source.DLaB.Xrm
         /// <summary>
         /// The Cache to be used by the service.  Defaults to the DLaBXrmConfig.CacheConfig.GetCache().
         /// </summary>
-        protected virtual MemoryCache GetCache()
+        protected virtual ICacheWrapper GetCache()
         {
             return DLaBXrmConfig.CacheConfig.GetCache();
         }

@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Async\TaskExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Async\WhereEqualExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Async\WhereInExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CacheWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\AttributeComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\ColumnSetComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers\ConditionExpressionComparer.cs" />
