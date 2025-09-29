@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 
-#if NET8_0_OR_GREATER
+#if NET
 using Microsoft.Extensions.Caching.Memory;
 #else
 using System.Runtime.Caching;
@@ -35,15 +35,9 @@ namespace Source.DLaB.Xrm
         void Set(string key, object? value, DateTime absoluteExpiration);
     }
 
-    /// <summary>
-    /// Cache wrapper implementation
-    /// </summary>
-#if !DLAB_XRM_DEBUG
-    [System.Diagnostics.DebuggerNonUserCode]
-#endif
     internal class CacheWrapper : ICacheWrapper
     {
-#if NET8_0_OR_GREATER
+#if NET
         private readonly IMemoryCache _cache;
 
         public CacheWrapper(IMemoryCache cache)
@@ -86,9 +80,6 @@ namespace Source.DLaB.Xrm
     /// <summary>
     /// Extension methods for ICacheWrapper
     /// </summary>
-#if !DLAB_XRM_DEBUG
-    [System.Diagnostics.DebuggerNonUserCode]
-#endif
     public static class CacheWrapperExtensions
     {
         private static readonly ConcurrentDictionary<string, object> LocksByKey = new ConcurrentDictionary<string, object>();

@@ -20,11 +20,9 @@ using DLaB.Common;
 using Source.DLaB.Common;
 #endif
 using System.Collections.Concurrent;
-#if !NET8_0_OR_GREATER
-using System.Runtime.Caching;
-#endif
 #if !NET
 using System.IO;
+using System.Runtime.Caching;
 using System.Runtime.Serialization;
 using System.Text;
 #endif
@@ -1389,7 +1387,7 @@ namespace Source.DLaB.Xrm
 
         private static readonly ConcurrentDictionary<string, object> LocksByKey = new ConcurrentDictionary<string, object>();
 
-#if !NET8_0_OR_GREATER
+#if !NET
         /// <summary>
         /// Gets the item from the cache or adds it using the factory functions to both get the value and set the expiration time.
         /// </summary>

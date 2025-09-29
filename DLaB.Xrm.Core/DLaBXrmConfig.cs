@@ -1,6 +1,6 @@
 ﻿#nullable enable
 using System;
-#if NET8_0_OR_GREATER
+#if NET
 using Microsoft.Extensions.Caching.Memory;
 #else
 using System.Runtime.Caching;
@@ -117,7 +117,7 @@ namespace Source.DLaB.Xrm
 
         private class DefaultConfig : IDLaBXrmConfig
         {
-#if NET8_0_OR_GREATER
+#if NET
             private static readonly IMemoryCache Cache = new MemoryCache(new MemoryCacheOptions());
             private static readonly ICacheWrapper CacheWrapper = new CacheWrapper(Cache);
 #else
