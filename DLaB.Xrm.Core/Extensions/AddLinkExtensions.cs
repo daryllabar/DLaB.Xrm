@@ -249,6 +249,10 @@ namespace Source.DLaB.Xrm
 
         #endregion AddLink<T>
 
+        /// <summary>
+        /// Makes the Aliases Unique
+        /// </summary>
+        /// <param name="link"></param>
         public static void UniquifyAliases(this LinkEntity? link)
         {
             ProcessLinks(link?.LinkEntities, new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
