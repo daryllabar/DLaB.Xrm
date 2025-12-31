@@ -12,7 +12,7 @@ namespace DLaB.Xrm.Entities
 	
 	[System.Runtime.Serialization.DataContractAttribute()]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("CrmSvcUtil", "9.0.0.9369")]
-	public enum adminsettingsentityState
+	public enum AdminSettingsEntityState
 	{
 		
 		[System.Runtime.Serialization.EnumMemberAttribute()]
@@ -28,7 +28,7 @@ namespace DLaB.Xrm.Entities
 	[System.Runtime.Serialization.DataContractAttribute()]
 	[Microsoft.Xrm.Sdk.Client.EntityLogicalNameAttribute("adminsettingsentity")]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("CrmSvcUtil", "9.0.0.9369")]
-	public partial class adminsettingsentity : Microsoft.Xrm.Sdk.Entity, System.ComponentModel.INotifyPropertyChanging, System.ComponentModel.INotifyPropertyChanged
+	public partial class AdminSettingsEntity : Microsoft.Xrm.Sdk.Entity, System.ComponentModel.INotifyPropertyChanging, System.ComponentModel.INotifyPropertyChanged
 	{
 		
 		public static class Fields
@@ -66,7 +66,7 @@ namespace DLaB.Xrm.Entities
 		/// Default Constructor.
 		/// </summary>
 		[System.Diagnostics.DebuggerNonUserCode()]
-		public adminsettingsentity() : 
+		public AdminSettingsEntity() : 
 				base(EntityLogicalName)
 		{
 		}
@@ -408,7 +408,7 @@ namespace DLaB.Xrm.Entities
 		/// Status of the admin_settings_entity
 		/// </summary>
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("statecode")]
-		public System.Nullable<DLaB.Xrm.Entities.adminsettingsentityState> StateCode
+		public System.Nullable<DLaB.Xrm.Entities.AdminSettingsEntityState> StateCode
 		{
 			[System.Diagnostics.DebuggerNonUserCode()]
 			get
@@ -416,7 +416,7 @@ namespace DLaB.Xrm.Entities
 				Microsoft.Xrm.Sdk.OptionSetValue optionSet = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>("statecode");
 				if ((optionSet != null))
 				{
-					return ((DLaB.Xrm.Entities.adminsettingsentityState)(System.Enum.ToObject(typeof(DLaB.Xrm.Entities.adminsettingsentityState), optionSet.Value)));
+					return ((DLaB.Xrm.Entities.AdminSettingsEntityState)(System.Enum.ToObject(typeof(DLaB.Xrm.Entities.AdminSettingsEntityState), optionSet.Value)));
 				}
 				else
 				{
@@ -844,7 +844,7 @@ namespace DLaB.Xrm.Entities
 		/// <param name="anonymousType">LINQ anonymous type.</param>
 		/// </summary>
 		[System.Diagnostics.DebuggerNonUserCode()]
-		public adminsettingsentity(object anonymousType) : 
+		public AdminSettingsEntity(object anonymousType) : 
 				this()
 		{
             foreach (var p in anonymousType.GetType().GetProperties())

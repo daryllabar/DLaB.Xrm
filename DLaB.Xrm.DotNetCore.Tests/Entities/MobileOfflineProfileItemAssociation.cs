@@ -782,12 +782,12 @@ namespace DLaB.Xrm.Entities
 		}
 		
 		[Microsoft.Xrm.Sdk.AttributeLogicalNameAttribute("selectedrelationshipsschema")]
-		public virtual selectedmobileofflineenabledentityrelationships? SelectedRelationShipsSchemaEnum
+		public virtual SelectedMobileOfflineEnabledEntityRelationships? SelectedRelationShipsSchemaEnum
 		{
 			[System.Diagnostics.DebuggerNonUserCode()]
 			get
 			{
-				return ((selectedmobileofflineenabledentityrelationships?)(EntityOptionSetEnum.GetEnum(this, "selectedrelationshipsschema")));
+				return ((SelectedMobileOfflineEnabledEntityRelationships?)(EntityOptionSetEnum.GetEnum(this, "selectedrelationshipsschema")));
 			}
 			[System.Diagnostics.DebuggerNonUserCode()]
 			set

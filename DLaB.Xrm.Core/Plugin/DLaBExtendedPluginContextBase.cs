@@ -119,7 +119,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <inheritdoc />
         public virtual EntityReference PrimaryEntity => new EntityReference(PrimaryEntityName, PrimaryEntityId);
         /// <inheritdoc />
-        public IOrganizationServiceFactory ServiceFactory => ServiceProvider.Get<IOrganizationServiceFactory>();
+        public IOrganizationServiceFactory ServiceFactory => ServiceProvider.GetRequiredService<IOrganizationServiceFactory>();
         /// <inheritdoc />
         public IOrganizationService CachedOrganizationService => _organizationServices.Cached.Value;
         /// <inheritdoc />
