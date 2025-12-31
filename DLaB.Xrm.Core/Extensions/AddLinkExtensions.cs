@@ -498,6 +498,14 @@ namespace Source.DLaB.Xrm
             return childLink;
         }
 
+        /// <summary>
+        /// Ensures that all aliases within the specified query expression are unique by updating duplicate aliases as needed.
+        /// </summary>
+        /// <remarks>This method modifies the aliases of link entities in place to prevent conflicts that
+        /// may occur when duplicate aliases are present. It is typically used before executing a query to avoid errors
+        /// related to non-unique aliases.</remarks>
+        /// <param name="qe">The query expression whose link entity aliases will be checked and updated to ensure uniqueness. Can be
+        /// null.</param>
         public static void UniquifyAliases(this QueryExpression? qe)
         {
             ProcessLinks(qe?.LinkEntities, new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
