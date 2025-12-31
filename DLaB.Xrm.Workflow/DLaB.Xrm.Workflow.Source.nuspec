@@ -27,9 +27,9 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.10" />
-    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="contentFiles\cs\net472\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.10" />
-    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="contentFiles\cs\net48\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.10" />
+    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="contentFiles\cs\net462\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.17" />
+    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="contentFiles\cs\net472\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.17" />
+    <file src="..\DLaB.Xrm.Workflow.Core\*.cs" target="contentFiles\cs\net48\App_Packages\DLaB.Xrm.Workflow.Source.4.0.0.17" />
     <file src="..\Icon.64x64.png" target="images\" />
   </files>
 </package>
