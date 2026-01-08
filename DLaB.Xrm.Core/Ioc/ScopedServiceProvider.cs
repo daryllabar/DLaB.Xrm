@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -43,7 +42,7 @@ namespace Source.DLaB.Xrm.Ioc
         public ScopedServiceProvider(IServiceProvider? scopedProvider, Dictionary<Type, Registration> registrations, ConcurrentDictionary<Type, object> instances)
         {
             _scopedInstances[typeof(IServiceProvider)] = this;
-            _registrations[typeof(IServiceProvider)] = new Registration(typeof(IServiceProvider), Lifetime.Scoped, s => this);
+            _registrations[typeof(IServiceProvider)] = new Registration(typeof(IServiceProvider), Lifetime.Scoped, _ => this);
             registrations = registrations ?? throw new ArgumentNullException(nameof(registrations));
             _instances = instances ?? throw new ArgumentNullException(nameof(instances));
             foreach (var kvp in registrations)
@@ -53,7 +52,7 @@ namespace Source.DLaB.Xrm.Ioc
             _scopedProvider = scopedProvider;
             if (_scopedProvider != null)
             {
-                _registrations[typeof(WrappedServiceProvider)] = new Registration(typeof(WrappedServiceProvider), Lifetime.Scoped, s => new WrappedServiceProvider(_scopedProvider));
+                _registrations[typeof(WrappedServiceProvider)] = new Registration(typeof(WrappedServiceProvider), Lifetime.Scoped, _ => new WrappedServiceProvider(_scopedProvider));
             }
         }
 
@@ -94,7 +93,7 @@ namespace Source.DLaB.Xrm.Ioc
             switch (registration.Lifetime)
             {
                 case Lifetime.Singleton:
-                    instance = _instances.GetOrAdd(serviceType, (t) => CreateInstance(serviceType, registration));
+                    instance = _instances.GetOrAdd(serviceType, _ => CreateInstance(serviceType, registration));
                     break;
                 case Lifetime.Scoped:
                     if (!_scopedInstances.TryGetValue(serviceType, out var scopedInstance))
@@ -162,11 +161,30 @@ namespace Source.DLaB.Xrm.Ioc
                 var constructorParameters = constructor.GetParameters();
                 if (constructorParameters.Length == 0)
                 {
-                    return Activator.CreateInstance(registration.Type)!;
+                    try
+                    {
+                        return Activator.CreateInstance(registration.Type)!;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new InvalidOperationException($"Error when attempting to create instance of {registration.Type.FullName} with parameterless constructor: {ex.Message}", ex);
+                    }
                 }
 
-                var parameters = constructorParameters.Select(parameterInfo => GetService(parameterInfo.ParameterType)).ToArray();
-                return constructor.Invoke(parameters);
+                var parameters = new object[constructorParameters.Length];
+                for (var i = 0; i < parameters.Length; i++) {
+                    parameters[i] = GetService(constructorParameters[i].ParameterType)!;
+                }
+
+                try
+                {
+                    return constructor.Invoke(parameters);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Error when attempting to create instance of {registration.Type.FullName} with parameters '{string.Join("', '", parameters)}': {ex.Message}", ex);
+                }
+                
             }
             finally
             {
