@@ -233,6 +233,7 @@ namespace Source.DLaB.Xrm
                 case "postfollow":
                 case "postlike":
                 case "principalentitymap":
+                case "principalobjectaccess":
                 case "principalobjectattributeaccess":
                 case "privilege":
                 case "processstage":
