@@ -53,9 +53,13 @@
 	</metadata>
 	<files>
 		<file src="bin\Release\net462\DLaB.Xrm.dll" target="lib\net462\DLaB.Xrm.dll" />
+		<file src="bin\Release\net462\DLaB.Xrm.pdb" target="lib\net462\DLaB.Xrm.pdb" />
 		<file src="bin\Release\net472\DLaB.Xrm.dll" target="lib\net472\DLaB.Xrm.dll" />
+		<file src="bin\Release\net472\DLaB.Xrm.pdb" target="lib\net472\DLaB.Xrm.pdb" />
 		<file src="bin\Release\net48\DLaB.Xrm.dll"  target="lib\net48\DLaB.Xrm.dll" />
+		<file src="bin\Release\net48\DLaB.Xrm.pdb"  target="lib\net48\DLaB.Xrm.pdb" />
 		<file src="bin\Release\net8.0\DLaB.Xrm.dll" target="lib\net8.0\DLaB.Xrm.dll" />
+		<file src="bin\Release\net8.0\DLaB.Xrm.pdb" target="lib\net8.0\DLaB.Xrm.pdb" />
 		
 		<file src="..\Icon.64x64.png" target="images\" />
 	</files>

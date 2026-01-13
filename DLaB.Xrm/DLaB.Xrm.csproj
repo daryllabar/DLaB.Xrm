@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	  <DebugType>embedded</DebugType>
+	  <DebugType>portable</DebugType>
 	  <FileVersion>5.1.1.6</FileVersion>
 	  <Version>5.1.1.6</Version>
 	  <SignAssembly>true</SignAssembly>
