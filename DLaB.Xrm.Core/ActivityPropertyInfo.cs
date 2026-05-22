@@ -342,7 +342,7 @@ namespace Source.DLaB.Xrm
                     if (logicalName.Length > 4 && logicalName[3] == '_')
                     {
                         var prefix = logicalName.ToLower().Substring(0, 3);
-                        if (logicalName.ToLower().Split([prefix], StringSplitOptions.None).Length >= 3 || logicalName.ToLower().EndsWith("_association"))
+                        if (logicalName.ToLower().Split(new [] { prefix }, StringSplitOptions.None).Length >= 3 || logicalName.ToLower().EndsWith("_association"))
                         {
                             // N:N Joins or association entities do not contain active flags
                             ActiveAttribute = ActiveAttributeType.None;
@@ -431,7 +431,7 @@ namespace Source.DLaB.Xrm
             // [AttributeLogicalName("statecode")], it's not a join entity
             foreach (var property in typeof(T).GetProperties())
             {
-                if (property.Name == "StateCode")
+                if (property.Name.ToLower() == "statecode")
                 {
                     return false;
                 }
