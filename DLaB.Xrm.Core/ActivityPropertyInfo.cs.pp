@@ -422,7 +422,27 @@ namespace Source.DLaB.Xrm
         private bool IsJoinEntity(string logicalName)
         {
             // Entities of the type new_Foo_Bar are usually Join Entities that don't have a state
-            return logicalName.Split('_').Length >= 3;
+            if (logicalName.Split('_').Length < 3)
+            {
+                return false;
+            }
+            // If the entity type has a StateCode property or a property decorated with
+            // [AttributeLogicalName("statecode")], it's not a join entity
+            foreach (var property in typeof(T).GetProperties())
+            {
+                if (property.Name == "StateCode")
+                {
+                    return false;
+                }
+                foreach (AttributeLogicalNameAttribute attr in property.GetCustomAttributes(typeof(AttributeLogicalNameAttribute), true))
+                {
+                    if (string.Equals(attr.LogicalName, "statecode", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         /// <summary>
