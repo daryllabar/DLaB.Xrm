@@ -5,7 +5,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
-using Source.DLaB.Xrm;
 
 namespace DLaB.Xrm.Tests.Core
 {
@@ -17,9 +16,8 @@ namespace DLaB.Xrm.Tests.Core
         {
             // An entity with a multi-underscored name that has a property named StateCode
             // should NOT be identified as a join entity
-            var info = new ActivePropertyInfo<MultiUnderscoredEntityWithStateCodeProperty>();
-            Assert.AreEqual(ActiveAttributeType.StateCode, info.ActiveAttribute,
-                "Entity with multi-underscored name but with a StateCode-named property should be treated as having a StateCode active attribute.");
+            var info = new Source.DLaB.Xrm.ActivePropertyInfo<MultiUnderscoredEntityWithStateCodeProperty>();
+            Assert.AreEqual(Source.DLaB.Xrm.ActiveAttributeType.StateCode, info.ActiveAttribute, "Entity with multi-underscored name but with a StateCode-named property should be treated as having a StateCode active attribute.");
         }
 
         [TestMethod]
@@ -27,9 +25,8 @@ namespace DLaB.Xrm.Tests.Core
         {
             // An entity with a multi-underscored name that has a property decorated with
             // [AttributeLogicalName("statecode")] should NOT be identified as a join entity
-            var info = new ActivePropertyInfo<MultiUnderscoredEntityWithStateCodeAttribute>();
-            Assert.AreEqual(ActiveAttributeType.StateCode, info.ActiveAttribute,
-                "Entity with multi-underscored name but with [AttributeLogicalName(\"statecode\")] property should be treated as having a StateCode active attribute.");
+            var info = new Source.DLaB.Xrm.ActivePropertyInfo<MultiUnderscoredEntityWithStateCodeAttribute>();
+            Assert.AreEqual(Source.DLaB.Xrm.ActiveAttributeType.StateCode, info.ActiveAttribute, "Entity with multi-underscored name but with [AttributeLogicalName(\"statecode\")] property should be treated as having a StateCode active attribute.");
         }
 
         [TestMethod]
@@ -37,9 +34,8 @@ namespace DLaB.Xrm.Tests.Core
         {
             // An entity with a multi-underscored name that does NOT have a StateCode property or attribute
             // should be identified as a join entity
-            var info = new ActivePropertyInfo<MultiUnderscoredEntityWithoutStateCode>();
-            Assert.AreEqual(ActiveAttributeType.None, info.ActiveAttribute,
-                "Entity with multi-underscored name and no StateCode property should be treated as a join entity with no active attribute.");
+            var info = new Source.DLaB.Xrm.ActivePropertyInfo<MultiUnderscoredEntityWithoutStateCode>();
+            Assert.AreEqual(Source.DLaB.Xrm.ActiveAttributeType.None, info.ActiveAttribute, "Entity with multi-underscored name and no StateCode property should be treated as a join entity with no active attribute.");
         }
     }
 
