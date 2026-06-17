@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	  <DebugType>portable</DebugType>
-	  <FileVersion>5.1.1.8</FileVersion>
-	  <Version>5.1.1.8</Version>
+	  <FileVersion>5.1.1.9</FileVersion>
+	  <Version>5.1.1.9</Version>
 	  <SignAssembly>true</SignAssembly>
 		<TargetFrameworks>net462;net472;net48;net8.0</TargetFrameworks>
     <OutputType>Library</OutputType>
