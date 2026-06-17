@@ -39,31 +39,35 @@ namespace Source.DLaB.Xrm
             ConditionallySetPageCount(maxCount, pageSize, page);
             page.PageNumber = 1;
             page.PagingCookie = null;
-            EntitiesWithCookie<T> response;
-            do
+
+            // Start the first request.
+            var fetchTask = GetEntitiesWithCookie(service, qe, token);
+
+            while (fetchTask != null)
             {
-                response = await GetEntitiesWithCookie(service, qe, token);
+                // Wait for the in-flight request to complete.
+                var response = await fetchTask;
+                fetchTask = null;
+
+                // Advance the paging info for the next request.
                 UpdatePageCount(page, maxCount);
                 page.PageNumber++;
                 page.PagingCookie = response.Cookie;
+
+                // If there are more records, start fetching the next page *before* yielding the
+                // current results, so the next server round-trip overlaps with the caller's
+                // processing of this page. Only one request is ever in flight at a time, and qe is
+                // not mutated again until after the next await, so reusing the same qe is safe.
+                if (response.MoreRecords
+                    && (maxCount == null || maxCount.Value <= _totalRetrievedCount))
+                {
+                    fetchTask = GetEntitiesWithCookie(service, qe, token);
+                }
+
                 foreach (var entity in response.Entities)
                 {
                     yield return entity;
                 }
-
-            } while (response.MoreRecords
-                     && response.Entities != null
-                     && (maxCount == null || maxCount.Value <= _totalRetrievedCount));
-
-            // No more records on server, return whatever has been received
-            if (response.Entities == null)
-            {
-                yield break;
-            }
-
-            foreach (var entity in response.Entities)
-            {
-                yield return entity;
             }
         }
 
@@ -88,7 +92,7 @@ namespace Source.DLaB.Xrm
         }
 
 
-        private void UpdatePageCount(PagingInfo page, int? maxCount)
+        private void UpdatePageCount(PagingInfo page, int? maxCount = 0)
         {
             if (maxCount <= 0)
             {
