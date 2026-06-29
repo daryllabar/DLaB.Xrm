@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	  <DebugType>portable</DebugType>
-	  <FileVersion>5.1.1.10</FileVersion>
-	  <Version>5.1.1.10</Version>
+	  <FileVersion>5.1.1.11</FileVersion>
+	  <Version>5.1.1.11</Version>
 	  <SignAssembly>true</SignAssembly>
 		<TargetFrameworks>net462;net472;net48;net8.0</TargetFrameworks>
     <OutputType>Library</OutputType>
@@ -42,7 +42,7 @@
 	-->
 	
   <ItemGroup>
-    <PackageReference Include="DLaB.Common" Version="1.6.0.5" />
+    <PackageReference Include="DLaB.Common" Version="1.6.0.14" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
     
 	<!--
