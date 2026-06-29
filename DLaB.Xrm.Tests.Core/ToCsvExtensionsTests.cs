@@ -40,5 +40,32 @@ namespace DLaB.Xrm.Tests.Core
 
             Assert.AreEqual("None", csv);
         }
+
+        [TestMethod]
+        public void ToCsv_WithOptions_SkipEmptyOnly_DoesNotSkipNull()
+        {
+            var values = new List<string?> {"One", null, "", "Two"};
+
+            var csv = values.ToCsv(new ToCsvOptions
+            {
+                SkipEmptyStrings = true
+            });
+
+            Assert.AreEqual("One, , Two", csv);
+        }
+
+        [TestMethod]
+        public void ToCsv_WithOptions_EmptyStringWhenNoValuesAndNoDefault()
+        {
+            var values = new List<string?> {null, ""};
+
+            var csv = values.ToCsv(new ToCsvOptions
+            {
+                SkipNullValues = true,
+                SkipEmptyStrings = true
+            });
+
+            Assert.AreEqual(string.Empty, csv);
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace Source.DLaB.Common
 
             if (options.SkipEmptyStrings)
             {
-                values = values.Where(i => !string.IsNullOrEmpty(i));
+                values = values.Where(i => i != string.Empty);
             }
 
             var filteredValues = values.ToList();
