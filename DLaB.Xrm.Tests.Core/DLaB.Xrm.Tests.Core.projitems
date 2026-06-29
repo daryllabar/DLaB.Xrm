@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)RequirementValidatorComparisonTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RequirementValidatorTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IocContainerTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ToCsvExtensionsTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypedQueryExpressionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WhereEqualExtensionsTests.cs" />
   </ItemGroup>
