@@ -13,7 +13,7 @@ namespace Source.DLaB.Xrm
     {
         #region ConditionExpression
 
-        private static bool EqualsCondition(this ConditionExpression c1, ConditionExpression c2)
+        private static bool EqualsCondition(this ConditionExpression? c1, ConditionExpression? c2)
         {
             return (c1 == c2) || (c1 != null && c2 != null &&
                 c1.AttributeName == c2.AttributeName &&

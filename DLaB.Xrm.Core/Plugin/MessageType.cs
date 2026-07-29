@@ -1,4 +1,3 @@
-#nullable enable
 #if DLAB_UNROOT_COMMON_NAMESPACE
 using DLaB.Common;
 #else
@@ -453,7 +452,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        public static bool operator ==(MessageType a, MessageType b)
+        public static bool operator ==(MessageType? a, MessageType? b)
         {
             // If both are null, or both are same instance, return true.
             if (ReferenceEquals(a, b))
@@ -472,7 +471,7 @@ namespace Source.DLaB.Xrm.Plugin
         /// <returns>
         /// The result of the operator.
         /// </returns>
-        public static bool operator !=(MessageType a, MessageType b)
+        public static bool operator !=(MessageType? a, MessageType? b)
         {
             return !(a == b);
         }

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using Microsoft.Xrm.Sdk;
@@ -275,7 +274,7 @@ namespace Source.DLaB.Xrm
                 : service.GetEntityOrDefault<TEntity>(entity.Id);
         }
 
-        private static bool NullSafeEquals(this object thisValue, object value)
+        private static bool NullSafeEquals(this object? thisValue, object? value)
         {
             if (thisValue == null)
             {
@@ -850,7 +849,7 @@ namespace Source.DLaB.Xrm
             {
                 Id = entity.Id,
                 [info.AttributeName] = info.ActiveAttribute == ActiveAttributeType.IsDisabled
-                    ? (object)(state == 1)
+                    ? (state == 1)
                     : new OptionSetValue(state)
             };
             if (status.HasValue)

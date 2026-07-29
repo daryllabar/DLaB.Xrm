@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using System.Linq;
 using System.Reflection;
@@ -325,9 +324,9 @@ namespace Source.DLaB.Xrm
         /// <param name="entity">The entity.</param>
         /// <param name="uri">The URI.</param>
         /// <returns></returns>
-        public static string GetFormUrl(this Entity entity, Uri uri)
+        public static string GetFormUrl(this Entity entity, Uri? uri)
         {
-            string parameters = $"etn={entity.LogicalName}&pagetype=entityrecord&id={entity.Id:D}";
+            var parameters = $"etn={entity.LogicalName}&pagetype=entityrecord&id={entity.Id:D}";
             string url;
             if (uri == null)
             {
@@ -413,7 +412,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static Guid GetIdOrDefault(this Entity entity)
+        public static Guid GetIdOrDefault(this Entity? entity)
         {
             return entity?.Id ?? Guid.Empty;
         }
@@ -623,7 +622,7 @@ namespace Source.DLaB.Xrm
         {
             var name = property.Name.ToLower();
             if (name == "id"
-                || name.Substring(name.Length - 1) == "1" && name.StartsWith(typeof(T).GetClassAttribute<EntityLogicalNameAttribute>()!.LogicalName)) // If an attribute is the same value as the name of the entity, it is created with a 1 post fix to allow for it to compile
+                || (name.Substring(name.Length - 1) == "1" && name.StartsWith(typeof(T).GetClassAttribute<EntityLogicalNameAttribute>()!.LogicalName))) // If an attribute is the same value as the name of the entity, it is created with a 1 post fix to allow for it to compile
             {
                 var attribute = typeof(T).GetProperty(property.Name)?.GetCustomAttributes<AttributeLogicalNameAttribute>().FirstOrDefault();
                 if (attribute == null)
@@ -827,12 +826,12 @@ namespace Source.DLaB.Xrm
         }
 
         /// <summary>
-            /// Converts the entity collection into a list, casting each entity.
-            /// </summary>
-            /// <typeparam name="T">The type of Entity</typeparam>
-            /// <param name="col">The collection to convert</param>
-            /// <returns></returns>
-            public static List<T> ToEntityList<T>(this EntityCollection col) where T : Entity
+        /// Converts the entity collection into a list, casting each entity.
+        /// </summary>
+        /// <typeparam name="T">The type of Entity</typeparam>
+        /// <param name="col">The collection to convert</param>
+        /// <returns></returns>
+        public static List<T> ToEntityList<T>(this EntityCollection col) where T : Entity
         {
             if (typeof(T) == typeof(Entity))
             {
@@ -840,7 +839,7 @@ namespace Source.DLaB.Xrm
                 return (List<T>)(object)col.Entities.ToList();
             }
 
-            return col.Entities.Select(e => e.AsEntity<T>()).Where(e => e != null)!.ToList<T>();
+            return col.Entities.Select(e => e.AsEntity<T>()).Where(e => e != null).ToList();
         }
 
 #endregion EntityCollection
@@ -904,7 +903,7 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static Guid GetIdOrDefault(this EntityReference entity)
+        public static Guid GetIdOrDefault(this EntityReference? entity)
         {
             return entity?.Id ?? Guid.Empty;
         }
@@ -927,10 +926,10 @@ namespace Source.DLaB.Xrm
         /// <param name="entityReference"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool NullSafeEquals(this EntityReference entityReference, EntityReference value)
+        public static bool NullSafeEquals(this EntityReference? entityReference, EntityReference? value)
         {
             // ReSharper disable once PossibleUnintendedReferenceComparison If EntityReference and Value are both null, or actually both the same reference, then return true
-            return entityReference == value || entityReference != null && entityReference.Equals(value);
+            return entityReference == value || (entityReference != null && entityReference.Equals(value));
         }
 
 #endregion EntityReference
@@ -1336,9 +1335,9 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="money"></param>
         /// <returns></returns>
-        public static decimal GetValueOrDefault(this Money money)
+        public static decimal GetValueOrDefault(this Money? money)
         {
-            return GetValueOrDefault(money, 0m);
+            return money.GetValueOrDefault(0m);
         }
 
         /// <summary>
@@ -1347,7 +1346,7 @@ namespace Source.DLaB.Xrm
         /// <param name="money">The Money.</param>
         /// <param name="defaultValue">The value to default the Money's Value to if it is null.</param>
         /// <returns></returns>
-        public static decimal GetValueOrDefault(this Money money, decimal defaultValue)
+        public static decimal GetValueOrDefault(this Money? money, decimal defaultValue)
         {
             return money?.Value ?? defaultValue;
         }
@@ -1361,7 +1360,7 @@ namespace Source.DLaB.Xrm
         /// <param name="money"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool NullSafeEquals(this Money money, decimal value)
+        public static bool NullSafeEquals(this Money? money, decimal value)
         {
             return money != null && money.Value == value;
         }
@@ -1375,10 +1374,10 @@ namespace Source.DLaB.Xrm
         /// <param name="money"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool NullSafeEquals(this Money money, Money value)
+        public static bool NullSafeEquals(this Money? money, Money? value)
         {
             // ReSharper disable once PossibleUnintendedReferenceComparison If Money and Value are both null, or actually both the same reference, then return true
-            return money == value || money != null && money.Equals(value);
+            return money == value || (money != null && money.Equals(value));
         }
 
 #endregion Money
@@ -1404,7 +1403,7 @@ namespace Source.DLaB.Xrm
                 return value;
             }
 
-            var lockForKey = LocksByKey.GetOrAdd(key, k => new object());
+            var lockForKey = LocksByKey.GetOrAdd(key, _ => new object());
             lock (lockForKey)
             {
                 value = (T)cache.Get(key);
@@ -1414,7 +1413,7 @@ namespace Source.DLaB.Xrm
                 }
 
                 value = getValue(key);
-                cache.Set(key, value, new CacheItemPolicy
+                cache.Set(key, value!, new CacheItemPolicy
                 {
                     AbsoluteExpiration = new DateTimeOffset(getExpirationTime(key, value))
                 });
@@ -1433,9 +1432,9 @@ namespace Source.DLaB.Xrm
         /// </summary>
         /// <param name="osv"></param>
         /// <returns></returns>
-        public static int GetValueOrDefault(this OptionSetValue osv)
+        public static int GetValueOrDefault(this OptionSetValue? osv)
         {
-            return GetValueOrDefault(osv, int.MinValue);
+            return osv.GetValueOrDefault(int.MinValue);
         }
 
         /// <summary>
@@ -1444,7 +1443,7 @@ namespace Source.DLaB.Xrm
         /// <param name="osv">The OptionSetValue.</param>
         /// <param name="defaultValue">The value to default the OptionSetValue's Value to if it is null.</param>
         /// <returns></returns>
-        public static int GetValueOrDefault(this OptionSetValue osv, int defaultValue)
+        public static int GetValueOrDefault(this OptionSetValue? osv, int defaultValue)
         {
             return osv?.Value ?? defaultValue;
         }
@@ -1458,7 +1457,7 @@ namespace Source.DLaB.Xrm
         /// <param name="osv"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool NullSafeEquals(this OptionSetValue osv, int value)
+        public static bool NullSafeEquals(this OptionSetValue? osv, int value)
         {
             return osv != null && osv.Value == value;
         }
@@ -1472,10 +1471,10 @@ namespace Source.DLaB.Xrm
         /// <param name="osv"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool NullSafeEquals(this OptionSetValue osv, OptionSetValue value)
+        public static bool NullSafeEquals(this OptionSetValue? osv, OptionSetValue? value)
         {
             // ReSharper disable once PossibleUnintendedReferenceComparison If Osv and Value are both null, or actually both the same reference, then return true
-            return osv == value || osv != null && osv.Equals(value);
+            return osv == value || (osv != null && osv.Equals(value));
         }
 
 #endregion OptionSetValue

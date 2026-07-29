@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xrm.Sdk.Query;
 
@@ -15,7 +14,7 @@ namespace Source.DLaB.Xrm
     {
         #region ConditionExpression
 
-        private static bool ValuesInConditionIn(this ConditionExpression c1, string attributeName, IEnumerable<object> values)
+        private static bool ValuesInConditionIn(this ConditionExpression? c1, string? attributeName, IEnumerable<object> values)
         {
             var list = values.ToList();
             return (c1 != null && attributeName != null && list.Any() &&
